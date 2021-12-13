@@ -33,8 +33,8 @@ func FindTerraform(ctx context.Context, minVersion, maxVersion *version.Version)
 
 	var terraformPath string
 	opts := []tfinstall.ExecPathFinder{
-		tfinstall.LookPath(),
 		tfinstall.ExactPath(filepath.Join(tfDir, terraformBinary)),
+		tfinstall.LookPath(),
 		tfinstall.ExactVersion(maxVersion.String(), tfDir),
 	}
 

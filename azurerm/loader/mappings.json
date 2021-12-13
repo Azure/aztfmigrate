@@ -125,7 +125,7 @@
     "idPattern": "/subscriptions/resourceGroups/providers/Microsoft.Network/routeTables"
   },
   {
-    "resourceType": "azurerm_service_endpoint_policy",
+    "resourceType": "azurerm_subnet_service_endpoint_storage_policy",
     "exampleConfiguration": "resource \"azurerm_resource_group\" \"example\" {\n  name     = \"example-rg\"\n  location = \"West Europe\"\n}\n\nresource \"azurerm_subnet_service_endpoint_storage_policy\" \"example\" {\n  name                = \"example-policy\"\n  resource_group_name = azurerm_resource_group.example.name\n  location            = azurerm_resource_group.example.location\n  definition {\n    name        = \"name1\"\n    description = \"definition1\"\n    service_resources = [\n      azurerm_resource_group.example.id,\n      azurerm_storage_account.example.id\n    ]\n  }\n}\n\nresource \"azurerm_storage_account\" \"example\" {\n  name                     = \"examplestorageacct\"\n  resource_group_name      = azurerm_resource_group.example.name\n  location                 = azurerm_resource_group.example.location\n  account_tier             = \"Standard\"\n  account_replication_type = \"GRS\"\n}\n",
     "idPattern": "/subscriptions/resourceGroups/providers/Microsoft.Network/serviceEndpointPolicies"
   },

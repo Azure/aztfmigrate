@@ -47,16 +47,22 @@ func getReferencesForAddress(address string, p *tfjson.Plan, refValueMap map[str
 			for _, expression := range r.Expressions {
 				res = append(res, listReferences(expression)...)
 			}
+			temp := make([]types.Reference, 0)
 			for _, ref := range res {
 				// if it refers to some resource's id before, after migration, it will refer to its name now
 				// TODO: use regex
 				if strings.HasPrefix(ref.Name, "azurerm_") && len(strings.Split(ref.Name, ".")) == 3 && strings.HasSuffix(ref.Name, "id") {
-					res = append(res, types.Reference{
+					temp = append(temp, types.Reference{
 						Name: ref.Name[0:strings.LastIndex(ref.Name, ".")] + ".name",
 					})
-					break
+					if strings.HasPrefix(ref.Name, "azurerm_resource_group") {
+						temp = append(temp, types.Reference{
+							Name: ref.Name[0:strings.LastIndex(ref.Name, ".")] + ".location",
+						})
+					}
 				}
 			}
+			res = append(res, temp...)
 			break
 		}
 	}
@@ -77,8 +83,14 @@ func getReferencesForAddress(address string, p *tfjson.Plan, refValueMap map[str
 			}
 		}
 	}
+	refSet := make(map[string]types.Reference)
 	for i := range res {
-		res[i].Value = refValueMap[res[i].Name]
+		refSet[res[i].Name] = res[i]
+	}
+	res = make([]types.Reference, 0)
+	for _, ref := range refSet {
+		ref.Value = refValueMap[ref.Name]
+		res = append(res, ref)
 	}
 	return res
 }

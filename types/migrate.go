@@ -35,26 +35,57 @@ func (r Output) GetStringValue() string {
 	}
 }
 
+type Instance struct {
+	Index      interface{}
+	ResourceId string
+	Outputs    []Output
+}
+
 type GenericResource struct {
 	Label        string
-	Id           string
+	Instances    []Instance
 	ResourceType string
 	Block        *hclwrite.Block
-	Migrated     bool
 	References   []Reference
-	Outputs      []Output
+	Migrated     bool
 }
 
-func (r GenericResource) OldAddress() string {
-	return fmt.Sprintf("azurerm-restapi_resource.%s", r.Label)
+func (r GenericResource) OldAddress(index interface{}) string {
+	oldAddress := fmt.Sprintf("azurerm-restapi_resource.%s", r.Label)
+	if index == nil {
+		return oldAddress
+	}
+	switch i := index.(type) {
+	case int, int32, int64:
+		return fmt.Sprintf(`%s[%d]`, oldAddress, i)
+	case string:
+		return fmt.Sprintf(`%s["%s"]`, oldAddress, i)
+	default:
+		return oldAddress
+	}
 }
 
-func (r GenericResource) NewAddress() string {
-	return fmt.Sprintf("%s.%s", r.ResourceType, r.Label)
+func (r GenericResource) NewAddress(index interface{}) string {
+	newAddress := fmt.Sprintf("%s.%s", r.ResourceType, r.Label)
+	if index == nil {
+		return newAddress
+	}
+	switch i := index.(type) {
+	case int, int32, int64:
+		return fmt.Sprintf(`%s[%d]`, newAddress, i)
+	case string:
+		return fmt.Sprintf(`%s["%s"]`, newAddress, i)
+	default:
+		return newAddress
+	}
 }
 
 func (r GenericResource) EmptyImportConfig() string {
 	return fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
+}
+
+func (r GenericResource) IsMultipleResources() bool {
+	return len(r.Instances) != 0 && r.Instances[0].Index != nil
 }
 
 type GenericPatchResource struct {

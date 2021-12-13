@@ -23,7 +23,7 @@ const planfile = "tfplan"
 // The required terraform version that has the `terraform add` command.
 var minRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20210630"))
 var maxRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20211006"))
-var LogEnabled = false
+var LogEnabled = true
 
 func NewTerraform(workingDirectory string) (*Terraform, error) {
 	execPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
@@ -103,22 +103,53 @@ func (t *Terraform) ListGenericResources() ([]types.GenericResource, error) {
 	if p == nil {
 		return resources, nil
 	}
+	resourceMap := make(map[string]*types.GenericResource)
 	for _, resourceChange := range p.ResourceChanges {
 		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azurerm-restapi_resource" {
 			continue
 		}
-		resources = append(resources, types.GenericResource{
-			Label:        resourceChange.Name,
-			Id:           getResourceId(resourceChange.Change.Before),
-			ResourceType: "",
-		})
+		if resourceChange.Index == nil {
+			resourceMap[resourceChange.Address] = &types.GenericResource{
+				Label: resourceChange.Name,
+				Instances: []types.Instance{
+					{
+						ResourceId: getResourceId(resourceChange.Change.Before),
+					},
+				},
+				References: make([]types.Reference, 0),
+			}
+		} else {
+			address := fmt.Sprintf("%s.%s", resourceChange.Type, resourceChange.Name)
+			if _, ok := resourceMap[address]; ok {
+				resourceMap[address].Instances = append(resourceMap[address].Instances, types.Instance{
+					Index:      resourceChange.Index,
+					ResourceId: getResourceId(resourceChange.Change.Before),
+				})
+			} else {
+				resourceMap[address] = &types.GenericResource{
+					Label:        resourceChange.Name,
+					ResourceType: "",
+					Instances: []types.Instance{
+						{
+							Index:      resourceChange.Index,
+							ResourceId: getResourceId(resourceChange.Change.Before),
+						},
+					},
+				}
+			}
+		}
+	}
+	for _, v := range resourceMap {
+		resources = append(resources, *v)
 	}
 	refValueMap := getRefValueMap(p)
 	for index, resource := range resources {
-		resources[index].References = getReferencesForAddress(resource.OldAddress(), p, refValueMap)
+		resources[index].References = getReferencesForAddress(resource.OldAddress(nil), p, refValueMap)
 	}
 	for i, resource := range resources {
-		resources[i].Outputs = getOutputsForAddress(resource.OldAddress(), refValueMap)
+		for j, instance := range resource.Instances {
+			resources[i].Instances[j].Outputs = getOutputsForAddress(resource.OldAddress(instance.Index), refValueMap)
+		}
 	}
 	return resources, err
 }
@@ -172,7 +203,7 @@ func (t *Terraform) ListGenericPatchResources() ([]types.GenericPatchResource, e
 	return resources, err
 }
 
-func (t *Terraform) Import(address string, id string) (string, error) {
+func (t *Terraform) ImportAdd(address string, id string) (string, error) {
 	_ = t.Init()
 	err := t.exec.Import(context.TODO(), address, id)
 	if err != nil {
@@ -185,6 +216,11 @@ func (t *Terraform) Import(address string, id string) (string, error) {
 		return "", fmt.Errorf("converting terraform state to config for resource %s: %w", address, err)
 	}
 	return tpl, nil
+}
+
+func (t *Terraform) Import(address string, id string) error {
+	_ = t.Init()
+	return t.exec.Import(context.TODO(), address, id)
 }
 
 func (t *Terraform) Apply() error {

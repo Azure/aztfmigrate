@@ -70,7 +70,7 @@ resource "azurerm-restapi_resource" "test2" {
 resource "azurerm_automation_account" "test1" {
   location            = "westeurope"
   name                = "henglu2"
-  resource_group_name = "example-resource-group"
+  resource_group_name = azurerm_resource_group.test.name
   sku_name            = "Basic"
 }
 

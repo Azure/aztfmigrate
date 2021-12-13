@@ -102,10 +102,7 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 		attrValue = strings.TrimSpace(attrValue)
 		for _, output := range outputs {
 			if attrValue == output.OldName {
-				f, dialog := hclwrite.ParseConfig([]byte(fmt.Sprintf("%s=%s", attrName, output.NewName)), "", hcl.InitialPos)
-				if dialog == nil || !dialog.HasErrors() && f != nil {
-					block.Body().SetAttributeRaw(attrName, f.Body().GetAttribute(attrName).Expr().BuildTokens(nil))
-				}
+				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(output.NewName))
 				break
 			}
 		}
@@ -259,15 +256,30 @@ func InjectReference(block *hclwrite.Block, refs []types.Reference) *hclwrite.Bl
 	for attrName, attr := range block.Body().Attributes() {
 		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
 		attrValue = strings.TrimSpace(attrValue)
+		if strings.HasPrefix(attrValue, "[") && strings.HasSuffix(attrValue, "]") {
+			arr := strings.Split(attrValue[1:len(attrValue)-1], ",")
+			found := false
+			for i, v := range arr {
+				for _, ref := range refs {
+					if strings.TrimSpace(v) == ref.GetStringValue() {
+						arr[i] = ref.Name
+						found = true
+						break
+					}
+				}
+			}
+			if found {
+				newValue := fmt.Sprintf("[%s]", strings.Join(arr, ", "))
+				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(newValue))
+				continue
+			}
+		}
 		for _, ref := range refs {
 			if ref.Value == nil {
 				continue
 			}
 			if ref.GetStringValue() == attrValue {
-				f, dialog := hclwrite.ParseConfig([]byte(fmt.Sprintf("%s=%s", attrName, ref.Name)), "", hcl.InitialPos)
-				if dialog == nil || !dialog.HasErrors() && f != nil {
-					block.Body().SetAttributeRaw(attrName, f.Body().GetAttribute(attrName).Expr().BuildTokens(nil))
-				}
+				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(ref.Name))
 				break
 			}
 		}
@@ -302,4 +314,92 @@ func GetValuePropMap(block *hclwrite.Block, prefix string) map[string]string {
 		}
 	}
 	return res
+}
+
+func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block) map[string][]hclwrite.Tokens {
+	attrNameSet := make(map[string]bool)
+	for _, b := range blocks {
+		for attrName := range b.Body().Attributes() {
+			attrNameSet[attrName] = true
+		}
+	}
+	attrValueMap := make(map[string][]hclwrite.Tokens)
+	for attrName := range attrNameSet {
+		values := make([]string, len(blocks))
+		tokens := make([]hclwrite.Tokens, len(blocks))
+		for i, b := range blocks {
+			if b == nil {
+				values[i] = "null"
+				tokens[i] = nil
+				continue
+			}
+			attr := b.Body().GetAttribute(attrName)
+			if attr == nil {
+				values[i] = "null"
+				tokens[i] = nil
+			} else {
+				tokens[i] = b.Body().GetAttribute(attrName).Expr().BuildTokens(nil)
+				values[i] = strings.TrimSpace(string(tokens[i].Bytes()))
+			}
+		}
+		if isArrayWithSameValue(values) {
+			output.Body().SetAttributeRaw(attrName, blocks[0].Body().GetAttribute(attrName).Expr().BuildTokens(nil))
+		} else {
+			output.Body().SetAttributeRaw(attrName, GetTokensForExpression("each.value."+attrName))
+			attrValueMap[attrName] = tokens
+		}
+	}
+
+	blockNameSet := make(map[string]bool)
+	for _, b := range blocks {
+		for _, nb := range b.Body().Blocks() {
+			blockNameSet[nb.Type()] = true
+		}
+	}
+	for blockName := range blockNameSet {
+		nestedBlocks := make([]*hclwrite.Block, len(blocks))
+		for i, b := range blocks {
+			if nestedBlock := b.Body().FirstMatchingBlock(blockName, []string{}); nestedBlock != nil {
+				nestedBlocks[i] = nestedBlock
+			}
+		}
+		outputNestedBlock := output.Body().AppendNewBlock(blockName, []string{})
+		tempMap := CombineBlock(nestedBlocks, outputNestedBlock)
+		for k, v := range tempMap {
+			attrValueMap[k] = v
+		}
+	}
+	return attrValueMap
+}
+
+func GetTokensForExpression(reference string) hclwrite.Tokens {
+	f, dialog := hclwrite.ParseConfig([]byte(fmt.Sprintf("%s=%s", "temp", reference)), "", hcl.InitialPos)
+	if dialog == nil || !dialog.HasErrors() && f != nil {
+		return f.Body().GetAttribute("temp").Expr().BuildTokens(nil)
+	}
+	return nil
+}
+
+func GetForEachConstants(instances []types.Instance, items map[string][]hclwrite.Tokens) string {
+	config := ""
+	i := 0
+	for _, instance := range instances {
+		item := ""
+		for key := range items {
+			item += fmt.Sprintf("%s = %s", key, string(items[key][i].Bytes()))
+		}
+		config += fmt.Sprintf("%s = {\n%s\n}\n", instance.Index, item)
+		i++
+	}
+	config = fmt.Sprintf("{\n%s}\n", config)
+	return config
+}
+
+func isArrayWithSameValue(arr []string) bool {
+	for _, x := range arr {
+		if x != arr[0] {
+			return false
+		}
+	}
+	return true
 }
