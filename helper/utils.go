@@ -1,9 +1,12 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
+	ctyJson "github.com/zclconf/go-cty/cty/json"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -97,6 +100,57 @@ func ParseHclArray(attrValue string) []string {
 			arr[i] = strings.TrimSpace(arr[i])
 		}
 		return arr
+	}
+	return nil
+}
+
+// ToHclSearchReplace generates hcl expression from `input`
+func ToHclSearchReplace(input interface{}, search []string, replacement []string) (string, bool) {
+	found := false
+	switch value := input.(type) {
+	case []interface{}:
+		if len(value) == 0 {
+			return "[]", false
+		}
+		res := make([]string, 0)
+		for _, element := range value {
+			config, ok := ToHclSearchReplace(element, search, replacement)
+			found = found || ok
+			res = append(res, config)
+		}
+		return fmt.Sprintf("[\n%s\n]", strings.Join(res, ",\n")), found
+	case map[string]interface{}:
+		if len(value) == 0 {
+			return "{}", found
+		}
+		attrs := make([]string, 0)
+		for k, v := range value {
+			config, ok := ToHclSearchReplace(v, search, replacement)
+			found = found || ok
+			attrs = append(attrs, fmt.Sprintf("%s = %s", k, config))
+		}
+		return fmt.Sprintf("{\n%s\n}", strings.Join(attrs, "\n")), found
+	case string:
+		for i := range search {
+			if search[i] == value {
+				return replacement[i], true
+			}
+		}
+		return fmt.Sprintf(`"%s"`, value), false
+	default:
+		return fmt.Sprintf("%v", value), false
+	}
+}
+
+func GetValueFromExpression(tokens hclwrite.Tokens) interface{} {
+	expression, _ := hclsyntax.ParseExpression(tokens.Bytes(), "", hcl.InitialPos)
+	if value, dialog := expression.Value(&hcl.EvalContext{}); dialog == nil || !dialog.HasErrors() {
+		if data, err := ctyJson.Marshal(value, value.Type()); err == nil {
+			var input interface{}
+			if err = json.Unmarshal(data, &input); err == nil {
+				return input
+			}
+		}
 	}
 	return nil
 }

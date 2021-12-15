@@ -81,30 +81,10 @@ func ReplaceGenericOutputs(outputs []types.Output) error {
 func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 	for attrName, attr := range block.Body().Attributes() {
 		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
-		attrValue = strings.TrimSpace(attrValue)
-		if arr := ParseHclArray(attrValue); arr != nil {
-			found := false
-			for i, v := range arr {
-				for _, output := range outputs {
-					if v == output.OldName {
-						arr[i] = output.NewName
-						found = true
-						break
-					}
-				}
-			}
-			if found {
-				newValue := fmt.Sprintf("[%s]", strings.Join(arr, ", "))
-				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(newValue))
-				continue
-			}
-		}
 		for _, output := range outputs {
-			if attrValue == output.OldName {
-				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(output.NewName))
-				break
-			}
+			attrValue = strings.ReplaceAll(attrValue, output.OldName, output.NewName)
 		}
+		block.Body().SetAttributeRaw(attrName, GetTokensForExpression(attrValue))
 	}
 	for index := range block.Body().Blocks() {
 		replaceOutputs(block.Body().Blocks()[index], outputs)
@@ -245,33 +225,18 @@ func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{
 
 // InjectReference replaces `block`'s literal value with reference provided by `refs`
 func InjectReference(block *hclwrite.Block, refs []types.Reference) *hclwrite.Block {
-	for attrName, attr := range block.Body().Attributes() {
-		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
-		attrValue = strings.TrimSpace(attrValue)
-		if arr := ParseHclArray(attrValue); arr != nil {
-			found := false
-			for i, v := range arr {
-				for _, ref := range refs {
-					if v == ref.GetStringValue() {
-						arr[i] = ref.Name
-						found = true
-						break
-					}
-				}
-			}
-			if found {
-				newValue := fmt.Sprintf("[%s]", strings.Join(arr, ", "))
-				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(newValue))
-				continue
-			}
+	search := make([]string, 0)
+	replacement := make([]string, 0)
+	for _, ref := range refs {
+		if stringValue, ok := ref.Value.(string); ok {
+			search = append(search, stringValue)
+			replacement = append(replacement, ref.Name)
 		}
-		for _, ref := range refs {
-			if ref.Value == nil {
-				continue
-			}
-			if ref.GetStringValue() == attrValue {
-				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(ref.Name))
-				break
+	}
+	for attrName, attr := range block.Body().Attributes() {
+		if input := GetValueFromExpression(attr.Expr().BuildTokens(nil)); input != nil {
+			if output, found := ToHclSearchReplace(input, search, replacement); found {
+				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(output))
 			}
 		}
 	}

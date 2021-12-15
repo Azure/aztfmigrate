@@ -16,6 +16,7 @@ There're some examples to show the migration results.
 2. [case2 - for_each](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case2%20-%20for_each)
 3. [case3 - nested block](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case3%20-%20nested%20block)
 4. [case4 - count](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case4%20-%20count)
+5. [case5 - nested block patch](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case5%20-%20nested%20block%20patch)
    
 ## Features
 - [x] Support `azurerm-restapi_resource` migration
@@ -24,8 +25,8 @@ There're some examples to show the migration results.
 - [x] Support meta-argument `count`
 - [ ] Support meta-argument `depends_on`
 - [x] Support dependency injection in array and primitive value.
-- [ ] Support dependency injection in Map value.
-- [ ] Support migration based on `azurerm` provider property coverage
+- [x] Support dependency injection in Map value.
+- [ ] Support migration based on `azurerm` provider's property coverage
 
 ## Known limitations
 1. References to local variables can't be migrated.
