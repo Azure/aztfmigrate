@@ -18,14 +18,14 @@ There're some examples to show the migration results.
 4. [case4 - count](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case4%20-%20count)
    
 ## Features
--[x] Support `azurerm-restapi_resource` migration
--[x] Support `azurerm-restapi_patch_resource` migration
--[x] Support meta-argument `for_each`
--[x] Support meta-argument `count`
--[ ] Support meta-argument `depends_on`
--[x] Support dependency injection in array and primitive value.
--[ ] Support dependency injection in Map value.
--[ ] Support migration based on `azurerm` provider property coverage
+- [x] Support `azurerm-restapi_resource` migration
+- [x] Support `azurerm-restapi_patch_resource` migration
+- [x] Support meta-argument `for_each`
+- [x] Support meta-argument `count`
+- [ ] Support meta-argument `depends_on`
+- [x] Support dependency injection in array and primitive value.
+- [ ] Support dependency injection in Map value.
+- [ ] Support migration based on `azurerm` provider property coverage
 
 ## Known limitations
 1. References to local variables can't be migrated.
