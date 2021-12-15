@@ -73,7 +73,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		log.Printf("[INFO] migrating resource %s (%d instances) to resource %s...", r.OldAddress(nil), len(r.Instances), r.NewAddress(nil))
 		if !r.IsMultipleResources() {
 			instance := r.Instances[0]
-			log.Printf("[INFO] importing %s to %s and generating config...", r.NewAddress(nil), instance.ResourceId)
+			log.Printf("[INFO] importing %s to %s and generating config...", instance.ResourceId, r.NewAddress(nil))
 			if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType); err == nil {
 				resources[index].Block = block
 				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(nil))
@@ -90,7 +90,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			// import into real state
 			for _, instance := range r.Instances {
 				address := r.NewAddress(instance.Index)
-				log.Printf("[INFO] importing %s to %s...", address, instance.ResourceId)
+				log.Printf("[INFO] importing %s to %s...", instance.ResourceId, address)
 				if err := terraform.Import(address, instance.ResourceId); err != nil {
 					log.Printf("[Error] error importing %s : %s", address, instance.ResourceId)
 				}
@@ -131,7 +131,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 
 			resources[index].Block = combinedBlock
 			for i, instance := range r.Instances {
-				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(instance.Index))
+				valuePropMap := helper.GetValuePropMap(blocks[i], resources[index].NewAddress(instance.Index))
 				for j, output := range resources[index].Instances[i].Outputs {
 					resources[index].Instances[i].Outputs[j].NewName = valuePropMap[output.GetStringValue()]
 				}
@@ -174,6 +174,17 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		if r.Migrated {
 			for _, instance := range r.Instances {
 				outputs = append(outputs, instance.Outputs...)
+				outputs = append(outputs, types.Output{
+					OldName: r.OldAddress(instance.Index) + ".resource_id",
+					NewName: r.NewAddress(instance.Index) + ".id",
+				})
+				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
+				for _, prop := range props {
+					outputs = append(outputs, types.Output{
+						OldName: r.OldAddress(instance.Index) + "." + prop,
+						NewName: r.NewAddress(instance.Index) + "." + prop,
+					})
+				}
 			}
 		}
 	}
