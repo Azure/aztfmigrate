@@ -316,7 +316,7 @@ func GetValuePropMap(block *hclwrite.Block, prefix string) map[string]string {
 	return res
 }
 
-func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block) map[string][]hclwrite.Tokens {
+func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bool) map[string][]hclwrite.Tokens {
 	attrNameSet := make(map[string]bool)
 	for _, b := range blocks {
 		for attrName := range b.Body().Attributes() {
@@ -342,11 +342,18 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block) map[string][
 				values[i] = strings.TrimSpace(string(tokens[i].Bytes()))
 			}
 		}
-		if isArrayWithSameValue(values) {
+		switch {
+		case isArrayWithSameValue(values):
 			output.Body().SetAttributeRaw(attrName, blocks[0].Body().GetAttribute(attrName).Expr().BuildTokens(nil))
-		} else {
+			break
+		case isForEach:
 			output.Body().SetAttributeRaw(attrName, GetTokensForExpression("each.value."+attrName))
 			attrValueMap[attrName] = tokens
+			break
+		default:
+			output.Body().SetAttributeRaw(attrName, GetTokensForExpression(fmt.Sprintf("%s${count.index}%s", prefix(values), suffix(values))))
+			attrValueMap[attrName] = tokens
+			break
 		}
 	}
 
@@ -364,7 +371,7 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block) map[string][
 			}
 		}
 		outputNestedBlock := output.Body().AppendNewBlock(blockName, []string{})
-		tempMap := CombineBlock(nestedBlocks, outputNestedBlock)
+		tempMap := CombineBlock(nestedBlocks, outputNestedBlock, isForEach)
 		for k, v := range tempMap {
 			attrValueMap[k] = v
 		}
@@ -402,4 +409,44 @@ func isArrayWithSameValue(arr []string) bool {
 		}
 	}
 	return true
+}
+
+func prefix(arr []string) string {
+	if len(arr) == 0 {
+		return ""
+	}
+	index := 0
+	for index = 0; index < len(arr[0]); index++ {
+		match := true
+		for i := 1; i < len(arr); i++ {
+			if index >= len(arr[i]) || arr[i][index] != arr[0][index] {
+				match = false
+				break
+			}
+		}
+		if !match {
+			break
+		}
+	}
+	return arr[0][0:index]
+}
+
+func suffix(arr []string) string {
+	if len(arr) == 0 {
+		return ""
+	}
+	index := 0
+	for index = 1; index <= len(arr[0]); index++ {
+		match := true
+		for i := 1; i < len(arr); i++ {
+			if index > len(arr[i]) || arr[i][len(arr[i])-index] != arr[0][len(arr[0])-index] {
+				match = false
+				break
+			}
+		}
+		if !match {
+			break
+		}
+	}
+	return arr[0][len(arr[0])-index+1:]
 }

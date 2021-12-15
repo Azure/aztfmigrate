@@ -56,8 +56,8 @@ func (r GenericResource) OldAddress(index interface{}) string {
 		return oldAddress
 	}
 	switch i := index.(type) {
-	case int, int32, int64:
-		return fmt.Sprintf(`%s[%d]`, oldAddress, i)
+	case int, int32, int64, float32, float64:
+		return fmt.Sprintf(`%s[%v]`, oldAddress, i)
 	case string:
 		return fmt.Sprintf(`%s["%s"]`, oldAddress, i)
 	default:
@@ -71,8 +71,8 @@ func (r GenericResource) NewAddress(index interface{}) string {
 		return newAddress
 	}
 	switch i := index.(type) {
-	case int, int32, int64:
-		return fmt.Sprintf(`%s[%d]`, newAddress, i)
+	case int, int32, int64, float32, float64:
+		return fmt.Sprintf(`%s[%v]`, newAddress, i)
 	case string:
 		return fmt.Sprintf(`%s["%s"]`, newAddress, i)
 	default:
@@ -86,6 +86,15 @@ func (r GenericResource) EmptyImportConfig() string {
 
 func (r GenericResource) IsMultipleResources() bool {
 	return len(r.Instances) != 0 && r.Instances[0].Index != nil
+}
+
+func (r GenericResource) IsForEach() bool {
+	if len(r.Instances) != 0 && r.Instances[0].Index != nil {
+		if _, ok := r.Instances[0].Index.(string); ok {
+			return true
+		}
+	}
+	return false
 }
 
 type GenericPatchResource struct {

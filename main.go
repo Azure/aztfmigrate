@@ -26,6 +26,7 @@ provider "azurerm" {
 const tempDir = "temp"
 
 func main() {
+	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
 	terraform, err := tf.NewTerraform(workingDirectory)
 	if err != nil {
@@ -38,9 +39,9 @@ func main() {
 func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_resource")
-	log.Printf("[INFO] initializing terraform")
 
 	// get azurerm-restapi resource from state
+	log.Printf("[INFO] searching azurerm-restapi_resource...")
 	resources, err := terraform.ListGenericResources()
 	if err != nil {
 		log.Fatal(err)
@@ -57,9 +58,6 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		resources[index].ResourceType = azurerm.GetAzureRMResourceType(resourceId)
 	}
 	log.Printf("[INFO] found %d azurerm-restapi_resource can migrate to azurerm resource", len(resources))
-	for _, r := range resources {
-		log.Printf("[INFO] resource %s (%d instances) will migrate to resource %s", r.OldAddress(nil), len(r.Instances), r.NewAddress(nil))
-	}
 
 	// generate import config
 	config := ""
@@ -72,8 +70,10 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 
 	// import and generate config
 	for index, r := range resources {
+		log.Printf("[INFO] migrating resource %s (%d instances) to resource %s...", r.OldAddress(nil), len(r.Instances), r.NewAddress(nil))
 		if !r.IsMultipleResources() {
 			instance := r.Instances[0]
+			log.Printf("[INFO] importing %s to %s and generating config...", r.NewAddress(nil), instance.ResourceId)
 			if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType); err == nil {
 				resources[index].Block = block
 				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(nil))
@@ -82,7 +82,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 				}
 				resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 				resources[index].Migrated = true
-				log.Printf("[INFO] %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
+				log.Printf("[INFO] resource %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
 			} else {
 				log.Printf("[ERROR] %+v", err)
 			}
@@ -90,6 +90,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			// import into real state
 			for _, instance := range r.Instances {
 				address := r.NewAddress(instance.Index)
+				log.Printf("[INFO] importing %s to %s...", address, instance.ResourceId)
 				if err := terraform.Import(address, instance.ResourceId); err != nil {
 					log.Printf("[Error] error importing %s : %s", address, instance.ResourceId)
 				}
@@ -111,6 +112,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			}
 
 			// import and build combined block
+			log.Printf("[INFO] generating config...")
 			blocks := make([]*hclwrite.Block, 0)
 			for _, instance := range r.Instances {
 				if block, err := importAndGenerateConfig(tempTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType); err == nil {
@@ -118,9 +120,14 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 				}
 			}
 			combinedBlock := hclwrite.NewBlock("resource", []string{r.ResourceType, r.Label})
-			foreachItems := helper.CombineBlock(blocks, combinedBlock)
-			foreachConfig := helper.GetForEachConstants(r.Instances, foreachItems)
-			combinedBlock.Body().SetAttributeRaw("for_each", helper.GetTokensForExpression(foreachConfig))
+			if r.IsForEach() {
+				foreachItems := helper.CombineBlock(blocks, combinedBlock, true)
+				foreachConfig := helper.GetForEachConstants(r.Instances, foreachItems)
+				combinedBlock.Body().SetAttributeRaw("for_each", helper.GetTokensForExpression(foreachConfig))
+			} else {
+				_ = helper.CombineBlock(blocks, combinedBlock, false)
+				combinedBlock.Body().SetAttributeRaw("count", helper.GetTokensForExpression(fmt.Sprintf("%d", len(r.Instances))))
+			}
 
 			resources[index].Block = combinedBlock
 			for i, instance := range r.Instances {
@@ -132,6 +139,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 
 			resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 			resources[index].Migrated = true
+			log.Printf("[INFO] resource %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
 		}
 	}
 	tempDirectoryCleanup(workingDirectory)
@@ -161,7 +169,6 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	}
 
 	// replace jsondecode(xxx.output) with azurerm references
-	log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
 	outputs := make([]types.Output, 0)
 	for _, r := range resources {
 		if r.Migrated {
@@ -170,8 +177,11 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			}
 		}
 	}
-	if err := helper.ReplaceGenericOutputs(outputs); err != nil {
-		log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+	if len(outputs) != 0 {
+		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
+		if err := helper.ReplaceGenericOutputs(outputs); err != nil {
+			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+		}
 	}
 }
 
@@ -181,6 +191,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	log.Printf("[INFO] initializing terraform")
 
 	// get azurerm-restapi patch resource from state
+	log.Printf("[INFO] searching azurerm-restapi_patch_resource...")
 	resources, err := terraform.ListGenericPatchResources()
 	if err != nil {
 		log.Fatal(err)
@@ -192,9 +203,6 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 		resources[index].ResourceType = azurerm.GetAzureRMResourceType(resource.Id)
 	}
 	log.Printf("[INFO] found %d azurerm-restapi_patch_resource can migrate to azurerm resource", len(resources))
-	for _, r := range resources {
-		log.Printf("[INFO] resource %s will migrate to resource %s", r.OldAddress(), r.NewAddress())
-	}
 
 	// generate import config
 	config := providerConfig
@@ -215,6 +223,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 
 	// import and generate config
 	for index, r := range resources {
+		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
 		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType); err == nil {
 			resources[index].Block = block
 			valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress())
@@ -233,15 +242,17 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 		log.Fatal(err)
 	}
 
-	log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
 	outputs := make([]types.Output, 0)
 	for _, r := range resources {
 		if r.Migrated {
 			outputs = append(outputs, r.Outputs...)
 		}
 	}
-	if err := helper.ReplaceGenericOutputs(outputs); err != nil {
-		log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+	if len(outputs) != 0 {
+		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
+		if err := helper.ReplaceGenericOutputs(outputs); err != nil {
+			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+		}
 	}
 
 	// remove from state

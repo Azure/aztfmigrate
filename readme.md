@@ -15,12 +15,13 @@ There're some examples to show the migration results.
 1. [case1 - basic](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case1%20-%20basic)
 2. [case2 - for_each](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case2%20-%20for_each)
 3. [case3 - nested block](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case3%20-%20nested%20block)
+4. [case4 - count](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case4%20-%20count)
    
 ## Features
 -[x] Support `azurerm-restapi_resource` migration
 -[x] Support `azurerm-restapi_patch_resource` migration
 -[x] Support meta-argument `for_each`
--[ ] Support meta-argument `count`
+-[x] Support meta-argument `count`
 -[ ] Support meta-argument `depends_on`
 -[x] Support dependency injection in array and primitive value.
 -[ ] Support dependency injection in Map value.

@@ -23,7 +23,7 @@ const planfile = "tfplan"
 // The required terraform version that has the `terraform add` command.
 var minRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20210630"))
 var maxRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20211006"))
-var LogEnabled = true
+var LogEnabled = false
 
 func NewTerraform(workingDirectory string) (*Terraform, error) {
 	execPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
@@ -66,7 +66,6 @@ func (t *Terraform) Init() error {
 		}
 		return err
 	}
-	log.Println("[INFO] skip running init command because .terraform folder exist")
 	return nil
 }
 
