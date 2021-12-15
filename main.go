@@ -74,11 +74,24 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		if !r.IsMultipleResources() {
 			instance := r.Instances[0]
 			log.Printf("[INFO] importing %s to %s and generating config...", instance.ResourceId, r.NewAddress(nil))
-			if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType); err == nil {
+			if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType, false); err == nil {
 				resources[index].Block = block
 				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(nil))
 				for i, output := range resources[index].Instances[0].Outputs {
 					resources[index].Instances[0].Outputs[i].NewName = valuePropMap[output.GetStringValue()]
+				}
+				for i, instance := range r.Instances {
+					resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
+						OldName: resources[index].OldAddress(instance.Index) + ".resource_id",
+						NewName: resources[index].NewAddress(instance.Index) + ".id",
+					})
+					props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
+					for _, prop := range props {
+						resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
+							OldName: resources[index].OldAddress(instance.Index) + "." + prop,
+							NewName: resources[index].NewAddress(instance.Index) + "." + prop,
+						})
+					}
 				}
 				resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 				resources[index].Migrated = true
@@ -115,7 +128,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			log.Printf("[INFO] generating config...")
 			blocks := make([]*hclwrite.Block, 0)
 			for _, instance := range r.Instances {
-				if block, err := importAndGenerateConfig(tempTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType); err == nil {
+				if block, err := importAndGenerateConfig(tempTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
 					blocks = append(blocks, block)
 				}
 			}
@@ -136,7 +149,19 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 					resources[index].Instances[i].Outputs[j].NewName = valuePropMap[output.GetStringValue()]
 				}
 			}
-
+			for i, instance := range r.Instances {
+				resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
+					OldName: resources[index].OldAddress(instance.Index) + ".resource_id",
+					NewName: resources[index].NewAddress(instance.Index) + ".id",
+				})
+				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
+				for _, prop := range props {
+					resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
+						OldName: resources[index].OldAddress(instance.Index) + "." + prop,
+						NewName: resources[index].NewAddress(instance.Index) + "." + prop,
+					})
+				}
+			}
 			resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 			resources[index].Migrated = true
 			log.Printf("[INFO] resource %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
@@ -174,17 +199,6 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		if r.Migrated {
 			for _, instance := range r.Instances {
 				outputs = append(outputs, instance.Outputs...)
-				outputs = append(outputs, types.Output{
-					OldName: r.OldAddress(instance.Index) + ".resource_id",
-					NewName: r.NewAddress(instance.Index) + ".id",
-				})
-				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
-				for _, prop := range props {
-					outputs = append(outputs, types.Output{
-						OldName: r.OldAddress(instance.Index) + "." + prop,
-						NewName: r.NewAddress(instance.Index) + "." + prop,
-					})
-				}
 			}
 		}
 	}
@@ -235,7 +249,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	// import and generate config
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
-		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType); err == nil {
+		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
 			resources[index].Block = block
 			valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress())
 			for i := range resources[index].Outputs {
@@ -290,7 +304,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	tempDirectoryCleanup(workingDirectory)
 }
 
-func importAndGenerateConfig(terraform *tf.Terraform, address string, id string, resourceType string) (*hclwrite.Block, error) {
+func importAndGenerateConfig(terraform *tf.Terraform, address string, id string, resourceType string, skipTune bool) (*hclwrite.Block, error) {
 	tpl, err := terraform.ImportAdd(address, id)
 	if err != nil {
 		return nil, fmt.Errorf("[ERROR] error importing address: %s, id: %s: %+v", address, id, err)
@@ -300,10 +314,12 @@ func importAndGenerateConfig(terraform *tf.Terraform, address string, id string,
 		return nil, fmt.Errorf("[ERROR] parsing the HCL generated by \"terraform add\" of %s: %s", address, diag.Error())
 	}
 
-	rb := f.Body().Blocks()[0].Body()
-	sch := schema.ProviderSchemaInfo.ResourceSchemas[resourceType]
-	if err := azurerm.TuneHCLSchemaForResource(rb, sch); err != nil {
-		return nil, fmt.Errorf("[ERROR] tuning hcl config base on schema: %+v", err)
+	if !skipTune {
+		rb := f.Body().Blocks()[0].Body()
+		sch := schema.ProviderSchemaInfo.ResourceSchemas[resourceType]
+		if err := azurerm.TuneHCLSchemaForResource(rb, sch); err != nil {
+			return nil, fmt.Errorf("[ERROR] tuning hcl config base on schema: %+v", err)
+		}
 	}
 
 	return f.Body().Blocks()[0], nil
