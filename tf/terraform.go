@@ -115,7 +115,6 @@ func (t *Terraform) ListGenericResources() ([]types.GenericResource, error) {
 						ResourceId: getResourceId(resourceChange.Change.Before),
 					},
 				},
-				References: make([]types.Reference, 0),
 			}
 		} else {
 			address := fmt.Sprintf("%s.%s", resourceChange.Type, resourceChange.Name)

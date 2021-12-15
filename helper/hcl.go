@@ -14,19 +14,10 @@ import (
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
+// ReplaceResourceBlock searches tf files in working directory and replace `targetAddress` block with `newBlock`
 func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error {
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	files, err := ioutil.ReadDir(workingDirectory)
-	if err != nil {
-		return err
-	}
-	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".tf") {
-			continue
-		}
+	workingDirectory, _ := os.Getwd()
+	for _, file := range ListHclFiles() {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -63,19 +54,10 @@ func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error 
 	return nil
 }
 
+// ReplaceGenericOutputs searches tf files in working directory and replace generic resource's output with new address
 func ReplaceGenericOutputs(outputs []types.Output) error {
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	files, err := ioutil.ReadDir(workingDirectory)
-	if err != nil {
-		return err
-	}
-	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".tf") {
-			continue
-		}
+	workingDirectory, _ := os.Getwd()
+	for _, file := range ListHclFiles() {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -100,6 +82,23 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 	for attrName, attr := range block.Body().Attributes() {
 		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
 		attrValue = strings.TrimSpace(attrValue)
+		if arr := ParseHclArray(attrValue); arr != nil {
+			found := false
+			for i, v := range arr {
+				for _, output := range outputs {
+					if v == output.OldName {
+						arr[i] = output.NewName
+						found = true
+						break
+					}
+				}
+			}
+			if found {
+				newValue := fmt.Sprintf("[%s]", strings.Join(arr, ", "))
+				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(newValue))
+				continue
+			}
+		}
 		for _, output := range outputs {
 			if attrValue == output.OldName {
 				block.Body().SetAttributeRaw(attrName, GetTokensForExpression(output.NewName))
@@ -112,19 +111,10 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 	}
 }
 
+// UpdateMigratedResourceBlock searches tf files in working directory and update generic patch resource's target
 func UpdateMigratedResourceBlock(resources []types.GenericPatchResource) error {
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	files, err := ioutil.ReadDir(workingDirectory)
-	if err != nil {
-		return err
-	}
-	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".tf") {
-			continue
-		}
+	workingDirectory, _ := os.Getwd()
+	for _, file := range ListHclFiles() {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -154,6 +144,7 @@ func UpdateMigratedResourceBlock(resources []types.GenericPatchResource) error {
 }
 
 func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{}, after interface{}) {
+	// user can't use patch resource to add item to some array, so we don't need to deal with before or after is an array
 	beforeMap, ok1 := before.(map[string]interface{})
 	afterMap, ok2 := after.(map[string]interface{})
 	if !ok1 || !ok2 {
@@ -252,16 +243,16 @@ func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{
 	}
 }
 
+// InjectReference replaces `block`'s literal value with reference provided by `refs`
 func InjectReference(block *hclwrite.Block, refs []types.Reference) *hclwrite.Block {
 	for attrName, attr := range block.Body().Attributes() {
 		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
 		attrValue = strings.TrimSpace(attrValue)
-		if strings.HasPrefix(attrValue, "[") && strings.HasSuffix(attrValue, "]") {
-			arr := strings.Split(attrValue[1:len(attrValue)-1], ",")
+		if arr := ParseHclArray(attrValue); arr != nil {
 			found := false
 			for i, v := range arr {
 				for _, ref := range refs {
-					if strings.TrimSpace(v) == ref.GetStringValue() {
+					if v == ref.GetStringValue() {
 						arr[i] = ref.Name
 						found = true
 						break
@@ -290,6 +281,7 @@ func InjectReference(block *hclwrite.Block, refs []types.Reference) *hclwrite.Bl
 	return block
 }
 
+// GetValuePropMap returns a map from literal value to reference
 func GetValuePropMap(block *hclwrite.Block, prefix string) map[string]string {
 	res := make(map[string]string)
 	if block == nil {
@@ -316,6 +308,7 @@ func GetValuePropMap(block *hclwrite.Block, prefix string) map[string]string {
 	return res
 }
 
+// CombineBlock combines `blocks` and update its result to `output` block, and return the difference in a map(key is attribute name, value is a list of attribute values)
 func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bool) map[string][]hclwrite.Tokens {
 	attrNameSet := make(map[string]bool)
 	for _, b := range blocks {
@@ -343,7 +336,7 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bo
 			}
 		}
 		switch {
-		case isArrayWithSameValue(values):
+		case IsArrayWithSameValue(values):
 			output.Body().SetAttributeRaw(attrName, blocks[0].Body().GetAttribute(attrName).Expr().BuildTokens(nil))
 			break
 		case isForEach:
@@ -351,7 +344,7 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bo
 			attrValueMap[attrName] = tokens
 			break
 		default:
-			output.Body().SetAttributeRaw(attrName, GetTokensForExpression(fmt.Sprintf("%s${count.index}%s", prefix(values), suffix(values))))
+			output.Body().SetAttributeRaw(attrName, GetTokensForExpression(fmt.Sprintf("%s${count.index}%s", Prefix(values), Suffix(values))))
 			attrValueMap[attrName] = tokens
 			break
 		}
@@ -379,14 +372,7 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bo
 	return attrValueMap
 }
 
-func GetTokensForExpression(reference string) hclwrite.Tokens {
-	f, dialog := hclwrite.ParseConfig([]byte(fmt.Sprintf("%s=%s", "temp", reference)), "", hcl.InitialPos)
-	if dialog == nil || !dialog.HasErrors() && f != nil {
-		return f.Body().GetAttribute("temp").Expr().BuildTokens(nil)
-	}
-	return nil
-}
-
+// GetForEachConstants converts a map of difference to hcl object
 func GetForEachConstants(instances []types.Instance, items map[string][]hclwrite.Tokens) string {
 	config := ""
 	i := 0
@@ -400,53 +386,4 @@ func GetForEachConstants(instances []types.Instance, items map[string][]hclwrite
 	}
 	config = fmt.Sprintf("{\n%s}\n", config)
 	return config
-}
-
-func isArrayWithSameValue(arr []string) bool {
-	for _, x := range arr {
-		if x != arr[0] {
-			return false
-		}
-	}
-	return true
-}
-
-func prefix(arr []string) string {
-	if len(arr) == 0 {
-		return ""
-	}
-	index := 0
-	for index = 0; index < len(arr[0]); index++ {
-		match := true
-		for i := 1; i < len(arr); i++ {
-			if index >= len(arr[i]) || arr[i][index] != arr[0][index] {
-				match = false
-				break
-			}
-		}
-		if !match {
-			break
-		}
-	}
-	return arr[0][0:index]
-}
-
-func suffix(arr []string) string {
-	if len(arr) == 0 {
-		return ""
-	}
-	index := 0
-	for index = 1; index <= len(arr[0]); index++ {
-		match := true
-		for i := 1; i < len(arr); i++ {
-			if index > len(arr[i]) || arr[i][len(arr[i])-index] != arr[0][len(arr[0])-index] {
-				match = false
-				break
-			}
-		}
-		if !match {
-			break
-		}
-	}
-	return arr[0][len(arr[0])-index+1:]
 }
