@@ -30,13 +30,12 @@ func init() {
 	}
 }
 
-func GetAzureRMResourceType(id string) string {
+func GetAzureRMResourceType(id string) []string {
+	resourceTypes := make([]string, 0)
 	for _, dep := range deps {
 		if helper.IsValueMatchPattern(id, dep.Pattern) {
-			return dep.ResourceType
+			resourceTypes = append(resourceTypes, dep.ResourceType)
 		}
-		// TODO: if matches with multiple, let user input azurerm resource type
 	}
-	// TODO: if none matches, let user input
-	return ""
+	return resourceTypes
 }

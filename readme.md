@@ -27,6 +27,7 @@ There're some examples to show the migration results.
 - [x] Support meta-argument `depends_on`, `lifecycle` and `provisioner`
 - [x] Support dependency injection in array and primitive value.
 - [x] Support dependency injection in Map and other complicated struct value.
+- [x] Support user input when there're multiple/none `azurerm` resource match for the resource id
 - [ ] Support migration based on `azurerm` provider's property coverage
 - [ ] Support data source `azurerm-restapi_resource` migration.
 
