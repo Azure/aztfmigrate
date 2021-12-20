@@ -14,6 +14,30 @@ import (
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
+// GetResourceBlock searches tf files in working directory and return `targetAddress` block
+func GetResourceBlock(targetAddress string) (*hclwrite.Block, error) {
+	workingDirectory, _ := os.Getwd()
+	for _, file := range ListHclFiles() {
+		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
+		if err != nil {
+			return nil, err
+		}
+		f, diag := hclwrite.ParseConfig(src, file.Name(), hcl.InitialPos)
+		if f == nil || diag != nil && diag.HasErrors() || f.Body() == nil {
+			continue
+		}
+		for _, block := range f.Body().Blocks() {
+			if block != nil && block.Type() == "resource" {
+				address := strings.Join(block.Labels(), ".")
+				if targetAddress == address {
+					return block, nil
+				}
+			}
+		}
+	}
+	return nil, nil
+}
+
 // ReplaceResourceBlock searches tf files in working directory and replace `targetAddress` block with `newBlock`
 func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error {
 	workingDirectory, _ := os.Getwd()
