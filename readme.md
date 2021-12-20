@@ -6,7 +6,7 @@ This tool is used to migrate resources from terraform `azurerm-restapi` provider
 ## How to use it?
 1. Clone this repo to local.
 2. `go install` under project directory.
-3. Run `azurerm-restapi-to-azurerm.exe` under your terraform working directory, 
+3. Run `azurerm-restapi-to-azurerm migrate` under your terraform working directory, 
    it will migrate all resources from `azurerm-restapi` provider to `azurerm` provider, 
    both terraform configuration and state.
    
