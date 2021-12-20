@@ -17,7 +17,7 @@ There're some examples to show the migration results.
 3. [case3 - nested block](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case3%20-%20nested%20block)
 4. [case4 - count](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case4%20-%20count)
 5. [case5 - nested block patch](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case5%20-%20nested%20block%20patch)
-6. [case6 - meta argument](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case6%20-%20meta%20argument)
+6. [case6 - meta argument](https://github.com/ms-henglu/azurerm-restapi-to-azurerm/tree/master/examples/case6%20-%20meta%20arguments)
    
 ## Features
 - [x] Support resource `azurerm-restapi_resource` migration
