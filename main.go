@@ -154,6 +154,10 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 					OldName: resources[index].OldAddress(instance.Index) + ".resource_id",
 					NewName: resources[index].NewAddress(instance.Index) + ".id",
 				})
+				resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
+					OldName: resources[index].OldAddress(instance.Index),
+					NewName: resources[index].NewAddress(instance.Index),
+				})
 				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
 				for _, prop := range props {
 					resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
@@ -180,6 +184,20 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		}
 	}
 
+	// migrate depends_on, lifecycle, provisioner
+	for index, r := range resources {
+		if existingBlock, err := helper.GetResourceBlock(r.OldAddress(nil)); err == nil && existingBlock != nil {
+			if attr := existingBlock.Body().GetAttribute("depends_on"); attr != nil {
+				resources[index].Block.Body().SetAttributeRaw("depends_on", attr.Expr().BuildTokens(nil))
+			}
+			for _, block := range existingBlock.Body().Blocks() {
+				if block.Type() == "lifecycle" || block.Type() == "provisioner" {
+					resources[index].Block.Body().AppendBlock(block)
+				}
+			}
+		}
+	}
+
 	// remove from config
 	if err := os.Remove(filenameImport); err != nil {
 		log.Fatal(err)
@@ -200,6 +218,10 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			for _, instance := range r.Instances {
 				outputs = append(outputs, instance.Outputs...)
 			}
+			outputs = append(outputs, types.Output{
+				OldName: r.OldAddress(nil),
+				NewName: r.NewAddress(nil),
+			})
 		}
 	}
 	if len(outputs) != 0 {
