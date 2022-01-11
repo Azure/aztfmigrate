@@ -19,7 +19,8 @@ resource "azurerm_resource_group" "test" {
 }
 
 resource "azurerm-restapi_resource" "test" {
-  resource_id = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/henglu${count.index}"
+  name        = "henglu${count.index}"
+  parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
   body = jsonencode({

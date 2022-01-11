@@ -36,7 +36,8 @@ locals {
 }
 
 resource "azurerm-restapi_resource" "test" {
-  resource_id            = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/${var.AutomationName}"
+  name                   = var.AutomationName
+  parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["name", "identity", "properties.sku"]
 
@@ -55,7 +56,8 @@ resource "azurerm-restapi_resource" "test" {
 }
 
 resource "azurerm-restapi_resource" "test2" {
-  resource_id = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/${var.AutomationName}another"
+  name        = "${var.AutomationName}another"
+  parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
   body = jsonencode({
