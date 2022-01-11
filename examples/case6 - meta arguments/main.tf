@@ -19,7 +19,8 @@ resource "azurerm_resource_group" "test" {
 }
 
 resource "azurerm-restapi_resource" "test" {
-  resource_id            = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/henglu1"
+  name                   = "henglu1"
+  parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["name", "identity", "properties.sku"]
 
@@ -50,7 +51,8 @@ resource "azurerm-restapi_resource" "test" {
 
 
 resource "azurerm-restapi_resource" "test1" {
-  resource_id            = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/anotherhenglu1"
+  name                   = "anotherhenglu1"
+  parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location

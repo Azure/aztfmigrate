@@ -37,7 +37,8 @@ variable "defName" {
 }
 
 resource "azurerm-restapi_resource" "test" {
-  resource_id = "${azurerm_resource_group.test.id}/providers/Microsoft.Network/serviceEndpointPolicies/henglu-policy"
+  name        = "henglu-policy"
+  parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
 
   body = <<BODY

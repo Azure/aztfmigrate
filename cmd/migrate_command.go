@@ -78,8 +78,9 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 		resourceTypes := azurerm.GetAzureRMResourceType(resourceId)
 		if len(resourceTypes) == 1 {
 			resources[index].ResourceType = resourceTypes[0]
+			continue
 		}
-		log.Printf("[WARN] can't found unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resourceId, strings.Join(resourceTypes, ", "))
+		log.Printf("[WARN] couldn't find unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resourceId, strings.Join(resourceTypes, ", "))
 		reader := bufio.NewReader(os.Stdin)
 		resourceType, _ := reader.ReadString('\n')
 		resources[index].ResourceType = strings.Trim(resourceType, "\r\n")
@@ -277,8 +278,9 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 		resourceTypes := azurerm.GetAzureRMResourceType(resource.Id)
 		if len(resourceTypes) == 1 {
 			resources[index].ResourceType = resourceTypes[0]
+			continue
 		}
-		log.Printf("[WARN] can't found unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resource.Id, strings.Join(resourceTypes, ", "))
+		log.Printf("[WARN] couldn't find unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resource.Id, strings.Join(resourceTypes, ", "))
 		reader := bufio.NewReader(os.Stdin)
 		resourceType, _ := reader.ReadString('\n')
 		resources[index].ResourceType = strings.Trim(resourceType, "\r\n")

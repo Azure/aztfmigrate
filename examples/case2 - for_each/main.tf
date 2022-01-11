@@ -38,7 +38,8 @@ variable "accounts" {
 
 
 resource "azurerm-restapi_resource" "test" {
-  resource_id = "${azurerm_resource_group.test.id}/providers/Microsoft.Automation/automationAccounts/henglu${each.value.name}"
+  name        = "henglu${each.value.name}"
+  parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location

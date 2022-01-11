@@ -166,7 +166,7 @@ func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{
 		if !reflect.DeepEqual(beforeMap[attrName], afterMap[attrName]) {
 			// add
 			if beforeMap[attrName] != nil && afterMap[attrName] == nil {
-				old.Body().SetAttributeRaw(attrName, new.Body().GetAttribute(attrName).BuildTokens(nil))
+				old.Body().SetAttributeRaw(attrName, new.Body().GetAttribute(attrName).Expr().BuildTokens(nil))
 				continue
 			}
 			// delete
