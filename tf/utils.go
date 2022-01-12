@@ -154,7 +154,6 @@ func getPropValueMap(input interface{}, prefix string) map[string]interface{} {
 				res[k] = v
 			}
 		}
-		break
 	case []interface{}:
 		for index, value := range cur {
 			propValueMap := getPropValueMap(value, fmt.Sprintf("%s.%d", prefix, index))
@@ -162,7 +161,6 @@ func getPropValueMap(input interface{}, prefix string) map[string]interface{} {
 				res[k] = v
 			}
 		}
-		break
 	default:
 		res[prefix] = cur
 	}
