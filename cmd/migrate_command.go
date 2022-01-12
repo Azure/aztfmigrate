@@ -391,7 +391,7 @@ func tempDirectoryCreate(workingDirectory string) {
 		}
 	}
 	if err := os.MkdirAll(tempPath, 0755); err != nil {
-		log.Fatalf("creating temp workspace %q: %w", tempPath, err)
+		log.Fatalf("creating temp workspace %q: %+v", tempPath, err)
 	}
 }
 

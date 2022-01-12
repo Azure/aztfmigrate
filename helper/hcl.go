@@ -327,15 +327,12 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bo
 		switch {
 		case IsArrayWithSameValue(values):
 			output.Body().SetAttributeRaw(attrName, blocks[0].Body().GetAttribute(attrName).Expr().BuildTokens(nil))
-			break
 		case isForEach:
 			output.Body().SetAttributeRaw(attrName, GetTokensForExpression("each.value."+attrName))
 			attrValueMap[attrName] = tokens
-			break
 		default:
 			output.Body().SetAttributeRaw(attrName, GetTokensForExpression(fmt.Sprintf("%s${count.index}%s", Prefix(values), Suffix(values))))
 			attrValueMap[attrName] = tokens
-			break
 		}
 	}
 
