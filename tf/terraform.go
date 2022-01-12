@@ -15,7 +15,7 @@ import (
 )
 
 type Terraform struct {
-	exec tfexec.Terraform
+	exec *tfexec.Terraform
 }
 
 const planfile = "tfplan"
@@ -39,7 +39,7 @@ func NewTerraform(workingDirectory string) (*Terraform, error) {
 	}
 
 	t := &Terraform{
-		exec: *tf,
+		exec: tf,
 	}
 	t.SetLogEnabled(true)
 	return t, nil
@@ -229,6 +229,6 @@ func (t *Terraform) Destroy() error {
 	return t.exec.Destroy(context.TODO())
 }
 
-func (t *Terraform) GetExec() tfexec.Terraform {
+func (t *Terraform) GetExec() *tfexec.Terraform {
 	return t.exec
 }

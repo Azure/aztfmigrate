@@ -12,7 +12,7 @@ import (
 type NestingMode int
 
 const (
-	nestingModeInvalid NestingMode = iota
+	nestingModeInvalid NestingMode = iota //nolint
 	NestingSingle
 	NestingGroup
 	NestingList
