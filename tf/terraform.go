@@ -23,15 +23,12 @@ const planfile = "tfplan"
 // The required terraform version that has the `terraform add` command.
 var minRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20210630"))
 var maxRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20211006"))
-var LogEnabled = false
+var LogEnabled = true
 
 func NewTerraform(workingDirectory string) (*Terraform, error) {
 	execPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
 	if err != nil {
 		return nil, fmt.Errorf("error finding a terraform exectuable: %w", err)
-	}
-	if err != nil {
-		return nil, err
 	}
 	tf, err := tfexec.NewTerraform(workingDirectory, execPath)
 	if err != nil {

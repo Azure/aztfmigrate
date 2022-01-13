@@ -39,8 +39,8 @@ func (c MigrateCommand) Run(args []string) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	migrateGenericResource(terraform, workingDirectory)
-	migrateGenericPatchResource(terraform, workingDirectory)
+	MigrateGenericResource(terraform, workingDirectory)
+	MigrateGenericPatchResource(terraform, workingDirectory)
 	return 0
 }
 
@@ -56,7 +56,7 @@ func (c MigrateCommand) Synopsis() string {
 	return "Migrate azurerm-restapi resources to azurerm resources in current working directory"
 }
 
-func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
+func MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_resource")
 
@@ -92,7 +92,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	for _, resource := range resources {
 		config += resource.EmptyImportConfig()
 	}
-	if err := ioutil.WriteFile(filenameImport, []byte(config), 0644); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0644); err != nil {
 		log.Fatal(err)
 	}
 
@@ -214,7 +214,7 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 
 	// migrate depends_on, lifecycle, provisioner
 	for index, r := range resources {
-		if existingBlock, err := helper.GetResourceBlock(r.OldAddress(nil)); err == nil && existingBlock != nil {
+		if existingBlock, err := helper.GetResourceBlock(workingDirectory, r.OldAddress(nil)); err == nil && existingBlock != nil {
 			if attr := existingBlock.Body().GetAttribute("depends_on"); attr != nil {
 				resources[index].Block.Body().SetAttributeRaw("depends_on", attr.Expr().BuildTokens(nil))
 			}
@@ -227,13 +227,13 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	}
 
 	// remove from config
-	if err := os.Remove(filenameImport); err != nil {
+	if err := os.Remove(filepath.Join(workingDirectory, filenameImport)); err != nil {
 		log.Fatal(err)
 	}
 	for _, r := range resources {
 		if r.Migrated {
 			log.Printf("[INFO] removing %s from config", r.OldAddress(nil))
-			if err := helper.ReplaceResourceBlock(r.OldAddress(nil), r.Block); err != nil {
+			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(nil), r.Block); err != nil {
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(nil), err)
 			}
 		}
@@ -254,13 +254,13 @@ func migrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	}
 	if len(outputs) != 0 {
 		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
-		if err := helper.ReplaceGenericOutputs(outputs); err != nil {
+		if err := helper.ReplaceGenericOutputs(workingDirectory, outputs); err != nil {
 			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
 		}
 	}
 }
 
-func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory string) {
+func MigrateGenericPatchResource(terraform *tf.Terraform, workingDirectory string) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_patch_resource")
 	log.Printf("[INFO] initializing terraform")
@@ -321,7 +321,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 		}
 	}
 
-	if err := helper.UpdateMigratedResourceBlock(resources); err != nil {
+	if err := helper.UpdateMigratedResourceBlock(workingDirectory, resources); err != nil {
 		log.Fatal(err)
 	}
 
@@ -333,7 +333,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	}
 	if len(outputs) != 0 {
 		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
-		if err := helper.ReplaceGenericOutputs(outputs); err != nil {
+		if err := helper.ReplaceGenericOutputs(workingDirectory, outputs); err != nil {
 			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
 		}
 	}
@@ -353,7 +353,7 @@ func migrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	for _, r := range resources {
 		if r.Migrated {
 			log.Printf("[INFO] removing %s from config", r.OldAddress())
-			if err := helper.ReplaceResourceBlock(r.OldAddress(), nil); err != nil {
+			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(), nil); err != nil {
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(), err)
 			}
 		}
