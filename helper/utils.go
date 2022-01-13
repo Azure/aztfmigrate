@@ -9,7 +9,6 @@ import (
 	ctyJson "github.com/zclconf/go-cty/cty/json"
 	"io/fs"
 	"io/ioutil"
-	"os"
 	"strings"
 )
 
@@ -65,12 +64,8 @@ func Suffix(arr []string) string {
 	return arr[0][len(arr[0])-index+1:]
 }
 
-func ListHclFiles() []fs.FileInfo {
+func ListHclFiles(workingDirectory string) []fs.FileInfo {
 	res := make([]fs.FileInfo, 0)
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return res
-	}
 	files, err := ioutil.ReadDir(workingDirectory)
 	if err != nil {
 		return res
