@@ -15,9 +15,8 @@ import (
 )
 
 // GetResourceBlock searches tf files in working directory and return `targetAddress` block
-func GetResourceBlock(targetAddress string) (*hclwrite.Block, error) {
-	workingDirectory, _ := os.Getwd()
-	for _, file := range ListHclFiles() {
+func GetResourceBlock(workingDirectory, targetAddress string) (*hclwrite.Block, error) {
+	for _, file := range ListHclFiles(workingDirectory) {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return nil, err
@@ -39,9 +38,8 @@ func GetResourceBlock(targetAddress string) (*hclwrite.Block, error) {
 }
 
 // ReplaceResourceBlock searches tf files in working directory and replace `targetAddress` block with `newBlock`
-func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error {
-	workingDirectory, _ := os.Getwd()
-	for _, file := range ListHclFiles() {
+func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlock *hclwrite.Block) error {
+	for _, file := range ListHclFiles(workingDirectory) {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -69,7 +67,7 @@ func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error 
 			f.Body().AppendNewline()
 		}
 		if found {
-			if err := os.WriteFile(file.Name(), hclwrite.Format(f.Bytes()), 0644); err != nil {
+			if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0644); err != nil {
 				log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 			}
 			return nil
@@ -79,9 +77,8 @@ func ReplaceResourceBlock(targetAddress string, newBlock *hclwrite.Block) error 
 }
 
 // ReplaceGenericOutputs searches tf files in working directory and replace generic resource's output with new address
-func ReplaceGenericOutputs(outputs []types.Output) error {
-	workingDirectory, _ := os.Getwd()
-	for _, file := range ListHclFiles() {
+func ReplaceGenericOutputs(workingDirectory string, outputs []types.Output) error {
+	for _, file := range ListHclFiles(workingDirectory) {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -95,7 +92,7 @@ func ReplaceGenericOutputs(outputs []types.Output) error {
 				replaceOutputs(block, outputs)
 			}
 		}
-		if err := os.WriteFile(file.Name(), hclwrite.Format(f.Bytes()), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0644); err != nil {
 			log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 		}
 	}
@@ -116,9 +113,8 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 }
 
 // UpdateMigratedResourceBlock searches tf files in working directory and update generic patch resource's target
-func UpdateMigratedResourceBlock(resources []types.GenericPatchResource) error {
-	workingDirectory, _ := os.Getwd()
-	for _, file := range ListHclFiles() {
+func UpdateMigratedResourceBlock(workingDirectory string, resources []types.GenericPatchResource) error {
+	for _, file := range ListHclFiles(workingDirectory) {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
@@ -140,7 +136,7 @@ func UpdateMigratedResourceBlock(resources []types.GenericPatchResource) error {
 			}
 		}
 
-		if err := os.WriteFile(file.Name(), hclwrite.Format(f.Bytes()), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0644); err != nil {
 			log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 		}
 	}
