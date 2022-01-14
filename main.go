@@ -31,6 +31,11 @@ func main() {
 				Ui: ui,
 			}, nil
 		},
+		"plan": func() (cli.Command, error) {
+			return &cmd.PlanCommand{
+				Ui: ui,
+			}, nil
+		},
 		"version": func() (cli.Command, error) {
 			return &cmd.VersionCommand{
 				Ui:      ui,
