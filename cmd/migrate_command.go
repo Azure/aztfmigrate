@@ -3,6 +3,7 @@ package cmd
 import (
 	"bufio"
 	"context"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -29,25 +30,39 @@ provider "azurerm" {
 const tempDir = "temp"
 
 type MigrateCommand struct {
-	Ui cli.Ui
+	Ui      cli.Ui
+	verbose bool
+}
+
+func (c *MigrateCommand) flags() *flag.FlagSet {
+	fs := defaultFlagSet("plan")
+	fs.BoolVar(&c.verbose, "v", false, "whether show terraform logs")
+	fs.Usage = func() { c.Ui.Error(c.Help()) }
+	return fs
 }
 
 func (c MigrateCommand) Run(args []string) int {
+	f := c.flags()
+	if err := f.Parse(args); err != nil {
+		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
+		return 1
+	}
+
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory)
+	terraform, err := tf.NewTerraform(workingDirectory, c.verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
-	MigrateGenericResource(terraform, workingDirectory)
-	MigrateGenericPatchResource(terraform, workingDirectory)
+	c.MigrateGenericResource(terraform, workingDirectory)
+	c.MigrateGenericPatchResource(terraform, workingDirectory)
 	return 0
 }
 
 func (c MigrateCommand) Help() string {
 	helpText := `
 Usage: azurerm-restapi-to-azurerm migrate
-` + c.Synopsis() + "\n\n"
+` + c.Synopsis() + "\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }
@@ -56,7 +71,7 @@ func (c MigrateCommand) Synopsis() string {
 	return "Migrate azurerm-restapi resources to azurerm resources in current working directory"
 }
 
-func MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
+func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_resource")
 
@@ -140,7 +155,7 @@ func MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 			// write empty config to temp dir for import
 			tempDirectoryCreate(workingDirectory)
 			tempPath := filepath.Join(workingDirectory, tempDir)
-			tempTerraform, err := tf.NewTerraform(tempPath)
+			tempTerraform, err := tf.NewTerraform(tempPath, c.verbose)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -260,7 +275,7 @@ func MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
 	}
 }
 
-func MigrateGenericPatchResource(terraform *tf.Terraform, workingDirectory string) {
+func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, workingDirectory string) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_patch_resource")
 	log.Printf("[INFO] initializing terraform")
@@ -296,7 +311,7 @@ func MigrateGenericPatchResource(terraform *tf.Terraform, workingDirectory strin
 	// save empty import config to temp dir
 	tempDirectoryCreate(workingDirectory)
 	tempPath := filepath.Join(workingDirectory, tempDir)
-	tempTerraform, err := tf.NewTerraform(tempPath)
+	tempTerraform, err := tf.NewTerraform(tempPath, c.verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
