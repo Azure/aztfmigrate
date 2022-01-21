@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bufio"
 	"context"
 	"flag"
 	"fmt"
@@ -54,15 +53,16 @@ func (c MigrateCommand) Run(args []string) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	c.MigrateGenericResource(terraform, workingDirectory)
-	c.MigrateGenericPatchResource(terraform, workingDirectory)
+	resources, patchResources := PlanCommand{Ui: c.Ui}.Plan(terraform, false)
+	c.MigrateGenericResource(terraform, resources)
+	c.MigrateGenericPatchResource(terraform, patchResources)
 	return 0
 }
 
 func (c MigrateCommand) Help() string {
 	helpText := `
 Usage: azurerm-restapi-to-azurerm migrate
-` + c.Synopsis() + "\n\n" + helpForFlags(c.flags())
+` + c.Synopsis() + "\nThe Terraform addresses listed in file `azurerm-restapi-to-azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }
@@ -71,42 +71,16 @@ func (c MigrateCommand) Synopsis() string {
 	return "Migrate azurerm-restapi resources to azurerm resources in current working directory"
 }
 
-func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, workingDirectory string) {
+func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resources []types.GenericResource) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_resource")
-
-	// get azurerm-restapi resource from state
-	log.Printf("[INFO] searching azurerm-restapi_resource...")
-	resources, err := terraform.ListGenericResources()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("[INFO] found %d azurerm-restapi_resource in state\n", len(resources))
-
-	// get migrated azurerm resource type
-	for index, resource := range resources {
-		resourceId := ""
-		for _, instance := range resource.Instances {
-			resourceId = instance.ResourceId
-			break
-		}
-		resourceTypes := azurerm.GetAzureRMResourceType(resourceId)
-		if len(resourceTypes) == 1 {
-			resources[index].ResourceType = resourceTypes[0]
-			continue
-		}
-		log.Printf("[WARN] couldn't find unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resourceId, strings.Join(resourceTypes, ", "))
-		reader := bufio.NewReader(os.Stdin)
-		resourceType, _ := reader.ReadString('\n')
-		resources[index].ResourceType = strings.Trim(resourceType, "\r\n")
-	}
-	log.Printf("[INFO] found %d azurerm-restapi_resource can migrate to azurerm resource", len(resources))
 
 	// generate import config
 	config := ""
 	for _, resource := range resources {
 		config += resource.EmptyImportConfig()
 	}
+	workingDirectory := terraform.GetWorkingDirectory()
 	if err := ioutil.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0644); err != nil {
 		log.Fatal(err)
 	}
@@ -275,32 +249,9 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, workingD
 	}
 }
 
-func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, workingDirectory string) {
+func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, resources []types.GenericPatchResource) {
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azurerm-restapi_patch_resource")
-	log.Printf("[INFO] initializing terraform")
-
-	// get azurerm-restapi patch resource from state
-	log.Printf("[INFO] searching azurerm-restapi_patch_resource...")
-	resources, err := terraform.ListGenericPatchResources()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("[INFO] found %d azurerm-restapi_patch_resource\n", len(resources))
-
-	// get migrated azurerm resource type
-	for index, resource := range resources {
-		resourceTypes := azurerm.GetAzureRMResourceType(resource.Id)
-		if len(resourceTypes) == 1 {
-			resources[index].ResourceType = resourceTypes[0]
-			continue
-		}
-		log.Printf("[WARN] couldn't find unique resource type for id: %s\npossible values are %s.\nPlease input a azurerm resource type", resource.Id, strings.Join(resourceTypes, ", "))
-		reader := bufio.NewReader(os.Stdin)
-		resourceType, _ := reader.ReadString('\n')
-		resources[index].ResourceType = strings.Trim(resourceType, "\r\n")
-	}
-	log.Printf("[INFO] found %d azurerm-restapi_patch_resource can migrate to azurerm resource", len(resources))
 
 	// generate import config
 	config := providerConfig
@@ -309,6 +260,7 @@ func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, wor
 	}
 
 	// save empty import config to temp dir
+	workingDirectory := terraform.GetWorkingDirectory()
 	tempDirectoryCreate(workingDirectory)
 	tempPath := filepath.Join(workingDirectory, tempDir)
 	tempTerraform, err := tf.NewTerraform(tempPath, c.verbose)

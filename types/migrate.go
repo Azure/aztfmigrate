@@ -42,12 +42,14 @@ type Instance struct {
 }
 
 type GenericResource struct {
-	Label        string
-	Instances    []Instance
-	ResourceType string
-	Block        *hclwrite.Block
-	References   []Reference
-	Migrated     bool
+	Label            string
+	Instances        []Instance
+	ResourceType     string
+	Block            *hclwrite.Block
+	References       []Reference
+	InputProperties  []string
+	OutputProperties []string
+	Migrated         bool
 }
 
 func (r GenericResource) OldAddress(index interface{}) string {
@@ -98,15 +100,17 @@ func (r GenericResource) IsForEach() bool {
 }
 
 type GenericPatchResource struct {
-	Label        string
-	OldLabel     string
-	Id           string
-	ResourceType string
-	Change       *tfjson.Change
-	Block        *hclwrite.Block
-	Migrated     bool
-	References   []Reference
-	Outputs      []Output
+	Label            string
+	OldLabel         string
+	Id               string
+	ResourceType     string
+	Change           *tfjson.Change
+	Block            *hclwrite.Block
+	Migrated         bool
+	References       []Reference
+	Outputs          []Output
+	InputProperties  []string
+	OutputProperties []string
 }
 
 func (r GenericPatchResource) OldAddress() string {

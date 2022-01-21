@@ -3,6 +3,7 @@ package tf
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	tfjson "github.com/hashicorp/terraform-json"
@@ -165,6 +166,49 @@ func getPropValueMap(input interface{}, prefix string) map[string]interface{} {
 		res[prefix] = cur
 	}
 	return res
+}
+
+func getInputProperties(address string, p *tfjson.Plan) []string {
+	for _, resourceChange := range p.ResourceChanges {
+		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Change.Before == nil || resourceChange.Address != address {
+			continue
+		}
+		if beforeMap, ok := resourceChange.Change.Before.(map[string]interface{}); ok && beforeMap["body"] != nil {
+			if body, ok := beforeMap["body"].(string); ok {
+				var bodyObj interface{}
+				if err := json.Unmarshal([]byte(body), &bodyObj); err == nil {
+					propValueMap := getPropValueMap(bodyObj, "")
+					propSet := make(map[string]bool)
+					for key := range propValueMap {
+						key = strings.TrimPrefix(key, ".")
+						if strings.HasPrefix(key, "tags") {
+							key = "tags"
+						}
+						propSet[key] = true
+					}
+					props := make([]string, 0)
+					for key := range propSet {
+						key = removeIndexOfProp(key)
+						props = append(props, key)
+					}
+					return props
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func removeIndexOfProp(prop string) string {
+	parts := strings.Split(prop, ".")
+	res := make([]string, 0)
+	for _, part := range parts {
+		if _, err := strconv.Atoi(part); err == nil {
+			continue
+		}
+		res = append(res, part)
+	}
+	return strings.Join(res, ".")
 }
 
 type Action string
