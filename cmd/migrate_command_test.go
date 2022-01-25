@@ -12,35 +12,36 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
+	"github.com/mitchellh/cli"
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/cmd"
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/tf"
 )
 
-func Test_basic(t *testing.T) {
-	testcase(t, basic())
+func TestMigrate_basic(t *testing.T) {
+	migrateTestCase(t, basic())
 }
 
-func Test_foreach(t *testing.T) {
-	testcase(t, foreach())
+func TestMigrate_foreach(t *testing.T) {
+	migrateTestCase(t, foreach())
 }
 
-func Test_nestedBlock(t *testing.T) {
-	testcase(t, nestedBlock())
+func TestMigrate_nestedBlock(t *testing.T) {
+	migrateTestCase(t, nestedBlock())
 }
 
-func Test_count(t *testing.T) {
-	testcase(t, count())
+func TestMigrate_count(t *testing.T) {
+	migrateTestCase(t, count())
 }
 
-func Test_nestedBlockPatch(t *testing.T) {
-	testcase(t, nestedBlockPatch())
+func TestMigrate_nestedBlockPatch(t *testing.T) {
+	migrateTestCase(t, nestedBlockPatch())
 }
 
-func Test_metaArguments(t *testing.T) {
-	testcase(t, metaArguments())
+func TestMigrate_metaArguments(t *testing.T) {
+	migrateTestCase(t, metaArguments())
 }
 
-func testcase(t *testing.T, content string) {
+func migrateTestCase(t *testing.T, content string, ignore ...string) {
 	if len(os.Getenv("TF_ACC")) == 0 {
 		t.Skipf("Set `TF_ACC=true` to enable this test")
 	}
@@ -51,7 +52,7 @@ func testcase(t *testing.T, content string) {
 		t.Fatal(err)
 	}
 
-	terraform, err := tf.NewTerraform(dir)
+	terraform, err := tf.NewTerraform(dir, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,8 +69,20 @@ func testcase(t *testing.T, content string) {
 		t.Fatalf("apply config: %+v", err)
 	}
 
-	cmd.MigrateGenericResource(terraform, dir)
-	cmd.MigrateGenericPatchResource(terraform, dir)
+	ui := &cli.ColoredUi{
+		ErrorColor: cli.UiColorRed,
+		WarnColor:  cli.UiColorYellow,
+		Ui: &cli.BasicUi{
+			Writer:      os.Stdout,
+			Reader:      os.Stdin,
+			ErrorWriter: os.Stderr,
+		},
+	}
+	planCommand := cmd.PlanCommand{Ui: ui}
+	resources, patchResources := planCommand.Plan(terraform, false)
+	migrateCommand := cmd.MigrateCommand{Ui: ui}
+	migrateCommand.MigrateGenericResource(terraform, resources)
+	migrateCommand.MigrateGenericPatchResource(terraform, patchResources)
 
 	// check generic resources are migrated
 	config, err := ioutil.ReadFile(filename)
@@ -83,9 +96,27 @@ func testcase(t *testing.T, content string) {
 	if file == nil {
 		t.Fatal("expect a valid file, but got nil")
 	}
+	migratedSet := make(map[string]bool)
+	for _, r := range resources {
+		migratedSet[r.OldAddress(nil)] = true
+	}
+	for _, r := range patchResources {
+		migratedSet[r.OldAddress()] = true
+	}
+	ignoreSet := make(map[string]bool)
+	for _, r := range ignore {
+		ignoreSet[r] = true
+	}
 	for _, block := range file.Body().Blocks() {
-		if block.Type() == "resource" && len(block.Labels()) == 2 && strings.Contains(block.Labels()[0], "azurerm-restapi") {
-			t.Fatalf("expect all azurerm-restapi resources migrated, but got %s, config: \n%s", strings.Join(block.Labels(), "."), string(config))
+		if block.Type() != "resource" {
+			continue
+		}
+		if len(block.Labels()) != 2 {
+			continue
+		}
+		address := strings.Join(block.Labels(), ".")
+		if migratedSet[address] {
+			t.Fatalf("expect %s to be migrated, but still exist in config, config: \n%s", address, string(config))
 		}
 	}
 
