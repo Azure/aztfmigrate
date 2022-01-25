@@ -15,8 +15,9 @@ import (
 )
 
 type Terraform struct {
-	exec       *tfexec.Terraform
-	LogEnabled bool
+	exec             *tfexec.Terraform
+	LogEnabled       bool
+	workingDirectory string
 }
 
 const planfile = "tfplan"
@@ -36,8 +37,9 @@ func NewTerraform(workingDirectory string, logEnabled bool) (*Terraform, error) 
 	}
 
 	t := &Terraform{
-		exec:       tf,
-		LogEnabled: logEnabled,
+		exec:             tf,
+		workingDirectory: workingDirectory,
+		LogEnabled:       logEnabled,
 	}
 	t.SetLogEnabled(true)
 	return t, nil
@@ -72,22 +74,6 @@ func (t *Terraform) Show() (*tfjson.State, error) {
 }
 
 func (t *Terraform) Plan() (*tfjson.Plan, error) {
-	ok, err := t.exec.Plan(context.TODO(), tfexec.Out(planfile))
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		// no changes
-		return nil, nil
-	}
-
-	t.SetLogEnabled(false)
-	p, err := t.exec.ShowPlanFile(context.TODO(), planfile)
-	t.SetLogEnabled(true)
-	return p, err
-}
-
-func (t *Terraform) ListGenericResources() ([]types.GenericResource, error) {
 	_, err := t.exec.Plan(context.TODO(), tfexec.Out(planfile))
 	if err != nil {
 		return nil, err
@@ -95,10 +81,13 @@ func (t *Terraform) ListGenericResources() ([]types.GenericResource, error) {
 	t.SetLogEnabled(false)
 	p, err := t.exec.ShowPlanFile(context.TODO(), planfile)
 	t.SetLogEnabled(true)
+	return p, err
+}
 
+func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource {
 	resources := make([]types.GenericResource, 0)
 	if p == nil {
-		return resources, nil
+		return resources
 	}
 	resourceMap := make(map[string]*types.GenericResource)
 	for _, resourceChange := range p.ResourceChanges {
@@ -141,27 +130,28 @@ func (t *Terraform) ListGenericResources() ([]types.GenericResource, error) {
 	refValueMap := getRefValueMap(p)
 	for index, resource := range resources {
 		resources[index].References = getReferencesForAddress(resource.OldAddress(nil), p, refValueMap)
+		resources[index].InputProperties = getInputProperties(resource.OldAddress(nil), p)
 	}
 	for i, resource := range resources {
+		outputPropSet := make(map[string]bool)
 		for j, instance := range resource.Instances {
 			resources[i].Instances[j].Outputs = getOutputsForAddress(resource.OldAddress(instance.Index), refValueMap)
+			for _, output := range resources[i].Instances[j].Outputs {
+				outputPropSet[strings.TrimPrefix(output.OldName, fmt.Sprintf("jsondecode(%s.output).", resource.OldAddress(instance.Index)))] = true
+			}
+		}
+		resources[i].OutputProperties = make([]string, 0)
+		for key := range outputPropSet {
+			resources[i].OutputProperties = append(resources[i].OutputProperties, key)
 		}
 	}
-	return resources, err
+	return resources
 }
 
-func (t *Terraform) ListGenericPatchResources() ([]types.GenericPatchResource, error) {
-	_, err := t.exec.Plan(context.TODO(), tfexec.Out(planfile))
-	if err != nil {
-		return nil, err
-	}
-	t.SetLogEnabled(false)
-	p, err := t.exec.ShowPlanFile(context.TODO(), planfile)
-	t.SetLogEnabled(true)
-
+func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPatchResource {
 	resources := make([]types.GenericPatchResource, 0)
 	if p == nil {
-		return resources, nil
+		return resources
 	}
 	idMap := make(map[string]*tfjson.ResourceChange)
 	for _, resourceChange := range p.ResourceChanges {
@@ -192,11 +182,16 @@ func (t *Terraform) ListGenericPatchResources() ([]types.GenericPatchResource, e
 	refValueMap := getRefValueMap(p)
 	for index, resource := range resources {
 		resources[index].References = getReferencesForAddress(resource.OldAddress(), p, refValueMap)
+		resources[index].InputProperties = getInputProperties(resource.OldAddress(), p)
 	}
 	for i, resource := range resources {
 		resources[i].Outputs = getOutputsForAddress(resource.OldAddress(), refValueMap)
+		resources[i].OutputProperties = make([]string, 0)
+		for _, output := range resources[i].Outputs {
+			resources[i].OutputProperties = append(resources[i].OutputProperties, strings.TrimPrefix(output.OldName, fmt.Sprintf("jsondecode(%s.output).", resource.OldAddress())))
+		}
 	}
-	return resources, err
+	return resources
 }
 
 func (t *Terraform) ImportAdd(address string, id string) (string, error) {
@@ -229,4 +224,8 @@ func (t *Terraform) Destroy() error {
 
 func (t *Terraform) GetExec() *tfexec.Terraform {
 	return t.exec
+}
+
+func (t *Terraform) GetWorkingDirectory() string {
+	return t.workingDirectory
 }
