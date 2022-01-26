@@ -137,7 +137,11 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 		for j, instance := range resource.Instances {
 			resources[i].Instances[j].Outputs = getOutputsForAddress(resource.OldAddress(instance.Index), refValueMap)
 			for _, output := range resources[i].Instances[j].Outputs {
-				outputPropSet[strings.TrimPrefix(output.OldName, fmt.Sprintf("jsondecode(%s.output).", resource.OldAddress(instance.Index)))] = true
+				prop := strings.TrimPrefix(output.OldName, fmt.Sprintf("jsondecode(%s.output).", resource.OldAddress(instance.Index)))
+				if strings.HasPrefix(prop, "identity.userAssignedIdentities") {
+					prop = "identity.userAssignedIdentities"
+				}
+				outputPropSet[prop] = true
 			}
 		}
 		resources[i].OutputProperties = make([]string, 0)
