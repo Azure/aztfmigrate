@@ -173,8 +173,34 @@ func getInputProperties(address string, p *tfjson.Plan) []string {
 		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Change.Before == nil || resourceChange.Address != address {
 			continue
 		}
-		if beforeMap, ok := resourceChange.Change.Before.(map[string]interface{}); ok && beforeMap["body"] != nil {
-			if body, ok := beforeMap["body"].(string); ok {
+
+		stateMap, ok := resourceChange.Change.Before.(map[string]interface{})
+		if !ok {
+			return nil
+		}
+
+		props := make([]string, 0)
+		if stateMap["tags"] != nil {
+			if tags, ok := stateMap["tags"].(map[string]interface{}); ok && len(tags) > 0 {
+				props = append(props, "tags")
+			}
+		}
+		if stateMap["identity"] != nil {
+			if identities, ok := stateMap["identity"].([]interface{}); ok && len(identities) > 0 {
+				if identity, ok := identities[0].(map[string]interface{}); ok {
+					if identity["type"] != nil {
+						if identityType, ok := identity["type"].(string); ok && len(identityType) > 0 {
+							props = append(props, "identity.type")
+						}
+						if identityIds, ok := identity["identity_ids"].([]interface{}); ok && len(identityIds) > 0 {
+							props = append(props, "identity.userAssignedIdentities")
+						}
+					}
+				}
+			}
+		}
+		if stateMap["body"] != nil {
+			if body, ok := stateMap["body"].(string); ok {
 				var bodyObj interface{}
 				if err := json.Unmarshal([]byte(body), &bodyObj); err == nil {
 					propValueMap := getPropValueMap(bodyObj, "")
@@ -186,15 +212,14 @@ func getInputProperties(address string, p *tfjson.Plan) []string {
 						}
 						propSet[key] = true
 					}
-					props := make([]string, 0)
 					for key := range propSet {
 						key = removeIndexOfProp(key)
 						props = append(props, key)
 					}
-					return props
 				}
 			}
 		}
+		return props
 	}
 	return nil
 }
