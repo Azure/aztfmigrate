@@ -1,0 +1,77 @@
+# Go
+# Build your Go project.
+# Add steps that test, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
+
+parameters:
+  - name: branch
+    displayName: Target Branch/Tags of hashicorp/terraform-provider-azurerm
+    type: string
+    default: main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  GOBIN:  '$(GOPATH)/bin' # Go binaries path
+  GOROOT: '/usr/local/go1.11' # Go installation path
+  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
+  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
+  moduleDir: '$(GOPATH)/src/github.com'
+
+steps:
+  - script: |
+      export TAG=branch-$(date +"%y%m%d")-update-azurerm-schema-to-${{ parameters.branch }}
+      echo $TAG
+      echo "##vso[task.setvariable variable=TAG;isOutput=true]$TAG"
+    displayName: 'Set up the variables'
+    name: step1
+
+  - script: |
+      wget https://golang.org/dl/go1.16.5.linux-amd64.tar.gz
+      sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz
+      export GOROOT=/usr/local/go
+      export PATH=$GOROOT/bin:$PATH
+      go version
+    displayName: 'Set up the Go workspace'
+
+  - script: |
+      git config --global user.email "henglu@microsoft.com"
+      git config --global user.name "Heng Lu"
+      git clone https://ms-henglu:$PAT@github.com/ms-henglu/terraform-provider-azurerm.git
+      git clone https://ms-henglu:$PAT@github.com/ms-henglu/azurerm-restapi-to-azurerm.git
+      cd terraform-provider-azurerm
+      git remote add hashi https://ms-henglu:$PAT@github.com/hashicorp/terraform-provider-azurerm.git
+      git remote
+      git fetch hashi
+      git checkout -b temp
+      git branch -D main
+      git checkout --track hashi/main
+      git checkout ${{ parameters.branch }}
+    displayName: 'Clone terraform-provider-azurerm'
+    env:
+      PAT: $(PAT)
+
+  - bash: |
+      export GOROOT=/usr/local/go
+      export PATH=$GOROOT/bin:$PATH
+      cd azurerm-restapi-to-azurerm/.tools/generate-provider-schema
+      pwd
+      chmod -R +x ./run.sh
+      ./run.sh /home/vsts/work/1/s/terraform-provider-azurerm ${{ parameters.branch }}
+    displayName: 'Exporting AzureRM Schema'
+
+  - bash: |
+      export GOROOT=/usr/local/go
+      export PATH=$GOROOT/bin:$PATH
+      export TAG=$(step1.TAG)
+      cd azurerm-restapi-to-azurerm
+      make fmt
+      git add .
+      git status
+      git commit -m "update azurerm schema"
+      git checkout -b ${TAG}
+      git push --set-upstream origin ${TAG} -f
+    displayName: 'Update AzureRM Schema'
+    env:
+      GH_TOKEN: $(PAT)
