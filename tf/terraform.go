@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/go-version"
@@ -58,7 +59,7 @@ func (t *Terraform) SetLogEnabled(enabled bool) {
 }
 
 func (t *Terraform) Init() error {
-	if _, err := os.Stat(".terraform"); os.IsNotExist(err) {
+	if _, err := os.Stat(path.Join(t.GetWorkingDirectory(), ".terraform")); os.IsNotExist(err) {
 		err := t.exec.Init(context.Background(), tfexec.Upgrade(false))
 		// ignore the error if can't find azurerm-restapi
 		if err != nil && strings.Contains(err.Error(), "Azure/azurerm-restapi: provider registry registry.terraform.io does not have") {

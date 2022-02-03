@@ -64,6 +64,8 @@ func migrateTestCase(t *testing.T, content string, ignore ...string) {
 		}
 	})
 
+	_ = terraform.Init()
+
 	err = terraform.Apply()
 	if err != nil {
 		t.Fatalf("apply config: %+v", err)
