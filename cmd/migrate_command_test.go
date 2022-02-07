@@ -47,11 +47,21 @@ func migrateTestCase(t *testing.T, content string, ignore ...string) {
 	}
 	dir := tempDir(t)
 	filename := filepath.Join(dir, "main.tf")
-	err := ioutil.WriteFile(filename, []byte(content), 0644)
+	err := ioutil.WriteFile(filename, []byte(`
+terraform {
+  required_providers {
+    azurerm = {
+      version = ">= 2.92.0"
+    }
+  }
+}
+provider "azurerm" {
+  features {}
+}
+`), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	terraform, err := tf.NewTerraform(dir, false)
 	if err != nil {
 		t.Fatal(err)
@@ -66,6 +76,10 @@ func migrateTestCase(t *testing.T, content string, ignore ...string) {
 
 	_ = terraform.Init()
 
+	err = ioutil.WriteFile(filename, []byte(content), 0644)
+	if err != nil {
+		t.Fatal(err)
+	}
 	err = terraform.Apply()
 	if err != nil {
 		t.Fatalf("apply config: %+v", err)
