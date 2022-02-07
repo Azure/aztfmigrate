@@ -30,12 +30,14 @@ const tempDir = "temp"
 
 type MigrateCommand struct {
 	Ui      cli.Ui
-	verbose bool
+	Verbose bool
+	Strict  bool
 }
 
 func (c *MigrateCommand) flags() *flag.FlagSet {
 	fs := defaultFlagSet("plan")
-	fs.BoolVar(&c.verbose, "v", false, "whether show terraform logs")
+	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
+	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
 }
@@ -49,11 +51,15 @@ func (c MigrateCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.verbose)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
-	resources, patchResources := PlanCommand{Ui: c.Ui}.Plan(terraform, false)
+	resources, patchResources := PlanCommand{
+		Ui:      c.Ui,
+		Verbose: c.Verbose,
+		Strict:  c.Strict,
+	}.Plan(terraform, false)
 	c.MigrateGenericResource(terraform, resources)
 	c.MigrateGenericPatchResource(terraform, patchResources)
 	return 0
@@ -129,7 +135,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 			// write empty config to temp dir for import
 			tempDirectoryCreate(workingDirectory)
 			tempPath := filepath.Join(workingDirectory, tempDir)
-			tempTerraform, err := tf.NewTerraform(tempPath, c.verbose)
+			tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -263,7 +269,7 @@ func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, res
 	workingDirectory := terraform.GetWorkingDirectory()
 	tempDirectoryCreate(workingDirectory)
 	tempPath := filepath.Join(workingDirectory, tempDir)
-	tempTerraform, err := tf.NewTerraform(tempPath, c.verbose)
+	tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}

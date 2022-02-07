@@ -14,30 +14,34 @@ import (
 )
 
 func TestPlan_basic(t *testing.T) {
-	planTestCase(t, basic(), []string{"azurerm-restapi_resource.test2", "azurerm-restapi_patch_resource.test"})
+	planTestCase(t, basic(), []string{"azurerm-restapi_resource.test2", "azurerm-restapi_patch_resource.test"}, false)
 }
 
 func TestPlan_foreach(t *testing.T) {
-	planTestCase(t, foreach(), []string{"azurerm-restapi_resource.test"})
+	planTestCase(t, foreach(), []string{"azurerm-restapi_resource.test"}, false)
 }
 
 func TestPlan_nestedBlock(t *testing.T) {
-	planTestCase(t, nestedBlock(), []string{"azurerm-restapi_resource.test"})
+	planTestCase(t, nestedBlock(), []string{"azurerm-restapi_resource.test"}, false)
 }
 
 func TestPlan_count(t *testing.T) {
-	planTestCase(t, count(), []string{"azurerm-restapi_resource.test"})
+	planTestCase(t, count(), []string{"azurerm-restapi_resource.test"}, false)
 }
 
 func TestPlan_nestedBlockPatch(t *testing.T) {
-	planTestCase(t, nestedBlockPatch(), []string{"azurerm-restapi_patch_resource.test"})
+	planTestCase(t, nestedBlockPatch(), []string{"azurerm-restapi_patch_resource.test"}, false)
 }
 
 func TestPlan_metaArguments(t *testing.T) {
-	planTestCase(t, metaArguments(), []string{"azurerm-restapi_resource.test1"})
+	planTestCase(t, metaArguments(), []string{"azurerm-restapi_resource.test1"}, false)
 }
 
-func planTestCase(t *testing.T, content string, expectMigratedAddresses []string) {
+func TestPlan_strictMode(t *testing.T) {
+	planTestCase(t, basic(), []string{}, true)
+}
+
+func planTestCase(t *testing.T, content string, expectMigratedAddresses []string, strictMode bool) {
 	if len(os.Getenv("TF_ACC")) == 0 {
 		t.Skipf("Set `TF_ACC=true` to enable this test")
 	}
@@ -74,7 +78,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 			ErrorWriter: os.Stderr,
 		},
 	}
-	planCommand := cmd.PlanCommand{Ui: ui}
+	planCommand := cmd.PlanCommand{Ui: ui, Strict: strictMode}
 	resources, patchResources := planCommand.Plan(terraform, true)
 
 	expectSet := make(map[string]bool)
