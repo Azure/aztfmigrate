@@ -81,7 +81,7 @@ func tuneForBlock(rb *hclwrite.Body, sch *schema.SchemaBlock, parentAttrNames []
 		if diags.HasErrors() {
 			return fmt.Errorf(`building attribute %q attribute: %s`, attrName, diags.Error())
 		}
-		attrValLit := strings.TrimSpace(string(attrExpr.Body().GetAttribute(attrName).Expr().BuildTokens(nil).Bytes()))
+		attrValLit := strings.TrimSpace(getAttributeExprString(attrExpr, attrName))
 		if attrValLit == dstr {
 			rb.RemoveAttribute(attrName)
 			continue
@@ -98,4 +98,19 @@ func tuneForBlock(rb *hclwrite.Body, sch *schema.SchemaBlock, parentAttrNames []
 		}
 	}
 	return nil
+}
+
+func getAttributeExprString(file *hclwrite.File, attrName string) string {
+	if file == nil {
+		return ""
+	}
+	if file.Body() == nil {
+		return ""
+	}
+	if attribute := file.Body().GetAttribute(attrName); attribute != nil {
+		if attribute.Expr() != nil {
+			return string(attribute.Expr().BuildTokens(nil).Bytes())
+		}
+	}
+	return ""
 }
