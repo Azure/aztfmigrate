@@ -67,3 +67,4 @@ There're some examples to show the migration results.
 ## Known limitations
 1. References to local variables can't be migrated.
 2. Usage of `dynamic` can't be migrated.
+3. Patch resource used to manage CMK can't be migrated.
