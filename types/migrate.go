@@ -37,6 +37,7 @@ func (r Output) GetStringValue() string {
 
 type Instance struct {
 	Index      interface{}
+	ApiVersion string
 	ResourceId string
 	Outputs    []Output
 }
@@ -100,6 +101,7 @@ func (r GenericResource) IsForEach() bool {
 }
 
 type GenericPatchResource struct {
+	ApiVersion       string
 	Label            string
 	OldLabel         string
 	Id               string

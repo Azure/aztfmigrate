@@ -20,12 +20,14 @@ import (
 
 type PlanCommand struct {
 	Ui      cli.Ui
-	verbose bool
+	Verbose bool
+	Strict  bool
 }
 
 func (c *PlanCommand) flags() *flag.FlagSet {
 	fs := defaultFlagSet("plan")
-	fs.BoolVar(&c.verbose, "v", false, "whether show terraform logs")
+	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
+	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
 }
@@ -39,7 +41,7 @@ func (c PlanCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.verbose)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,17 +88,22 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 	resources := make([]types.GenericResource, 0)
 	patchResources := make([]types.GenericPatchResource, 0)
 	for _, resource := range terraform.ListGenericResources(p) {
-		if ignoreSet[resource.OldAddress(nil)] {
+		if ignoreSet[resource.OldAddress(nil)] || len(resource.Instances) == 0 {
 			continue
 		}
-		resourceId := ""
-		for _, instance := range resource.Instances {
-			resourceId = instance.ResourceId
-			break
-		}
+		resourceId := resource.Instances[0].ResourceId
 		resourceTypes := azurerm.GetAzureRMResourceType(resourceId)
 
 		idPattern, _ := helper.GetIdPattern(resourceId)
+		if c.Strict {
+			azurermApiVersion := coverage.GetApiVersion(idPattern)
+			if azurermApiVersion != resource.Instances[0].ApiVersion {
+				unsupportedMessage += fmt.Sprintf("\t%s: api-versions are not matched, expect %s, got %s\n",
+					resource.OldAddress(nil), resource.Instances[0].ApiVersion, azurermApiVersion)
+				continue
+			}
+		}
+
 		_, uncoveredPut := coverage.GetPutCoverage(resource.InputProperties, idPattern)
 		_, uncoveredGet := coverage.GetGetCoverage(resource.OutputProperties, idPattern)
 
@@ -125,6 +132,14 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 		resourceTypes := azurerm.GetAzureRMResourceType(resource.Id)
 
 		idPattern, _ := helper.GetIdPattern(resource.Id)
+		if c.Strict {
+			azurermApiVersion := coverage.GetApiVersion(idPattern)
+			if azurermApiVersion != resource.ApiVersion {
+				unsupportedMessage += fmt.Sprintf("\t%s: api-versions are not matched, expect %s, got %s\n",
+					resource.OldAddress(), resource.ApiVersion, azurermApiVersion)
+				continue
+			}
+		}
 		_, uncoveredPut := coverage.GetPutCoverage(resource.InputProperties, idPattern)
 		_, uncoveredGet := coverage.GetGetCoverage(resource.OutputProperties, idPattern)
 
