@@ -101,6 +101,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 				Instances: []types.Instance{
 					{
 						ResourceId: getResourceId(resourceChange.Change.Before),
+						ApiVersion: getApiVersion(resourceChange.Change.Before),
 					},
 				},
 			}
@@ -110,6 +111,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 				resourceMap[address].Instances = append(resourceMap[address].Instances, types.Instance{
 					Index:      resourceChange.Index,
 					ResourceId: getResourceId(resourceChange.Change.Before),
+					ApiVersion: getApiVersion(resourceChange.Change.Before),
 				})
 			} else {
 				resourceMap[address] = &types.GenericResource{
@@ -119,6 +121,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 						{
 							Index:      resourceChange.Index,
 							ResourceId: getResourceId(resourceChange.Change.Before),
+							ApiVersion: getApiVersion(resourceChange.Change.Before),
 						},
 					},
 				}
@@ -180,6 +183,7 @@ func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPat
 			OldLabel:     resourceChange.Name,
 			Label:        rc.Name,
 			Id:           resourceId,
+			ApiVersion:   getApiVersion(resourceChange.Change.Before),
 			ResourceType: rc.Type,
 			Change:       rc.Change,
 		})

@@ -19,6 +19,17 @@ func getResourceId(value interface{}) string {
 	return ""
 }
 
+func getApiVersion(value interface{}) string {
+	if valueMap, ok := value.(map[string]interface{}); ok && valueMap["type"] != nil {
+		if typeValue, ok := valueMap["type"].(string); ok {
+			if parts := strings.Split(typeValue, "@"); len(parts) == 2 {
+				return parts[1]
+			}
+		}
+	}
+	return ""
+}
+
 func getId(value interface{}) string {
 	if valueMap, ok := value.(map[string]interface{}); ok && valueMap["id"] != nil {
 		if resourceId, ok := valueMap["id"].(string); ok {

@@ -18,6 +18,19 @@ func init() {
 	}
 }
 
+func GetApiVersion(idPattern string) string {
+	for _, r := range cov {
+		if r.Operation != "PUT" {
+			continue
+		}
+		if !strings.EqualFold(idPattern, r.IdPattern) {
+			continue
+		}
+		return r.ApiVersion
+	}
+	return ""
+}
+
 func GetPutCoverage(props []string, idPattern string) ([]string, []string) {
 	return getCoverage(props, "PUT", idPattern)
 }
