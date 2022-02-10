@@ -55,7 +55,7 @@ func (c MigrateCommand) Run(args []string) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	resources, patchResources := PlanCommand{
+	resources, patchResources := PlanCommand{ //nolint
 		Ui:      c.Ui,
 		Verbose: c.Verbose,
 		Strict:  c.Strict,
