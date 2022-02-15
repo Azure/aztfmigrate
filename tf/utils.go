@@ -10,15 +10,6 @@ import (
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
-func getResourceId(value interface{}) string {
-	if valueMap, ok := value.(map[string]interface{}); ok && valueMap["resource_id"] != nil {
-		if resourceId, ok := valueMap["resource_id"].(string); ok {
-			return resourceId
-		}
-	}
-	return ""
-}
-
 func getApiVersion(value interface{}) string {
 	if valueMap, ok := value.(map[string]interface{}); ok && valueMap["type"] != nil {
 		if typeValue, ok := valueMap["type"].(string); ok {
