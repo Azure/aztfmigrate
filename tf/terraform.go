@@ -100,7 +100,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 				Label: resourceChange.Name,
 				Instances: []types.Instance{
 					{
-						ResourceId: getResourceId(resourceChange.Change.Before),
+						ResourceId: getId(resourceChange.Change.Before),
 						ApiVersion: getApiVersion(resourceChange.Change.Before),
 					},
 				},
@@ -110,7 +110,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 			if _, ok := resourceMap[address]; ok {
 				resourceMap[address].Instances = append(resourceMap[address].Instances, types.Instance{
 					Index:      resourceChange.Index,
-					ResourceId: getResourceId(resourceChange.Change.Before),
+					ResourceId: getId(resourceChange.Change.Before),
 					ApiVersion: getApiVersion(resourceChange.Change.Before),
 				})
 			} else {
@@ -120,7 +120,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 					Instances: []types.Instance{
 						{
 							Index:      resourceChange.Index,
-							ResourceId: getResourceId(resourceChange.Change.Before),
+							ResourceId: getId(resourceChange.Change.Before),
 							ApiVersion: getApiVersion(resourceChange.Change.Before),
 						},
 					},
@@ -173,7 +173,7 @@ func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPat
 		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azurerm-restapi_patch_resource" {
 			continue
 		}
-		resourceId := getResourceId(resourceChange.Change.Before)
+		resourceId := getId(resourceChange.Change.Before)
 		if idMap[resourceId] == nil {
 			log.Printf("[WARN] resource azurerm-restapi_patch_resource.%s's target is not in the same terraform working directory", resourceChange.Name)
 			continue

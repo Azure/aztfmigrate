@@ -104,11 +104,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 					resources[index].Instances[0].Outputs[i].NewName = valuePropMap[output.GetStringValue()]
 				}
 				for i, instance := range r.Instances {
-					resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
-						OldName: resources[index].OldAddress(instance.Index) + ".resource_id",
-						NewName: resources[index].NewAddress(instance.Index) + ".id",
-					})
-					props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
+					props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids", "id"}
 					for _, prop := range props {
 						resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
 							OldName: resources[index].OldAddress(instance.Index) + "." + prop,
@@ -174,14 +170,10 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 			}
 			for i, instance := range r.Instances {
 				resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
-					OldName: resources[index].OldAddress(instance.Index) + ".resource_id",
-					NewName: resources[index].NewAddress(instance.Index) + ".id",
-				})
-				resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
 					OldName: resources[index].OldAddress(instance.Index),
 					NewName: resources[index].NewAddress(instance.Index),
 				})
-				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids"}
+				props := []string{"location", "tags", "identity", "identity.0", "identity.0.type", "identity.0.identity_ids", "id"}
 				for _, prop := range props {
 					resources[index].Instances[i].Outputs = append(resources[index].Instances[i].Outputs, types.Output{
 						OldName: resources[index].OldAddress(instance.Index) + "." + prop,
