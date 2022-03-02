@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -10,7 +10,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "test" {
@@ -35,7 +35,7 @@ locals {
   AutomationSku = "Basic"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name                   = var.AutomationName
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -55,7 +55,7 @@ resource "azurerm-restapi_resource" "test" {
   })
 }
 
-resource "azurerm-restapi_resource" "test2" {
+resource "azapi_resource" "test2" {
   name        = "${var.AutomationName}another"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -63,7 +63,7 @@ resource "azurerm-restapi_resource" "test2" {
   body = jsonencode({
     properties = {
       sku = {
-        name = jsondecode(azurerm-restapi_resource.test.output).properties.sku.name
+        name = jsondecode(azapi_resource.test.output).properties.sku.name
       }
     }
   })
@@ -76,7 +76,7 @@ resource "azurerm_automation_account" "test1" {
   sku_name            = "Basic"
 }
 
-resource "azurerm-restapi_patch_resource" "test" {
+resource "azapi_patch_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
@@ -88,9 +88,9 @@ resource "azurerm-restapi_patch_resource" "test" {
 }
 
 output "accountName" {
-  value = jsondecode(azurerm-restapi_resource.test.output).name
+  value = jsondecode(azapi_resource.test.output).name
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azurerm-restapi_patch_resource.test.output).properties.sku.name
+  value = jsondecode(azapi_patch_resource.test.output).properties.sku.name
 }

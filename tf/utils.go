@@ -75,7 +75,7 @@ func getReferencesForAddress(address string, p *tfjson.Plan, refValueMap map[str
 	for i := range res {
 		refName := res[i].Name
 		// TODO: use regex
-		if strings.HasPrefix(refName, "azurerm-restapi") && strings.HasSuffix(refName, "output") && len(strings.Split(refName, ".")) == 3 {
+		if strings.HasPrefix(refName, "azapi") && strings.HasSuffix(refName, "output") && len(strings.Split(refName, ".")) == 3 {
 			genericRefSet[refName] = true
 		}
 	}
@@ -120,7 +120,7 @@ func getRefValueMap(p *tfjson.Plan) map[string]interface{} {
 			continue
 		}
 		prefix := resourceChange.Address
-		if strings.HasPrefix(prefix, "azurerm-restapi") {
+		if strings.HasPrefix(prefix, "azapi") {
 			if beforeMap, ok := resourceChange.Change.Before.(map[string]interface{}); ok && beforeMap["output"] != nil {
 				if output, ok := beforeMap["output"].(string); ok {
 					var outputObj interface{}

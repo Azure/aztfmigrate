@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-exec/tfexec"
+	"github.com/hashicorp/terraform-exec/tfinstall"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
@@ -27,10 +28,20 @@ const planfile = "tfplan"
 var minRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20210630"))
 var maxRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20211006"))
 
-func NewTerraform(workingDirectory string, logEnabled bool) (*Terraform, error) {
-	execPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
-	if err != nil {
-		return nil, fmt.Errorf("error finding a terraform exectuable: %w", err)
+func NewTerraform(workingDirectory string, logEnabled bool, isDevVersion bool) (*Terraform, error) {
+	execPath := ""
+	if isDevVersion {
+		devExecPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
+		if err != nil {
+			return nil, fmt.Errorf("error finding a terraform exectuable: %w", err)
+		}
+		execPath = devExecPath
+	} else {
+		curExecPath, err := tfinstall.LookPath().ExecPath(context.TODO())
+		if err != nil {
+			return nil, err
+		}
+		execPath = curExecPath
 	}
 	tf, err := tfexec.NewTerraform(workingDirectory, execPath)
 	if err != nil {
@@ -61,8 +72,8 @@ func (t *Terraform) SetLogEnabled(enabled bool) {
 func (t *Terraform) Init() error {
 	if _, err := os.Stat(path.Join(t.GetWorkingDirectory(), ".terraform")); os.IsNotExist(err) {
 		err := t.exec.Init(context.Background(), tfexec.Upgrade(false))
-		// ignore the error if can't find azurerm-restapi
-		if err != nil && strings.Contains(err.Error(), "Azure/azurerm-restapi: provider registry registry.terraform.io does not have") {
+		// ignore the error if can't find azapi
+		if err != nil && strings.Contains(err.Error(), "Azure/azapi: provider registry registry.terraform.io does not have") {
 			return nil
 		}
 		return err
@@ -92,7 +103,7 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 	}
 	resourceMap := make(map[string]*types.GenericResource)
 	for _, resourceChange := range p.ResourceChanges {
-		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azurerm-restapi_resource" {
+		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azapi_resource" {
 			continue
 		}
 		if resourceChange.Index == nil {
@@ -163,19 +174,19 @@ func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPat
 	}
 	idMap := make(map[string]*tfjson.ResourceChange)
 	for _, resourceChange := range p.ResourceChanges {
-		if resourceChange == nil || resourceChange.Change == nil || strings.Contains(resourceChange.Type, "azurerm-restapi") {
+		if resourceChange == nil || resourceChange.Change == nil || strings.Contains(resourceChange.Type, "azapi") {
 			continue
 		}
 		idMap[getId(resourceChange.Change.Before)] = resourceChange
 	}
 
 	for _, resourceChange := range p.ResourceChanges {
-		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azurerm-restapi_patch_resource" {
+		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azapi_patch_resource" {
 			continue
 		}
 		resourceId := getId(resourceChange.Change.Before)
 		if idMap[resourceId] == nil {
-			log.Printf("[WARN] resource azurerm-restapi_patch_resource.%s's target is not in the same terraform working directory", resourceChange.Name)
+			log.Printf("[WARN] resource azapi_patch_resource.%s's target is not in the same terraform working directory", resourceChange.Name)
 			continue
 		}
 		rc := idMap[resourceId]

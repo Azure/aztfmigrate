@@ -51,7 +51,7 @@ func (c MigrateCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,7 +79,7 @@ func (c MigrateCommand) Synopsis() string {
 
 func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resources []types.GenericResource) {
 	log.Printf("[INFO] -----------------------------------------------")
-	log.Printf("[INFO] task: migrate azurerm-restapi_resource")
+	log.Printf("[INFO] task: migrate azapi_resource")
 
 	// generate import config
 	config := ""
@@ -94,10 +94,39 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	// import and generate config
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s (%d instances) to resource %s...", r.OldAddress(nil), len(r.Instances), r.NewAddress(nil))
+		// import into real state
+		for _, instance := range r.Instances {
+			address := r.NewAddress(instance.Index)
+			log.Printf("[INFO] importing %s to %s...", instance.ResourceId, address)
+			if err := terraform.Import(address, instance.ResourceId); err != nil {
+				log.Printf("[Error] error importing %s : %s", address, instance.ResourceId)
+			}
+		}
+
+		// write empty config to temp dir for import
+		tempDirectoryCreate(workingDirectory)
+		tempPath := filepath.Join(workingDirectory, tempDir)
+		devTerraform, err := tf.NewTerraform(tempPath, c.Verbose, true)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		config := providerConfig
+		for _, instance := range r.Instances {
+			if !r.IsMultipleResources() {
+				config += fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
+			} else {
+				config += fmt.Sprintf("resource \"%s\" \"%s_%v\" {}\n", r.ResourceType, r.Label, instance.Index)
+			}
+		}
+		if err = ioutil.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
+			log.Fatal(err)
+		}
+
 		if !r.IsMultipleResources() {
 			instance := r.Instances[0]
 			log.Printf("[INFO] importing %s to %s and generating config...", instance.ResourceId, r.NewAddress(nil))
-			if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType, false); err == nil {
+			if block, err := importAndGenerateConfig(devTerraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType, false); err == nil {
 				resources[index].Block = block
 				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(nil))
 				for i, output := range resources[index].Instances[0].Outputs {
@@ -119,35 +148,11 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 				log.Printf("[ERROR] %+v", err)
 			}
 		} else {
-			// import into real state
-			for _, instance := range r.Instances {
-				address := r.NewAddress(instance.Index)
-				log.Printf("[INFO] importing %s to %s...", instance.ResourceId, address)
-				if err := terraform.Import(address, instance.ResourceId); err != nil {
-					log.Printf("[Error] error importing %s : %s", address, instance.ResourceId)
-				}
-			}
-
-			// write empty config to temp dir for import
-			tempDirectoryCreate(workingDirectory)
-			tempPath := filepath.Join(workingDirectory, tempDir)
-			tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
-			if err != nil {
-				log.Fatal(err)
-			}
-			config := providerConfig
-			for _, instance := range r.Instances {
-				config += fmt.Sprintf("resource \"%s\" \"%s_%v\" {}\n", r.ResourceType, r.Label, instance.Index)
-			}
-			if err = ioutil.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
-				log.Fatal(err)
-			}
-
 			// import and build combined block
 			log.Printf("[INFO] generating config...")
 			blocks := make([]*hclwrite.Block, 0)
 			for _, instance := range r.Instances {
-				if block, err := importAndGenerateConfig(tempTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
+				if block, err := importAndGenerateConfig(devTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
 					blocks = append(blocks, block)
 				}
 			}
@@ -240,16 +245,16 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 		}
 	}
 	if len(outputs) != 0 {
-		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
+		log.Printf("[INFO] replacing azapi resource references with azurerm resoure reference.")
 		if err := helper.ReplaceGenericOutputs(workingDirectory, outputs); err != nil {
-			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+			log.Printf("[ERROR] replacing azapi resource references with azurerm resoure reference: %+v", err)
 		}
 	}
 }
 
 func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, resources []types.GenericPatchResource) {
 	log.Printf("[INFO] -----------------------------------------------")
-	log.Printf("[INFO] task: migrate azurerm-restapi_patch_resource")
+	log.Printf("[INFO] task: migrate azapi_patch_resource")
 
 	// generate import config
 	config := providerConfig
@@ -261,7 +266,7 @@ func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, res
 	workingDirectory := terraform.GetWorkingDirectory()
 	tempDirectoryCreate(workingDirectory)
 	tempPath := filepath.Join(workingDirectory, tempDir)
-	tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
+	devTerraform, err := tf.NewTerraform(tempPath, c.Verbose, true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -272,7 +277,7 @@ func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, res
 	// import and generate config
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
-		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
+		if block, err := importAndGenerateConfig(devTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
 			resources[index].Block = block
 			valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress())
 			for i := range resources[index].Outputs {
@@ -297,9 +302,9 @@ func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, res
 		}
 	}
 	if len(outputs) != 0 {
-		log.Printf("[INFO] replacing azurerm-restapi resource references with azurerm resoure reference.")
+		log.Printf("[INFO] replacing azapi resource references with azurerm resoure reference.")
 		if err := helper.ReplaceGenericOutputs(workingDirectory, outputs); err != nil {
-			log.Printf("[ERROR] replacing azurerm-restapi resource references with azurerm resoure reference: %+v", err)
+			log.Printf("[ERROR] replacing azapi resource references with azurerm resoure reference: %+v", err)
 		}
 	}
 

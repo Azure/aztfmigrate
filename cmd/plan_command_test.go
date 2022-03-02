@@ -14,27 +14,27 @@ import (
 )
 
 func TestPlan_basic(t *testing.T) {
-	planTestCase(t, basic(), []string{"azurerm-restapi_resource.test2", "azurerm-restapi_patch_resource.test"}, false)
+	planTestCase(t, basic(), []string{"azapi_resource.test2", "azapi_patch_resource.test"}, false)
 }
 
 func TestPlan_foreach(t *testing.T) {
-	planTestCase(t, foreach(), []string{"azurerm-restapi_resource.test"}, false)
+	planTestCase(t, foreach(), []string{"azapi_resource.test"}, false)
 }
 
 func TestPlan_nestedBlock(t *testing.T) {
-	planTestCase(t, nestedBlock(), []string{"azurerm-restapi_resource.test"}, false)
+	planTestCase(t, nestedBlock(), []string{"azapi_resource.test"}, false)
 }
 
 func TestPlan_count(t *testing.T) {
-	planTestCase(t, count(), []string{"azurerm-restapi_resource.test"}, false)
+	planTestCase(t, count(), []string{"azapi_resource.test"}, false)
 }
 
 func TestPlan_nestedBlockPatch(t *testing.T) {
-	planTestCase(t, nestedBlockPatch(), []string{"azurerm-restapi_patch_resource.test"}, false)
+	planTestCase(t, nestedBlockPatch(), []string{"azapi_patch_resource.test"}, false)
 }
 
 func TestPlan_metaArguments(t *testing.T) {
-	planTestCase(t, metaArguments(), []string{"azurerm-restapi_resource.test1"}, false)
+	planTestCase(t, metaArguments(), []string{"azapi_resource.test1"}, false)
 }
 
 func TestPlan_strictMode(t *testing.T) {
@@ -52,7 +52,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 		t.Fatal(err)
 	}
 
-	terraform, err := tf.NewTerraform(dir, false)
+	terraform, err := tf.NewTerraform(dir, false, false)
 	if err != nil {
 		t.Fatal(err)
 	}
