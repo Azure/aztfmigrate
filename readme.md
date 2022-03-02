@@ -1,7 +1,7 @@
 # azurerm-restapi to azurerm
 
 ## Introduction
-This tool is used to migrate resources from terraform `azurerm-restapi` provider to `azurerm` provider.
+This tool is used to migrate resources from terraform `azapi` provider to `azurerm` provider.
 
 ## How to setup?
 1. Clone this repo to local.
@@ -13,31 +13,31 @@ PS C:\Users\henglu\go\src\github.com\ms-henglu\azurerm-restapi-to-azurerm> azure
 Usage: azurerm-restapi-to-azurerm [--version] [--help] <command> [<args>]
 
 Available commands are:
-    migrate    Migrate azurerm-restapi resources to azurerm resources in current working directory
-    plan       Show azurerm-restapi resources which can migrate to azurerm resources in current working directory
+    migrate    Migrate azapi resources to azurerm resources in current working directory
+    plan       Show azapi resources which can migrate to azurerm resources in current working directory
     version    Displays the version of the migration tool
 ```
 
 1. Run `azurerm-restapi-to-azurerm plan` under your terraform working directory, 
-   it will list all resources that can be migrated from `azurerm-restapi` provider to `azurerm` provider.
+   it will list all resources that can be migrated from `azapi` provider to `azurerm` provider.
    The Terraform addresses listed in file `azurerm-restapi-to-azurerm.ignore` will be ignored during migration.
 ```
-2022/01/25 14:34:46 [INFO] searching azurerm-restapi_resource & azurerm-restapi_patch_resource...
+2022/01/25 14:34:46 [INFO] searching azapi_resource & azapi_patch_resource...
 2022/01/25 14:34:55 [INFO]
 
 The tool will perform the following actions:
 
 The following resources will be migrated:
-azurerm-restapi_resource.test2 will be replaced with azurerm_automation_account
-azurerm-restapi_patch_resource.test will be replaced with azurerm_automation_account
+azapi_resource.test2 will be replaced with azurerm_automation_account
+azapi_patch_resource.test will be replaced with azurerm_automation_account
 
 The following resources can't be migrated:
-azurerm-restapi_resource.test: input properties not supported: [], output properties not supported: [identity.principalId, identity.type, identity.tenantId]
+azapi_resource.test: input properties not supported: [], output properties not supported: [identity.principalId, identity.type, identity.tenantId]
 
 The following resources will be ignored in migration:
    ```
 2. Run `azurerm-restapi-to-azurerm migrate` under your terraform working directory, 
-   it will migrate above resources from `azurerm-restapi` provider to `azurerm` provider, 
+   it will migrate above resources from `azapi` provider to `azurerm` provider, 
    both terraform configuration and state.
    The Terraform addresses listed in file `azurerm-restapi-to-azurerm.ignore` will be ignored during migration.
    

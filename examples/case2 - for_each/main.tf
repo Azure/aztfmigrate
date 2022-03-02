@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -10,7 +10,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "test" {
@@ -37,7 +37,7 @@ variable "accounts" {
 }
 
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name        = "henglu${each.value.name}"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"

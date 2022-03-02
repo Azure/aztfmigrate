@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -10,7 +10,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "test" {
@@ -36,7 +36,7 @@ variable "defName" {
   default = "def1"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name        = "henglu-policy"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"

@@ -41,7 +41,7 @@ func (c PlanCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func (c PlanCommand) Synopsis() string {
 
 func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.GenericResource, []types.GenericPatchResource) {
 	// get azurerm-restapi resource from state
-	log.Printf("[INFO] searching azurerm-restapi_resource & azurerm-restapi_patch_resource...")
+	log.Printf("[INFO] searching azapi_resource & azapi_patch_resource...")
 	p, err := terraform.Plan()
 	if err != nil {
 		log.Fatal(err)

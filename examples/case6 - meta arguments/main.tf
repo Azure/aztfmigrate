@@ -1,7 +1,7 @@
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -10,7 +10,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "test" {
@@ -18,7 +18,7 @@ resource "azurerm_resource_group" "test" {
   location = "west europe"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name                   = "henglu1"
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -50,7 +50,7 @@ resource "azurerm-restapi_resource" "test" {
 }
 
 
-resource "azurerm-restapi_resource" "test1" {
+resource "azapi_resource" "test1" {
   name                   = "anotherhenglu1"
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -68,7 +68,7 @@ resource "azurerm-restapi_resource" "test1" {
     }
   })
 
-  depends_on = [azurerm_resource_group.test, azurerm-restapi_resource.test]
+  depends_on = [azurerm_resource_group.test, azapi_resource.test]
 
   lifecycle {
     create_before_destroy = true

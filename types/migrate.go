@@ -54,7 +54,7 @@ type GenericResource struct {
 }
 
 func (r GenericResource) OldAddress(index interface{}) string {
-	oldAddress := fmt.Sprintf("azurerm-restapi_resource.%s", r.Label)
+	oldAddress := fmt.Sprintf("azapi_resource.%s", r.Label)
 	if index == nil {
 		return oldAddress
 	}
@@ -116,7 +116,7 @@ type GenericPatchResource struct {
 }
 
 func (r GenericPatchResource) OldAddress() string {
-	return fmt.Sprintf("azurerm-restapi_patch_resource.%s", r.OldLabel)
+	return fmt.Sprintf("azapi_patch_resource.%s", r.OldLabel)
 }
 
 func (r GenericPatchResource) NewAddress() string {

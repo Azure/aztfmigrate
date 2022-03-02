@@ -62,7 +62,7 @@ provider "azurerm" {
 	if err != nil {
 		t.Fatal(err)
 	}
-	terraform, err := tf.NewTerraform(dir, false)
+	terraform, err := tf.NewTerraform(dir, false, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,8 +174,8 @@ func template() string {
 	return fmt.Sprintf(`
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
@@ -184,7 +184,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 resource "azurerm_resource_group" "test" {
@@ -214,7 +214,7 @@ locals {
   AutomationSku = "Basic"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name                   = var.AutomationName
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -234,7 +234,7 @@ resource "azurerm-restapi_resource" "test" {
   })
 }
 
-resource "azurerm-restapi_resource" "test2" {
+resource "azapi_resource" "test2" {
   name        = "${var.AutomationName}another"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -242,7 +242,7 @@ resource "azurerm-restapi_resource" "test2" {
   body = jsonencode({
     properties = {
       sku = {
-        name = jsondecode(azurerm-restapi_resource.test.output).properties.sku.name
+        name = jsondecode(azapi_resource.test.output).properties.sku.name
       }
     }
   })
@@ -255,7 +255,7 @@ resource "azurerm_automation_account" "test1" {
   sku_name            = "Basic"
 }
 
-resource "azurerm-restapi_patch_resource" "test" {
+resource "azapi_patch_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
@@ -267,11 +267,11 @@ resource "azurerm-restapi_patch_resource" "test" {
 }
 
 output "accountName" {
-  value = jsondecode(azurerm-restapi_resource.test.output).name
+  value = jsondecode(azapi_resource.test.output).name
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azurerm-restapi_patch_resource.test.output).properties.sku.name
+  value = jsondecode(azapi_patch_resource.test.output).properties.sku.name
 }
 `, template(), randomResourceName(), randomResourceName())
 }
@@ -299,7 +299,7 @@ variable "accounts" {
 }
 
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name        = "henglu${each.value.name}"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -344,7 +344,7 @@ variable "defName" {
   default = "def1"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name        = "%s"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
@@ -378,7 +378,7 @@ func count() string {
 	return fmt.Sprintf(`
 %s
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name        = "%s${count.index}"
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -425,7 +425,7 @@ variable "action" {
   default = "Allow"
 }
 
-resource "azurerm-restapi_patch_resource" "test" {
+resource "azapi_patch_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
   body        = <<BODY
@@ -455,7 +455,7 @@ func metaArguments() string {
 	return fmt.Sprintf(`
 %s
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   name                   = "%s"
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -487,7 +487,7 @@ resource "azurerm-restapi_resource" "test" {
 }
 
 
-resource "azurerm-restapi_resource" "test1" {
+resource "azapi_resource" "test1" {
   name                   = "%s"
   parent_id              = azurerm_resource_group.test.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
@@ -505,7 +505,7 @@ resource "azurerm-restapi_resource" "test1" {
     }
   })
 
-  depends_on = [azurerm_resource_group.test, azurerm-restapi_resource.test]
+  depends_on = [azurerm_resource_group.test, azapi_resource.test]
 
   lifecycle {
     create_before_destroy = false
