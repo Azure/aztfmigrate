@@ -172,7 +172,8 @@ func getPropValueMap(input interface{}, prefix string) map[string]interface{} {
 
 func getInputProperties(address string, p *tfjson.Plan) []string {
 	for _, resourceChange := range p.ResourceChanges {
-		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Change.Before == nil || resourceChange.Address != address {
+		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Change.Before == nil ||
+			(resourceChange.Address != address && !strings.HasPrefix(resourceChange.Address, address+"[")) {
 			continue
 		}
 

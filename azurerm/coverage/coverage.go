@@ -18,7 +18,7 @@ func init() {
 		cov[i].IdPattern = strings.ReplaceAll(cov[i].IdPattern, "/{}", "")
 	}
 	if len(cov) <= 10 {
-		log.Printf("[WARN] Coverage report for DEVELOPMENT is loaded. Please use released binaries in production.")
+		log.Printf("[WARN] Coverage report for DEVELOPMENT is loaded. Please use the released binaries in production.")
 	}
 }
 
@@ -54,7 +54,13 @@ func getCoverage(props []string, operation, idPattern string) ([]string, []strin
 		propsSet := make(map[string]bool)
 		propsSet["name"] = true
 		for _, prop := range r.Properties {
-			propsSet[strings.ReplaceAll(prop, "/", ".")] = true
+			parts := strings.Split(prop, "/")
+			for i := range parts {
+				if index := strings.Index(parts[i], "{"); index != -1 {
+					parts[i] = parts[i][0:index]
+				}
+			}
+			propsSet[strings.Join(parts, ".")] = true
 		}
 		covered := make([]string, 0)
 		uncovered := make([]string, 0)
