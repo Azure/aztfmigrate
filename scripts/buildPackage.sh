@@ -42,11 +42,12 @@ function release() {
   for os_arch in "${OS_ARCH[@]}" ; do
     OS=${os_arch%%:*}
     ARCH=${os_arch#*:}
+    EXT=$([ "$OS" == "windows" ] && echo ".exe" || echo "")
     info "GOOS: ${OS}, GOARCH: ${ARCH}"
     (
-      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}"
-      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}"
-      rm -rf "${BUILD_ARTIFACT}"
+      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}${EXT}"
+      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}${EXT}"
+      rm -rf "${BUILD_ARTIFACT}${EXT}"
     )
   done
   mv *.zip "${BUILD_DIR}"
