@@ -8,7 +8,7 @@ SCRIPTS_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${SCRIPTS_DIR}/../dist/"
 SOURCE_DIR="${SCRIPTS_DIR}/../"
 NAME="azurerm-restapi-to-azurerm"
-BUILD_ARTIFACT="${NAME}_v${VERSION}"
+BUILD_ARTIFACT="${NAME}"
 ARCHIVE_ARTIFACT="${NAME}_${VERSION}"
 
 OS_ARCH=("freebsd:amd64"
@@ -42,11 +42,12 @@ function release() {
   for os_arch in "${OS_ARCH[@]}" ; do
     OS=${os_arch%%:*}
     ARCH=${os_arch#*:}
+    EXT=$([ "$OS" == "windows" ] && echo ".exe" || echo "")
     info "GOOS: ${OS}, GOARCH: ${ARCH}"
     (
-      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}"
-      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}"
-      rm -rf "${BUILD_ARTIFACT}"
+      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}${EXT}"
+      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}${EXT}"
+      rm -rf "${BUILD_ARTIFACT}${EXT}"
     )
   done
   mv *.zip "${BUILD_DIR}"
