@@ -38,6 +38,14 @@ func Test_GetCoverage(t *testing.T) {
 			Covered:    []string{"properties.sku.name", "tags"},
 			Uncovered:  []string{},
 		},
+
+		{
+			ApiVersion: "2021-07-01",
+			IdPattern:  "/subscriptions/resourceGroups/providers/Microsoft.MACHINELEARNINGSERVICES/WORKSPACES/COMPUTES",
+			Properties: []string{"properties.computeLocation", "tags"},
+			Covered:    []string{"properties.computeLocation", "tags"},
+			Uncovered:  []string{},
+		},
 	}
 
 	for _, testcase := range testcases {
