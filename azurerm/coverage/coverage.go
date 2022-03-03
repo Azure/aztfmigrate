@@ -3,6 +3,7 @@ package coverage
 import (
 	_ "embed"
 	"encoding/json"
+	"log"
 	"strings"
 )
 
@@ -15,6 +16,9 @@ func init() {
 	_ = json.Unmarshal([]byte(coverageJson), &cov)
 	for i := range cov {
 		cov[i].IdPattern = strings.ReplaceAll(cov[i].IdPattern, "/{}", "")
+	}
+	if len(cov) <= 10 {
+		log.Printf("[WARN] Coverage report for DEVELOPMENT is loaded. Please use released binaries in production.")
 	}
 }
 
