@@ -1,0 +1,27 @@
+[
+  {
+    "api_version": "2015-10-31",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
+    "operation": "DELETE"
+  },
+  {
+    "api_version": "2015-10-31",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
+    "operation": "GET",
+    "properties": [
+      "location",
+      "properties/sku/name",
+      "tags"
+    ]
+  },
+  {
+    "api_version": "2015-10-31",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
+    "operation": "PUT",
+    "properties": [
+      "location",
+      "properties/sku/name",
+      "tags"
+    ]
+  }
+]
