@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/types"
+	"github.com/Azure/azapi2azurerm/azurerm/types"
 )
 
 type MappingJsonDependencyLoader struct {

@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/types"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
 // GetResourceBlock searches tf files in working directory and return `targetAddress` block

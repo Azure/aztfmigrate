@@ -1,6 +1,6 @@
 package loader
 
-import "github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/types"
+import "github.com/Azure/azapi2azurerm/azurerm/types"
 
 type DependencyLoader interface {
 	Load() ([]types.Dependency, error)

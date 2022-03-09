@@ -1,4 +1,4 @@
-module github.com/ms-henglu/azurerm-restapi-to-azurerm
+module github.com/Azure/azapi2azurerm
 
 go 1.16
 

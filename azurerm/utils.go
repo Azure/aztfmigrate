@@ -1,9 +1,9 @@
 package azurerm
 
 import (
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/loader"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/types"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/helper"
+	"github.com/Azure/azapi2azurerm/azurerm/loader"
+	"github.com/Azure/azapi2azurerm/azurerm/types"
+	"github.com/Azure/azapi2azurerm/helper"
 )
 
 var deps = make([]types.Dependency, 0)

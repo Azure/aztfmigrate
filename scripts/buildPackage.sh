@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPTS_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${SCRIPTS_DIR}/../dist/"
 SOURCE_DIR="${SCRIPTS_DIR}/../"
-NAME="azurerm-restapi-to-azurerm"
+NAME="azapi2azurerm"
 BUILD_ARTIFACT="${NAME}"
 ARCHIVE_ARTIFACT="${NAME}_${VERSION}"
 

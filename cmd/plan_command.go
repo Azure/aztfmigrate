@@ -10,12 +10,12 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/azurerm"
+	"github.com/Azure/azapi2azurerm/azurerm/coverage"
+	"github.com/Azure/azapi2azurerm/helper"
+	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/azapi2azurerm/types"
 	"github.com/mitchellh/cli"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/coverage"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/helper"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/tf"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
 type PlanCommand struct {
@@ -51,18 +51,18 @@ func (c PlanCommand) Run(args []string) int {
 
 func (c PlanCommand) Help() string {
 	helpText := `
-Usage: azurerm-restapi-to-azurerm plan
-` + c.Synopsis() + "\nThe Terraform addresses listed in file `azurerm-restapi-to-azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
+Usage: azapi2azurerm plan
+` + c.Synopsis() + "\nThe Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }
 
 func (c PlanCommand) Synopsis() string {
-	return "Show azurerm-restapi resources which can migrate to azurerm resources in current working directory"
+	return "Show azapi resources which can migrate to azurerm resources in current working directory"
 }
 
 func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.GenericResource, []types.GenericPatchResource) {
-	// get azurerm-restapi resource from state
+	// get azapi resource from state
 	log.Printf("[INFO] searching azapi_resource & azapi_patch_resource...")
 	p, err := terraform.Plan()
 	if err != nil {
@@ -73,7 +73,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 	unsupportedMessage := "The following resources can't be migrated:\n"
 	ignoreMessage := "The following resources will be ignored in migration:\n"
 	ignoreSet := make(map[string]bool)
-	if file, err := ioutil.ReadFile(path.Join(terraform.GetWorkingDirectory(), "azurerm-restapi-to-azurerm.ignore")); err == nil {
+	if file, err := ioutil.ReadFile(path.Join(terraform.GetWorkingDirectory(), "azapi2azurerm.ignore")); err == nil {
 		lines := strings.Split(string(file), "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)

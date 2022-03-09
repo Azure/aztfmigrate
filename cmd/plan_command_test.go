@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Azure/azapi2azurerm/cmd"
+	"github.com/Azure/azapi2azurerm/tf"
 	"github.com/mitchellh/cli"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/cmd"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/tf"
 )
 
 func TestPlan_basic(t *testing.T) {
