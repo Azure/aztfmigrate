@@ -10,14 +10,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/azurerm"
+	"github.com/Azure/azapi2azurerm/azurerm/schema"
+	"github.com/Azure/azapi2azurerm/helper"
+	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/azapi2azurerm/types"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/schema"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/helper"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/tf"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
 const filenameImport = "imports.tf"
@@ -67,14 +67,14 @@ func (c MigrateCommand) Run(args []string) int {
 
 func (c MigrateCommand) Help() string {
 	helpText := `
-Usage: azurerm-restapi-to-azurerm migrate
-` + c.Synopsis() + "\nThe Terraform addresses listed in file `azurerm-restapi-to-azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
+Usage: azapi2azurerm migrate
+` + c.Synopsis() + "\nThe Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }
 
 func (c MigrateCommand) Synopsis() string {
-	return "Migrate azurerm-restapi resources to azurerm resources in current working directory"
+	return "Migrate azapi resources to azurerm resources in current working directory"
 }
 
 func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resources []types.GenericResource) {

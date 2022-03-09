@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Azure/azapi2azurerm/cmd"
+	"github.com/Azure/azapi2azurerm/tf"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/cmd"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/tf"
 )
 
 func TestMigrate_basic(t *testing.T) {
@@ -152,7 +152,7 @@ func init() {
 }
 
 func tempDir(t *testing.T) string {
-	tmpDir := filepath.Join(os.TempDir(), "azurerm-restapi-to-azurerm", t.Name())
+	tmpDir := filepath.Join(os.TempDir(), "azapi2azurerm", t.Name())
 	err := os.MkdirAll(tmpDir, 0o755)
 	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)

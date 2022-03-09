@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/types"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
 func getApiVersion(value interface{}) string {

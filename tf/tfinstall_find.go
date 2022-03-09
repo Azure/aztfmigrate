@@ -22,7 +22,7 @@ func FindTerraform(ctx context.Context, minVersion, maxVersion *version.Version)
 	if err != nil {
 		return "", fmt.Errorf("error finding the user cache directory: %w", err)
 	}
-	rootDir := filepath.Join(cacheDir, "azurerm-restapi-to-azurerm")
+	rootDir := filepath.Join(cacheDir, "azapi2azurerm")
 	if err := os.MkdirAll(rootDir, 0755); err != nil {
 		return "", fmt.Errorf("creating workspace root %q: %w", rootDir, err)
 	}

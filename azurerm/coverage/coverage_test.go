@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/azurerm/coverage"
+	"github.com/Azure/azapi2azurerm/azurerm/coverage"
 )
 
 func Test_GetCoverage(t *testing.T) {

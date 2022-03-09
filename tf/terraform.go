@@ -9,11 +9,11 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/types"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-exec/tfexec"
 	"github.com/hashicorp/terraform-exec/tfinstall"
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/ms-henglu/azurerm-restapi-to-azurerm/types"
 )
 
 type Terraform struct {

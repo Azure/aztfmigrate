@@ -74,7 +74,7 @@ func (c *VersionCommand) Run(args []string) int {
 
 func (c *VersionCommand) Help() string {
 	helpText := `
-Usage: azurerm-restapi-to-azurerm version [-json]
+Usage: azapi2azurerm version [-json]
 ` + c.Synopsis() + "\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
