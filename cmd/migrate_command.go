@@ -55,13 +55,13 @@ func (c MigrateCommand) Run(args []string) int {
 	if err != nil {
 		log.Fatal(err)
 	}
-	resources, patchResources := PlanCommand{ //nolint
+	resources, updateResources := PlanCommand{ //nolint
 		Ui:      c.Ui,
 		Verbose: c.Verbose,
 		Strict:  c.Strict,
 	}.Plan(terraform, false)
 	c.MigrateGenericResource(terraform, resources)
-	c.MigrateGenericPatchResource(terraform, patchResources)
+	c.MigrateGenericUpdateResource(terraform, updateResources)
 	return 0
 }
 
@@ -252,9 +252,9 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	}
 }
 
-func (c MigrateCommand) MigrateGenericPatchResource(terraform *tf.Terraform, resources []types.GenericPatchResource) {
+func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, resources []types.GenericUpdateResource) {
 	log.Printf("[INFO] -----------------------------------------------")
-	log.Printf("[INFO] task: migrate azapi_patch_resource")
+	log.Printf("[INFO] task: migrate azapi_update_resource")
 
 	// generate import config
 	config := providerConfig

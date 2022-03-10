@@ -14,7 +14,7 @@ import (
 )
 
 func TestPlan_basic(t *testing.T) {
-	planTestCase(t, basic(), []string{"azapi_resource.test2", "azapi_patch_resource.test"}, false)
+	planTestCase(t, basic(), []string{"azapi_resource.test2", "azapi_update_resource.test"}, false)
 }
 
 func TestPlan_foreach(t *testing.T) {
@@ -29,8 +29,8 @@ func TestPlan_count(t *testing.T) {
 	planTestCase(t, count(), []string{"azapi_resource.test"}, false)
 }
 
-func TestPlan_nestedBlockPatch(t *testing.T) {
-	planTestCase(t, nestedBlockPatch(), []string{"azapi_patch_resource.test"}, false)
+func TestPlan_nestedBlockUpdate(t *testing.T) {
+	planTestCase(t, nestedBlockUpdate(), []string{"azapi_update_resource.test"}, false)
 }
 
 func TestPlan_metaArguments(t *testing.T) {
@@ -79,7 +79,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 		},
 	}
 	planCommand := cmd.PlanCommand{Ui: ui, Strict: strictMode}
-	resources, patchResources := planCommand.Plan(terraform, true)
+	resources, updateResources := planCommand.Plan(terraform, true)
 
 	expectSet := make(map[string]bool)
 	for _, value := range expectMigratedAddresses {
@@ -90,7 +90,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 			t.Fatalf("expect %s not migrated, but got it migrated", r.OldAddress(nil))
 		}
 	}
-	for _, r := range patchResources {
+	for _, r := range updateResources {
 		if !expectSet[r.OldAddress()] {
 			t.Fatalf("expect %s not migrated, but got it migrated", r.OldAddress())
 		}

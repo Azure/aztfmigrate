@@ -33,8 +33,8 @@ func TestMigrate_count(t *testing.T) {
 	migrateTestCase(t, count())
 }
 
-func TestMigrate_nestedBlockPatch(t *testing.T) {
-	migrateTestCase(t, nestedBlockPatch())
+func TestMigrate_nestedBlockUpdate(t *testing.T) {
+	migrateTestCase(t, nestedBlockUpdate())
 }
 
 func TestMigrate_metaArguments(t *testing.T) {
@@ -95,10 +95,10 @@ provider "azurerm" {
 		},
 	}
 	planCommand := cmd.PlanCommand{Ui: ui}
-	resources, patchResources := planCommand.Plan(terraform, false)
+	resources, updateResources := planCommand.Plan(terraform, false)
 	migrateCommand := cmd.MigrateCommand{Ui: ui}
 	migrateCommand.MigrateGenericResource(terraform, resources)
-	migrateCommand.MigrateGenericPatchResource(terraform, patchResources)
+	migrateCommand.MigrateGenericUpdateResource(terraform, updateResources)
 
 	// check generic resources are migrated
 	config, err := ioutil.ReadFile(filename)
@@ -116,7 +116,7 @@ provider "azurerm" {
 	for _, r := range resources {
 		migratedSet[r.OldAddress(nil)] = true
 	}
-	for _, r := range patchResources {
+	for _, r := range updateResources {
 		migratedSet[r.OldAddress()] = true
 	}
 	ignoreSet := make(map[string]bool)
@@ -255,7 +255,7 @@ resource "azurerm_automation_account" "test1" {
   sku_name            = "Basic"
 }
 
-resource "azapi_patch_resource" "test" {
+resource "azapi_update_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
@@ -271,7 +271,7 @@ output "accountName" {
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azapi_patch_resource.test.output).properties.sku.name
+  value = jsondecode(azapi_update_resource.test.output).properties.sku.name
 }
 `, template(), randomResourceName(), randomResourceName())
 }
@@ -396,7 +396,7 @@ resource "azapi_resource" "test" {
 `, template(), randomResourceName())
 }
 
-func nestedBlockPatch() string {
+func nestedBlockUpdate() string {
 	return fmt.Sprintf(`
 %s
 
@@ -425,7 +425,7 @@ variable "action" {
   default = "Allow"
 }
 
-resource "azapi_patch_resource" "test" {
+resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
   body        = <<BODY

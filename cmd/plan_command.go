@@ -61,9 +61,9 @@ func (c PlanCommand) Synopsis() string {
 	return "Show azapi resources which can migrate to azurerm resources in current working directory"
 }
 
-func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.GenericResource, []types.GenericPatchResource) {
+func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.GenericResource, []types.GenericUpdateResource) {
 	// get azapi resource from state
-	log.Printf("[INFO] searching azapi_resource & azapi_patch_resource...")
+	log.Printf("[INFO] searching azapi_resource & azapi_update_resource...")
 	p, err := terraform.Plan()
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +86,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 	}
 
 	resources := make([]types.GenericResource, 0)
-	patchResources := make([]types.GenericPatchResource, 0)
+	updateResources := make([]types.GenericUpdateResource, 0)
 	for _, resource := range terraform.ListGenericResources(p) {
 		if ignoreSet[resource.OldAddress(nil)] || len(resource.Instances) == 0 {
 			continue
@@ -125,7 +125,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 		}
 	}
 
-	for _, resource := range terraform.ListGenericPatchResources(p) {
+	for _, resource := range terraform.ListGenericUpdateResources(p) {
 		if ignoreSet[resource.OldAddress()] {
 			continue
 		}
@@ -154,7 +154,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 			} else {
 				migrationMessage += fmt.Sprintf("\t%s will be replaced with %v\n", resource.OldAddress(), strings.Join(resourceTypes, ", "))
 			}
-			patchResources = append(patchResources, resource)
+			updateResources = append(updateResources, resource)
 		} else {
 			unsupportedMessage += fmt.Sprintf("\t%s: input properties not supported: [%v], output properties not supported: [%v]\n",
 				resource.OldAddress(), strings.Join(uncoveredPut, ", "), strings.Join(uncoveredGet, ", "))
@@ -162,7 +162,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 	}
 
 	log.Printf("[INFO]\n\nThe tool will perform the following actions:\n\n%s\n%s\n%s\n", migrationMessage, unsupportedMessage, ignoreMessage)
-	return resources, patchResources
+	return resources, updateResources
 }
 
 func (c PlanCommand) getUserInputResourceType(resourceId string, values []string) string {

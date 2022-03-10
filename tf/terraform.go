@@ -167,8 +167,8 @@ func (t *Terraform) ListGenericResources(p *tfjson.Plan) []types.GenericResource
 	return resources
 }
 
-func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPatchResource {
-	resources := make([]types.GenericPatchResource, 0)
+func (t *Terraform) ListGenericUpdateResources(p *tfjson.Plan) []types.GenericUpdateResource {
+	resources := make([]types.GenericUpdateResource, 0)
 	if p == nil {
 		return resources
 	}
@@ -181,16 +181,16 @@ func (t *Terraform) ListGenericPatchResources(p *tfjson.Plan) []types.GenericPat
 	}
 
 	for _, resourceChange := range p.ResourceChanges {
-		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azapi_patch_resource" {
+		if resourceChange == nil || resourceChange.Change == nil || resourceChange.Type != "azapi_update_resource" {
 			continue
 		}
 		resourceId := getId(resourceChange.Change.Before)
 		if idMap[resourceId] == nil {
-			log.Printf("[WARN] resource azapi_patch_resource.%s's target is not in the same terraform working directory", resourceChange.Name)
+			log.Printf("[WARN] resource azapi_update_resource.%s's target is not in the same terraform working directory", resourceChange.Name)
 			continue
 		}
 		rc := idMap[resourceId]
-		resources = append(resources, types.GenericPatchResource{
+		resources = append(resources, types.GenericUpdateResource{
 			OldLabel:     resourceChange.Name,
 			Label:        rc.Name,
 			Id:           resourceId,

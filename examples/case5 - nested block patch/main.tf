@@ -43,7 +43,7 @@ variable "action" {
   default = "Allow"
 }
 
-resource "azapi_patch_resource" "test" {
+resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
   body        = <<BODY
