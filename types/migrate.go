@@ -100,7 +100,7 @@ func (r GenericResource) IsForEach() bool {
 	return false
 }
 
-type GenericPatchResource struct {
+type GenericUpdateResource struct {
 	ApiVersion       string
 	Label            string
 	OldLabel         string
@@ -115,14 +115,14 @@ type GenericPatchResource struct {
 	OutputProperties []string
 }
 
-func (r GenericPatchResource) OldAddress() string {
-	return fmt.Sprintf("azapi_patch_resource.%s", r.OldLabel)
+func (r GenericUpdateResource) OldAddress() string {
+	return fmt.Sprintf("azapi_update_resource.%s", r.OldLabel)
 }
 
-func (r GenericPatchResource) NewAddress() string {
+func (r GenericUpdateResource) NewAddress() string {
 	return fmt.Sprintf("%s.%s", r.ResourceType, r.Label)
 }
 
-func (r GenericPatchResource) EmptyImportConfig() string {
+func (r GenericUpdateResource) EmptyImportConfig() string {
 	return fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
 }

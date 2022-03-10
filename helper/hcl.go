@@ -113,7 +113,7 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 }
 
 // UpdateMigratedResourceBlock searches tf files in working directory and update generic patch resource's target
-func UpdateMigratedResourceBlock(workingDirectory string, resources []types.GenericPatchResource) error {
+func UpdateMigratedResourceBlock(workingDirectory string, resources []types.GenericUpdateResource) error {
 	for _, file := range ListHclFiles(workingDirectory) {
 		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {

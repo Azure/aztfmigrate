@@ -76,7 +76,7 @@ resource "azurerm_automation_account" "test1" {
   sku_name            = "Basic"
 }
 
-resource "azapi_patch_resource" "test" {
+resource "azapi_update_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
@@ -92,5 +92,5 @@ output "accountName" {
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azapi_patch_resource.test.output).properties.sku.name
+  value = jsondecode(azapi_update_resource.test.output).properties.sku.name
 }

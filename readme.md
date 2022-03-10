@@ -22,14 +22,14 @@ Available commands are:
    it will list all resources that can be migrated from `azapi` provider to `azurerm` provider.
    The Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.
 ```
-2022/01/25 14:34:46 [INFO] searching azapi_resource & azapi_patch_resource...
+2022/01/25 14:34:46 [INFO] searching azapi_resource & azapi_update_resource...
 2022/01/25 14:34:55 [INFO]
 
 The tool will perform the following actions:
 
 The following resources will be migrated:
 azapi_resource.test2 will be replaced with azurerm_automation_account
-azapi_patch_resource.test will be replaced with azurerm_automation_account
+azapi_update_resource.test will be replaced with azurerm_automation_account
 
 The following resources can't be migrated:
 azapi_resource.test: input properties not supported: [], output properties not supported: [identity.principalId, identity.type, identity.tenantId]
@@ -53,7 +53,7 @@ There're some examples to show the migration results.
    
 ## Features
 - [x] Support resource `azapi_resource` migration
-- [x] Support resource `azapi_patch_resource` migration
+- [x] Support resource `azapi_update_resource` migration
 - [x] Support meta-argument `for_each`
 - [x] Support meta-argument `count`
 - [x] Support meta-argument `depends_on`, `lifecycle` and `provisioner`
@@ -67,4 +67,4 @@ There're some examples to show the migration results.
 ## Known limitations
 1. References to local variables can't be migrated.
 2. Usage of `dynamic` can't be migrated.
-3. Patch resource used to manage CMK can't be migrated.
+3. Update resource used to manage CMK can't be migrated.
