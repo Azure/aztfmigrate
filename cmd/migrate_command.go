@@ -43,6 +43,8 @@ func (c *MigrateCommand) flags() *flag.FlagSet {
 }
 
 func (c MigrateCommand) Run(args []string) int {
+	// AzureRM provider will honor env.var "AZURE_HTTP_USER_AGENT" when constructing for HTTP "User-Agent" header.
+	os.Setenv("AZURE_HTTP_USER_AGENT", "azapi2azurerm commands/migrate")
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
 		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
