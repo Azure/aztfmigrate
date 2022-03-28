@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var ProviderVersion = "tags/v3.0.1"
+var ProviderVersion = "tags/v3.0.2"
 
 var ProviderSchemaInfo ProviderSchema
 
