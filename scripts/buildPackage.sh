@@ -46,16 +46,12 @@ function release() {
     info "GOOS: ${OS}, GOARCH: ${ARCH}"
     (
       env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}${EXT}"
-      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}${EXT}"
-      rm -rf "${BUILD_ARTIFACT}${EXT}"
+      mv "${BUILD_ARTIFACT}${EXT}" "${BUILD_DIR}"
     )
   done
-  mv *.zip "${BUILD_DIR}"
   cd "${BUILD_DIR}"
-  shasum -a 256 *.zip > "${ARCHIVE_ARTIFACT}_SHA256SUMS"
-  cp "${ARCHIVE_ARTIFACT}_SHA256SUMS" "${ARCHIVE_ARTIFACT}_SHA256SUMS.sig"
-  cat "${ARCHIVE_ARTIFACT}_SHA256SUMS"
   cp ../scripts/dearmor.sh ./
+  ls
 }
 
 release
