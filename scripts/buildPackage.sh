@@ -9,7 +9,6 @@ BUILD_DIR="${SCRIPTS_DIR}/../dist/"
 SOURCE_DIR="${SCRIPTS_DIR}/../"
 NAME="azapi2azurerm"
 BUILD_ARTIFACT="${NAME}"
-ARCHIVE_ARTIFACT="${NAME}_${VERSION}"
 
 OS_ARCH=("freebsd:amd64"
   "freebsd:386"
@@ -45,17 +44,14 @@ function release() {
     EXT=$([ "$OS" == "windows" ] && echo ".exe" || echo "")
     info "GOOS: ${OS}, GOARCH: ${ARCH}"
     (
-      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}${EXT}"
-      zip "${ARCHIVE_ARTIFACT}_${OS}_${ARCH}.zip" "${BUILD_ARTIFACT}${EXT}"
-      rm -rf "${BUILD_ARTIFACT}${EXT}"
+      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}_${OS}_${ARCH}${EXT}"
+      mv "${BUILD_ARTIFACT}_${OS}_${ARCH}${EXT}" "${BUILD_DIR}"
     )
   done
-  mv *.zip "${BUILD_DIR}"
   cd "${BUILD_DIR}"
-  shasum -a 256 *.zip > "${ARCHIVE_ARTIFACT}_SHA256SUMS"
-  cp "${ARCHIVE_ARTIFACT}_SHA256SUMS" "${ARCHIVE_ARTIFACT}_SHA256SUMS.sig"
-  cat "${ARCHIVE_ARTIFACT}_SHA256SUMS"
   cp ../scripts/dearmor.sh ./
+  cp ../scripts/checksum.sh ./
+  ls
 }
 
 release
