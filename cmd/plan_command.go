@@ -34,7 +34,7 @@ func (c *PlanCommand) flags() *flag.FlagSet {
 
 func (c PlanCommand) Run(args []string) int {
 	// AzureRM provider will honor env.var "AZURE_HTTP_USER_AGENT" when constructing for HTTP "User-Agent" header.
-	os.Setenv("AZURE_HTTP_USER_AGENT", "azapi2azurerm commands/plan")
+	os.Setenv("AZURE_HTTP_USER_AGENT", "mig")
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
 		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
