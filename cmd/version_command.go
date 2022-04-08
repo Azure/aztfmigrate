@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/Azure/azapi2azurerm/azurerm/schema"
 	"github.com/mitchellh/cli"
 )
 
@@ -67,7 +68,7 @@ func (c *VersionCommand) Run(args []string) int {
 		return 0
 	}
 
-	ver := fmt.Sprintf("%s\nplatform: %s/%s\ngo: %s\ncompiler: %s", c.Version, output.GoOS, output.GoArch, output.GoVersion, output.Compiler)
+	ver := fmt.Sprintf("%s\nazurerm: %s\nplatform: %s/%s\ngo: %s\ncompiler: %s", c.Version, schema.ProviderVersion, output.GoOS, output.GoArch, output.GoVersion, output.Compiler)
 	c.Ui.Output(ver)
 	return 0
 }
