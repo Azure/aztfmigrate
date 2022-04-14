@@ -68,3 +68,7 @@ There're some examples to show the migration results.
 1. References to local variables can't be migrated.
 2. Usage of `dynamic` can't be migrated.
 3. Update resource used to manage CMK can't be migrated.
+
+## Credits
+
+We wish to thank HashiCorp for the use of some MPLv2-licensed code from their open source project [terraform-plugin-sdk](https://github.com/hashicorp/terraform-plugin-sdk).
