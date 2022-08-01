@@ -272,11 +272,16 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	if err != nil {
 		log.Fatal(err)
 	}
+	userTerraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
+	if err != nil {
+		log.Fatal(err)
+	}
 	if err = ioutil.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
 		log.Fatal(err)
 	}
 
 	// import and generate config
+	newAddrs := make([]string, 0)
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
 		if block, err := importAndGenerateConfig(devTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
@@ -287,6 +292,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 			}
 			resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 			resources[index].Migrated = true
+			newAddrs = append(newAddrs, r.NewAddress())
 			log.Printf("[INFO] %s has migrated to %s", r.OldAddress(), r.NewAddress())
 		} else {
 			log.Printf("[ERROR] %+v", err)
@@ -329,6 +335,12 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(), err)
 			}
 		}
+	}
+
+	log.Println("[INFO] refreshing state for migrated resources...")
+	err = userTerraform.RefreshState(newAddrs)
+	if err != nil {
+		log.Printf("refreshing state: %+v", err)
 	}
 
 	tempDirectoryCleanup(workingDirectory)
