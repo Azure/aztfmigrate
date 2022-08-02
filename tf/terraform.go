@@ -238,6 +238,15 @@ func (t *Terraform) Apply() error {
 	return t.exec.Apply(context.TODO())
 }
 
+func (t *Terraform) RefreshState(resources []string) error {
+	// TODO: replace refresh command with apply -refresh-only
+	opts := make([]tfexec.RefreshCmdOption, 0)
+	for _, res := range resources {
+		opts = append(opts, tfexec.Target(res))
+	}
+	return t.exec.Refresh(context.TODO(), opts...)
+}
+
 func (t *Terraform) Destroy() error {
 	return t.exec.Destroy(context.TODO())
 }
