@@ -239,13 +239,12 @@ func (t *Terraform) Apply() error {
 }
 
 func (t *Terraform) RefreshState(resources []string) error {
-	opts := make([]tfexec.ApplyOption, 0)
-	// TODO: refresh-only option is not supported in terraform-exec, use tfexec.DirOrPlan as a hack
-	opts = append(opts, tfexec.DirOrPlan("-refresh-only"))
+	// TODO: replace refresh command with apply -refresh-only
+	opts := make([]tfexec.RefreshCmdOption, 0)
 	for _, res := range resources {
 		opts = append(opts, tfexec.Target(res))
 	}
-	return t.exec.Apply(context.TODO(), opts...)
+	return t.exec.Refresh(context.TODO(), opts...)
 }
 
 func (t *Terraform) Destroy() error {
