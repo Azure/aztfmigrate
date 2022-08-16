@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -89,7 +88,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 		config += resource.EmptyImportConfig()
 	}
 	workingDirectory := terraform.GetWorkingDirectory()
-	if err := ioutil.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0644); err != nil {
 		log.Fatal(err)
 	}
 
@@ -121,7 +120,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 				config += fmt.Sprintf("resource \"%s\" \"%s_%v\" {}\n", r.ResourceType, r.Label, instance.Index)
 			}
 		}
-		if err = ioutil.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
+		if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
 			log.Fatal(err)
 		}
 
@@ -276,7 +275,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = ioutil.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
+	if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
 		log.Fatal(err)
 	}
 

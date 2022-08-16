@@ -3,7 +3,7 @@ package tf
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -63,9 +63,9 @@ func (t *Terraform) SetLogEnabled(enabled bool) {
 		t.exec.SetStderr(os.Stderr)
 		t.exec.SetLogger(log.New(os.Stdout, "", 0))
 	} else {
-		t.exec.SetStdout(ioutil.Discard)
-		t.exec.SetStderr(ioutil.Discard)
-		t.exec.SetLogger(log.New(ioutil.Discard, "", 0))
+		t.exec.SetStdout(io.Discard)
+		t.exec.SetStderr(io.Discard)
+		t.exec.SetLogger(log.New(io.Discard, "", 0))
 	}
 }
 

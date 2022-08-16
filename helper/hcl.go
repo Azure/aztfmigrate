@@ -2,7 +2,6 @@ package helper
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -17,7 +16,7 @@ import (
 // GetResourceBlock searches tf files in working directory and return `targetAddress` block
 func GetResourceBlock(workingDirectory, targetAddress string) (*hclwrite.Block, error) {
 	for _, file := range ListHclFiles(workingDirectory) {
-		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
+		src, err := os.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +39,7 @@ func GetResourceBlock(workingDirectory, targetAddress string) (*hclwrite.Block, 
 // ReplaceResourceBlock searches tf files in working directory and replace `targetAddress` block with `newBlock`
 func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlock *hclwrite.Block) error {
 	for _, file := range ListHclFiles(workingDirectory) {
-		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
+		src, err := os.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
 		}
@@ -79,7 +78,7 @@ func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlock *hclw
 // ReplaceGenericOutputs searches tf files in working directory and replace generic resource's output with new address
 func ReplaceGenericOutputs(workingDirectory string, outputs []types.Output) error {
 	for _, file := range ListHclFiles(workingDirectory) {
-		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
+		src, err := os.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
 		}
@@ -115,7 +114,7 @@ func replaceOutputs(block *hclwrite.Block, outputs []types.Output) {
 // UpdateMigratedResourceBlock searches tf files in working directory and update generic patch resource's target
 func UpdateMigratedResourceBlock(workingDirectory string, resources []types.GenericUpdateResource) error {
 	for _, file := range ListHclFiles(workingDirectory) {
-		src, err := ioutil.ReadFile(filepath.Join(workingDirectory, file.Name()))
+		src, err := os.ReadFile(filepath.Join(workingDirectory, file.Name()))
 		if err != nil {
 			return err
 		}

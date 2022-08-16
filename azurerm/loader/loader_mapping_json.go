@@ -3,7 +3,7 @@ package loader
 import (
 	_ "embed"
 	"encoding/json"
-	"io/ioutil"
+	"os"
 
 	"github.com/Azure/azapi2azurerm/azurerm/types"
 )
@@ -20,7 +20,7 @@ func (m MappingJsonDependencyLoader) Load() ([]types.Dependency, error) {
 	var data []byte
 	var err error
 	if len(m.MappingJsonFilepath) > 0 {
-		data, err = ioutil.ReadFile(m.MappingJsonFilepath)
+		data, err = os.ReadFile(m.MappingJsonFilepath)
 		if err != nil {
 			return []types.Dependency{}, err
 		}

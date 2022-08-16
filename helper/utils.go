@@ -3,13 +3,14 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
+	"os"
+	"strings"
+
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	ctyJson "github.com/zclconf/go-cty/cty/json"
-	"io/fs"
-	"io/ioutil"
-	"strings"
 )
 
 // IsArrayWithSameValue returns true if all elements in `arr` are identical
@@ -64,9 +65,9 @@ func Suffix(arr []string) string {
 	return arr[0][len(arr[0])-index+1:]
 }
 
-func ListHclFiles(workingDirectory string) []fs.FileInfo {
-	res := make([]fs.FileInfo, 0)
-	files, err := ioutil.ReadDir(workingDirectory)
+func ListHclFiles(workingDirectory string) []fs.DirEntry {
+	res := make([]fs.DirEntry, 0)
+	files, err := os.ReadDir(workingDirectory)
 	if err != nil {
 		return res
 	}
