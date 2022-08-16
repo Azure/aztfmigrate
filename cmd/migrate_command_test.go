@@ -2,7 +2,6 @@ package cmd_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -47,7 +46,7 @@ func migrateTestCase(t *testing.T, content string, ignore ...string) {
 	}
 	dir := tempDir(t)
 	filename := filepath.Join(dir, "main.tf")
-	err := ioutil.WriteFile(filename, []byte(`
+	err := os.WriteFile(filename, []byte(`
 terraform {
   required_providers {
     azurerm = {
@@ -76,7 +75,7 @@ provider "azurerm" {
 
 	_ = terraform.Init()
 
-	err = ioutil.WriteFile(filename, []byte(content), 0644)
+	err = os.WriteFile(filename, []byte(content), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,7 +100,7 @@ provider "azurerm" {
 	migrateCommand.MigrateGenericUpdateResource(terraform, updateResources)
 
 	// check generic resources are migrated
-	config, err := ioutil.ReadFile(filename)
+	config, err := os.ReadFile(filename)
 	if err != nil {
 		t.Fatal(err)
 	}

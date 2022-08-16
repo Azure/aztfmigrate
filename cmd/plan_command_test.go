@@ -1,7 +1,6 @@
 package cmd_test
 
 import (
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -47,7 +46,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 	}
 	dir := tempDir(t)
 	filename := filepath.Join(dir, "main.tf")
-	err := ioutil.WriteFile(filename, []byte(content), 0644)
+	err := os.WriteFile(filename, []byte(content), 0644)
 	if err != nil {
 		t.Fatal(err)
 	}

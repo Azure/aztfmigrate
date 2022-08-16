@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -75,7 +74,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 	unsupportedMessage := "The following resources can't be migrated:\n"
 	ignoreMessage := "The following resources will be ignored in migration:\n"
 	ignoreSet := make(map[string]bool)
-	if file, err := ioutil.ReadFile(path.Join(terraform.GetWorkingDirectory(), "azapi2azurerm.ignore")); err == nil {
+	if file, err := os.ReadFile(path.Join(terraform.GetWorkingDirectory(), "azapi2azurerm.ignore")); err == nil {
 		lines := strings.Split(string(file), "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
