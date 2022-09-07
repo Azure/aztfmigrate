@@ -1,5 +1,4 @@
 package main
 
-func VersionString() string {
-	return "0.5.0"
-}
+// To set this from outside, use go build -ldflags "-X 'main.version=$(VERSION)'"
+var version string = "dev"

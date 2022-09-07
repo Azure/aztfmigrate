@@ -10,7 +10,7 @@ import (
 func main() {
 	c := &cli.CLI{
 		Name:       "azapi2azurerm",
-		Version:    VersionString(),
+		Version:    version,
 		Args:       os.Args[1:],
 		HelpWriter: os.Stdout,
 	}
@@ -39,7 +39,7 @@ func main() {
 		"version": func() (cli.Command, error) {
 			return &cmd.VersionCommand{
 				Ui:      ui,
-				Version: VersionString(),
+				Version: version,
 			}, nil
 		},
 	}
