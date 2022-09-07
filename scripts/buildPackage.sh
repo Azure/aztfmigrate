@@ -44,7 +44,7 @@ function release() {
     EXT=$([ "$OS" == "windows" ] && echo ".exe" || echo "")
     info "GOOS: ${OS}, GOARCH: ${ARCH}"
     (
-      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o "${BUILD_ARTIFACT}_${OS}_${ARCH}${EXT}"
+      env GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X 'main.version=${VERSION}'" -o "${BUILD_ARTIFACT}_${OS}_${ARCH}${EXT}"
       mv "${BUILD_ARTIFACT}_${OS}_${ARCH}${EXT}" "${BUILD_DIR}"
     )
   done
