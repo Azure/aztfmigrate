@@ -379,13 +379,13 @@ stages:
           - task: GitHubRelease@1
             displayName: "Draft Github Release"
             inputs:
-              gitHubConnection: "Github"
-              repositoryName: "$(Build.Repository.Name)"
-              action: "create"
-              target: "$(Build.SourceVersion)"
-              tagSource: "gitTag"
+              gitHubConnection: 'OAuth_Temp_ServiceConnection'
+              repositoryName: '$(Build.Repository.Name)'
+              action: 'create'
+              target: '$(Build.SourceVersion)'
+              tagSource: 'gitTag'
               tagPattern: '^v\d+\.\d+\.\d+'
-              assets: "$(system.defaultWorkingDirectory)/release/*"
+              assets: '$(system.defaultWorkingDirectory)/release/*'
               isDraft: true
               addChangeLog: false
 
