@@ -14,11 +14,11 @@ while ((count <= total)); do
     echo "Try ($count/$total)"
     # See: https://access.redhat.com/solutions/2779441
     dnf check-update --refresh || [[ $? == 100 ]]  
-    dnf install -y aztfy && break
+    dnf install -y azapi2azurerm && break
 
     sleep 1m
     ((count++))
 done
 (( count <= total ))
 
-grep $version <(aztfy -v)
+grep $version <(azapi2azurerm -v)
