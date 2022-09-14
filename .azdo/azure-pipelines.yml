@@ -379,7 +379,7 @@ stages:
           - task: GitHubRelease@1
             displayName: "Draft Github Release"
             inputs:
-              gitHubConnection: 'Azure'
+              gitHubConnection: 'azapi2azurerm'
               repositoryName: '$(Build.Repository.Name)'
               action: 'create'
               target: '$(Build.SourceVersion)'
