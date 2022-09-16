@@ -131,7 +131,7 @@ stages:
             displayName: "Download wix toolset"
             inputs:
               command: download
-              vstsFeed: "release/aztfy"
+              vstsFeed: "release/azapi2azurerm"
               vstsFeedPackage: "wixsetup"
               vstsPackageVersion: "3.11.2"
               downloadDirectory: $(system.defaultWorkingDirectory)/dist/tool
@@ -553,7 +553,7 @@ stages:
             displayName: "Download repoclient"
             inputs:
               command: download
-              vstsFeed: "release/aztfy"
+              vstsFeed: "release/azapi2azurerm"
               vstsFeedPackage: "azure-repoapi-client"
               vstsPackageVersion: "2.2.1"
               downloadDirectory: $(system.defaultWorkingDirectory)/dist/tool
