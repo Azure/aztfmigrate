@@ -127,14 +127,15 @@ stages:
             inputs:
               artifact: windows-$(ARCH)
               path: $(system.defaultWorkingDirectory)/dist/bin
-          - task: UniversalPackages@0
+          - task: DownloadPackage@1
             displayName: "Download wix toolset"
             inputs:
-              command: download
-              vstsFeed: "release/azapi2azurerm"
-              vstsFeedPackage: "wixsetup"
-              vstsPackageVersion: "3.11.2"
-              downloadDirectory: $(system.defaultWorkingDirectory)/dist/tool
+              packageType: 'upack'
+              feed: '9b6b54d1-85ce-4ff5-8faa-608b4a183fc6/41be8e3b-5983-4aa7-a713-2d4a8b026d8c'
+              view: '82e38225-8996-4f71-8023-5e4b293281f2'
+              definition: '174d6082-24fb-4c19-b2ea-f944dce00a04'
+              version: '3.11.2'
+              downloadPath: '$(system.defaultWorkingDirectory)/dist/tool'
           - bash: |
               set -e
 
@@ -549,14 +550,15 @@ stages:
                 pipeline: $(pipelineId)
                 runVersion: "specific"
                 runId: ${{ parameters.artifactBuildId }}
-          - task: UniversalPackages@0
+          - task: DownloadPackage@1
             displayName: "Download repoclient"
             inputs:
-              command: download
-              vstsFeed: "release/azapi2azurerm"
-              vstsFeedPackage: "azure-repoapi-client"
-              vstsPackageVersion: "2.2.1"
-              downloadDirectory: $(system.defaultWorkingDirectory)/dist/tool
+              packageType: 'upack'
+              feed: '9b6b54d1-85ce-4ff5-8faa-608b4a183fc6/41be8e3b-5983-4aa7-a713-2d4a8b026d8c'
+              view: '82e38225-8996-4f71-8023-5e4b293281f2'
+              definition: '4fd1ea7e-1b04-4b2d-8bc7-9131d17f508f'
+              version: '2.2.1'
+              downloadPath: '$(system.defaultWorkingDirectory)/dist/tool'
           - script: |
               set -e
               sudo apt install -y ./dist/tool/azure-repoapi-client_2.2.1_amd64.deb
