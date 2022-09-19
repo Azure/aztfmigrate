@@ -3,9 +3,72 @@
 ## Introduction
 This tool is used to migrate resources from terraform `azapi` provider to `azurerm` provider.
 
-## How to setup?
-1. Clone this repo to local.
-2. `go install` under project directory.
+## Install
+
+### From Release
+
+Precompiled binaries and Window MSI are available at [Releases](https://github.com/Azure/azapi2azurerm/releases).
+
+### From Package Manager
+
+#### dnf (Linux)
+
+Supported versions:
+
+- RHEL 8 (amd64, arm64)
+- RHEL 9 (amd64, arm64)
+
+1. Import the Microsoft repository key:
+
+    ```
+    rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    ```
+
+2. Add `packages-microsoft-com-prod` repository:
+
+    ```
+    ver=8 # or 9
+    dnf install -y https://packages.microsoft.com/config/rhel/${ver}/packages-microsoft-prod.rpm
+    ```
+
+3. Install:
+
+    ```
+    dnf install azapi2azurerm
+    ```
+
+#### apt (Linux)
+
+Supported versions:
+
+- Ubuntu 20.04 (amd64, arm64)
+- Ubuntu 22.04 (amd64, arm64)
+
+1. Import the Microsoft repository key:
+
+    ```
+    curl -sSL https://packages.microsoft.com/keys/microsoft.asc > /etc/apt/trusted.gpg.d/microsoft.asc
+    ```
+
+2. Add `packages-microsoft-com-prod` repository:
+
+    ```
+    ver=20.04 # or 22.04
+    apt-add-repository https://packages.microsoft.com/ubuntu/${ver}/prod
+    ```
+
+3. Install:
+
+    ```
+    apt-get install azapi2azurerm
+    ```
+
+#### AUR (Linux)
+
+```bash
+yay -S azapi2azurerm
+```
+
    
 ## Command Usage
 ```
