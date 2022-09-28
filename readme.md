@@ -9,6 +9,11 @@ This tool is used to migrate resources from terraform `azapi` provider to `azure
 
 Precompiled binaries and Window MSI are available at [Releases](https://github.com/Azure/azapi2azurerm/releases).
 
+For Mac OS users, you need to run the following command to remove the quarantine flag.
+```bash
+xattr -d com.apple.quarantine azapi2azurerm 
+```
+
 ### From Package Manager
 
 #### dnf (Linux)
@@ -69,7 +74,6 @@ Supported versions:
 yay -S azapi2azurerm
 ```
 
-   
 ## Command Usage
 ```
 PS C:\Users\henglu\go\src\github.com\Azure\azapi2azurerm> azapi2azurerm.exe            
