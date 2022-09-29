@@ -6,7 +6,7 @@
     <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?endif ?>
 
-	<Product Id="*" Name="azapi2azurerm" Language="1033" Version="$(env.VERSION)" Manufacturer="Microsoft" UpgradeCode="64fec5fc-2cad-4ec0-95ed-bdf283f6f36d">
+	<Product Id="*" Name="azapi2azurerm" Language="1033" Version="$(env.VERSION)" Manufacturer="Microsoft" UpgradeCode="1ac52465-d10f-4f22-a52b-1c369d8faf5d">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of azapi2azurerm is already installed." />
