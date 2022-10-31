@@ -57,7 +57,7 @@ terraform {
 provider "azurerm" {
   features {}
 }
-`), 0644)
+`), 0600)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ provider "azurerm" {
 
 	_ = terraform.Init()
 
-	err = os.WriteFile(filename, []byte(content), 0644)
+	err = os.WriteFile(filename, []byte(content), 0600)
 	if err != nil {
 		t.Fatal(err)
 	}

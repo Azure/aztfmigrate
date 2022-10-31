@@ -23,11 +23,11 @@ func FindTerraform(ctx context.Context, minVersion, maxVersion *version.Version)
 		return "", fmt.Errorf("error finding the user cache directory: %w", err)
 	}
 	rootDir := filepath.Join(cacheDir, "azapi2azurerm")
-	if err := os.MkdirAll(rootDir, 0755); err != nil {
+	if err := os.MkdirAll(rootDir, 0750); err != nil {
 		return "", fmt.Errorf("creating workspace root %q: %w", rootDir, err)
 	}
 	tfDir := filepath.Join(rootDir, "terraform")
-	if err := os.MkdirAll(tfDir, 0755); err != nil {
+	if err := os.MkdirAll(tfDir, 0750); err != nil {
 		return "", fmt.Errorf("creating terraform cache dir %q: %w", tfDir, err)
 	}
 
