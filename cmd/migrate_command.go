@@ -43,6 +43,7 @@ func (c *MigrateCommand) flags() *flag.FlagSet {
 
 func (c MigrateCommand) Run(args []string) int {
 	// AzureRM provider will honor env.var "AZURE_HTTP_USER_AGENT" when constructing for HTTP "User-Agent" header.
+	// #nosec G104
 	os.Setenv("AZURE_HTTP_USER_AGENT", "mig")
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
@@ -88,7 +89,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 		config += resource.EmptyImportConfig()
 	}
 	workingDirectory := terraform.GetWorkingDirectory()
-	if err := os.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0600); err != nil {
 		log.Fatal(err)
 	}
 
@@ -120,7 +121,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 				config += fmt.Sprintf("resource \"%s\" \"%s_%v\" {}\n", r.ResourceType, r.Label, instance.Index)
 			}
 		}
-		if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
+		if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0600); err != nil {
 			log.Fatal(err)
 		}
 
@@ -275,7 +276,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0644); err != nil {
+	if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0600); err != nil {
 		log.Fatal(err)
 	}
 
@@ -373,7 +374,7 @@ func tempDirectoryCreate(workingDirectory string) {
 			log.Fatalf("error deleting %s: %+v", tempPath, err)
 		}
 	}
-	if err := os.MkdirAll(tempPath, 0755); err != nil {
+	if err := os.MkdirAll(tempPath, 0750); err != nil {
 		log.Fatalf("creating temp workspace %q: %+v", tempPath, err)
 	}
 }

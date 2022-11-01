@@ -33,6 +33,7 @@ func (c *PlanCommand) flags() *flag.FlagSet {
 
 func (c PlanCommand) Run(args []string) int {
 	// AzureRM provider will honor env.var "AZURE_HTTP_USER_AGENT" when constructing for HTTP "User-Agent" header.
+	// #nosec G104
 	os.Setenv("AZURE_HTTP_USER_AGENT", "mig")
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
