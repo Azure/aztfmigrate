@@ -1,4 +1,3 @@
-/* #nosec */
 package main
 
 import (
