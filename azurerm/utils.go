@@ -1,41 +1,17 @@
 package azurerm
 
 import (
-	"github.com/Azure/azapi2azurerm/azurerm/loader"
-	"github.com/Azure/azapi2azurerm/azurerm/types"
-	"github.com/Azure/azapi2azurerm/helper"
+	"github.com/magodo/aztft/aztft"
 )
 
-var deps = make([]types.Dependency, 0)
-
-func init() {
-	mappingJsonLoader := loader.MappingJsonDependencyLoader{}
-	hardcodeLoader := loader.HardcodeDependencyLoader{}
-	deps = make([]types.Dependency, 0)
-	depsMap := make(map[string]types.Dependency)
-	if temp, err := mappingJsonLoader.Load(); err == nil {
-		for _, dep := range temp {
-			depsMap[dep.ResourceType+"."+dep.ReferredProperty] = dep
-		}
-	}
-	if temp, err := hardcodeLoader.Load(); err == nil {
-		for _, dep := range temp {
-			depsMap[dep.ResourceType+"."+dep.ReferredProperty] = dep
-		}
-	}
-	for _, dep := range depsMap {
-		if dep.ReferredProperty == "id" {
-			deps = append(deps, dep)
-		}
-	}
-}
-
-func GetAzureRMResourceType(id string) []string {
+func GetAzureRMResourceType(id string) ([]string, bool, error) {
 	resourceTypes := make([]string, 0)
-	for _, dep := range deps {
-		if helper.IsValueMatchPattern(id, dep.Pattern) {
-			resourceTypes = append(resourceTypes, dep.ResourceType)
-		}
+	types, exact, err := aztft.QueryType(id, nil)
+	if err != nil {
+		return nil, false, err
 	}
-	return resourceTypes
+	for _, t := range types {
+		resourceTypes = append(resourceTypes, t.TFType)
+	}
+	return resourceTypes, exact, err
 }
