@@ -94,7 +94,10 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 			continue
 		}
 		resourceId := resource.Instances[0].ResourceId
-		resourceTypes := azurerm.GetAzureRMResourceType(resourceId)
+		resourceTypes, exact, err := azurerm.GetAzureRMResourceType(resourceId)
+		if err != nil {
+			log.Fatal(fmt.Errorf("failed to get resource type for %s: %w", resourceId, err))
+		}
 
 		idPattern, _ := helper.GetIdPattern(resourceId)
 		if c.Strict {
@@ -111,7 +114,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 
 		if len(uncoveredGet)+len(uncoveredPut) == 0 {
 			if !isPlanOnly {
-				if len(resourceTypes) == 1 {
+				if exact {
 					resource.ResourceType = resourceTypes[0]
 				} else {
 					resource.ResourceType = c.getUserInputResourceType(resourceId, resourceTypes)
@@ -131,7 +134,10 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 		if ignoreSet[resource.OldAddress()] {
 			continue
 		}
-		resourceTypes := azurerm.GetAzureRMResourceType(resource.Id)
+		resourceTypes, exact, err := azurerm.GetAzureRMResourceType(resource.Id)
+		if err != nil {
+			log.Fatal(fmt.Errorf("failed to get resource type for %s: %w", resource.Id, err))
+		}
 
 		idPattern, _ := helper.GetIdPattern(resource.Id)
 		if c.Strict {
@@ -147,7 +153,7 @@ func (c PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) ([]types.Gen
 
 		if len(uncoveredGet)+len(uncoveredPut) == 0 {
 			if !isPlanOnly {
-				if len(resourceTypes) == 1 {
+				if exact {
 					resource.ResourceType = resourceTypes[0]
 				} else {
 					resource.ResourceType = c.getUserInputResourceType(resource.Id, resourceTypes)
