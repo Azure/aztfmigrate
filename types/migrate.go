@@ -84,7 +84,11 @@ func (r GenericResource) NewAddress(index interface{}) string {
 }
 
 func (r GenericResource) EmptyImportConfig() string {
-	return fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
+	countStatement := ""
+	if r.IsMultipleResources() && !r.IsForEach() {
+		countStatement = fmt.Sprintf("count = %d", len(r.Instances))
+	}
+	return fmt.Sprintf("resource \"%s\" \"%s\" {%s}\n", r.ResourceType, r.Label, countStatement)
 }
 
 func (r GenericResource) IsMultipleResources() bool {
