@@ -119,6 +119,12 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
 		}
 		return pid.String(), nil
+	case "azurerm_network_manager_deployment":
+		managerId := id.Parent().Parent()
+		if err := managerId.Normalize(importSpec); err != nil {
+			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", managerId.String(), rt, importSpec, err)
+		}
+		return managerId.String() + "/commit|" + id.Names()[1] + "|" + id.Names()[2], nil
 
 	// Porperty-like resources
 	case "azurerm_disk_pool_iscsi_target_lun":
