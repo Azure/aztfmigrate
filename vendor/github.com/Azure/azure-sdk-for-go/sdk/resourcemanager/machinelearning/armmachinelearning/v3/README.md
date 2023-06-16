@@ -33,31 +33,23 @@ cred, err := azidentity.NewDefaultAzureCredential(nil)
 
 For more information on authentication, please see the documentation for `azidentity` at [pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity).
 
-## Client Factory
+## Clients
 
-Azure Machine Learning module consists of one or more clients. We provide a client factory which could be used to create any client in this module.
+Azure Machine Learning modules consist of one or more clients.  A client groups a set of related APIs, providing access to its functionality within the specified subscription.  Create one or more clients to access the APIs you require using your credential.
 
 ```go
-clientFactory, err := armmachinelearning.NewClientFactory(<subscription ID>, cred, nil)
+client, err := armmachinelearning.NewUsagesClient(<subscription ID>, cred, nil)
 ```
 
 You can use `ClientOptions` in package `github.com/Azure/azure-sdk-for-go/sdk/azcore/arm` to set endpoint to connect with public and sovereign clouds as well as Azure Stack. For more information, please see the documentation for `azcore` at [pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azcore](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azcore).
 
 ```go
-options := arm.ClientOptions {
+options := arm.ClientOptions{
     ClientOptions: azcore.ClientOptions {
         Cloud: cloud.AzureChina,
     },
 }
-clientFactory, err := armmachinelearning.NewClientFactory(<subscription ID>, cred, &options)
-```
-
-## Clients
-
-A client groups a set of related APIs, providing access to its functionality.  Create one or more clients to access the APIs you require using client factory.
-
-```go
-client := clientFactory.NewUsagesClient()
+client, err := armmachinelearning.NewUsagesClient(<subscription ID>, cred, &options)
 ```
 
 ## Major Version Upgrade

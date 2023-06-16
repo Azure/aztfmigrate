@@ -14,6 +14,8 @@ import (
 	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
+	armruntime "github.com/Azure/azure-sdk-for-go/sdk/azcore/arm/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"net/http"
@@ -24,58 +26,65 @@ import (
 // SchedulesClient contains the methods for the Schedules group.
 // Don't use this type directly, use NewSchedulesClient() instead.
 type SchedulesClient struct {
-	internal       *arm.Client
+	host           string
 	subscriptionID string
+	pl             runtime.Pipeline
 }
 
 // NewSchedulesClient creates a new instance of SchedulesClient with the specified values.
-//   - subscriptionID - The ID of the target subscription.
-//   - credential - used to authorize requests. Usually a credential from azidentity.
-//   - options - pass nil to accept the default values.
+// subscriptionID - The ID of the target subscription.
+// credential - used to authorize requests. Usually a credential from azidentity.
+// options - pass nil to accept the default values.
 func NewSchedulesClient(subscriptionID string, credential azcore.TokenCredential, options *arm.ClientOptions) (*SchedulesClient, error) {
-	cl, err := arm.NewClient(moduleName+".SchedulesClient", moduleVersion, credential, options)
+	if options == nil {
+		options = &arm.ClientOptions{}
+	}
+	ep := cloud.AzurePublic.Services[cloud.ResourceManager].Endpoint
+	if c, ok := options.Cloud.Services[cloud.ResourceManager]; ok {
+		ep = c.Endpoint
+	}
+	pl, err := armruntime.NewPipeline(moduleName, moduleVersion, credential, runtime.PipelineOptions{}, options)
 	if err != nil {
 		return nil, err
 	}
 	client := &SchedulesClient{
 		subscriptionID: subscriptionID,
-		internal:       cl,
+		host:           ep,
+		pl:             pl,
 	}
 	return client, nil
 }
 
 // BeginCreateOrUpdate - Create or update schedule.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - name - Schedule name.
-//   - body - Schedule definition.
-//   - options - SchedulesClientBeginCreateOrUpdateOptions contains the optional parameters for the SchedulesClient.BeginCreateOrUpdate
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// name - Schedule name.
+// body - Schedule definition.
+// options - SchedulesClientBeginCreateOrUpdateOptions contains the optional parameters for the SchedulesClient.BeginCreateOrUpdate
+// method.
 func (client *SchedulesClient) BeginCreateOrUpdate(ctx context.Context, resourceGroupName string, workspaceName string, name string, body Schedule, options *SchedulesClientBeginCreateOrUpdateOptions) (*runtime.Poller[SchedulesClientCreateOrUpdateResponse], error) {
 	if options == nil || options.ResumeToken == "" {
 		resp, err := client.createOrUpdate(ctx, resourceGroupName, workspaceName, name, body, options)
 		if err != nil {
 			return nil, err
 		}
-		return runtime.NewPoller[SchedulesClientCreateOrUpdateResponse](resp, client.internal.Pipeline(), nil)
+		return runtime.NewPoller[SchedulesClientCreateOrUpdateResponse](resp, client.pl, nil)
 	} else {
-		return runtime.NewPollerFromResumeToken[SchedulesClientCreateOrUpdateResponse](options.ResumeToken, client.internal.Pipeline(), nil)
+		return runtime.NewPollerFromResumeToken[SchedulesClientCreateOrUpdateResponse](options.ResumeToken, client.pl, nil)
 	}
 }
 
 // CreateOrUpdate - Create or update schedule.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
 func (client *SchedulesClient) createOrUpdate(ctx context.Context, resourceGroupName string, workspaceName string, name string, body Schedule, options *SchedulesClientBeginCreateOrUpdateOptions) (*http.Response, error) {
 	req, err := client.createOrUpdateCreateRequest(ctx, resourceGroupName, workspaceName, name, body, options)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +113,7 @@ func (client *SchedulesClient) createOrUpdateCreateRequest(ctx context.Context, 
 		return nil, errors.New("parameter name cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{name}", url.PathEscape(name))
-	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -117,34 +126,32 @@ func (client *SchedulesClient) createOrUpdateCreateRequest(ctx context.Context, 
 
 // BeginDelete - Delete schedule.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - name - Schedule name.
-//   - options - SchedulesClientBeginDeleteOptions contains the optional parameters for the SchedulesClient.BeginDelete method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// name - Schedule name.
+// options - SchedulesClientBeginDeleteOptions contains the optional parameters for the SchedulesClient.BeginDelete method.
 func (client *SchedulesClient) BeginDelete(ctx context.Context, resourceGroupName string, workspaceName string, name string, options *SchedulesClientBeginDeleteOptions) (*runtime.Poller[SchedulesClientDeleteResponse], error) {
 	if options == nil || options.ResumeToken == "" {
 		resp, err := client.deleteOperation(ctx, resourceGroupName, workspaceName, name, options)
 		if err != nil {
 			return nil, err
 		}
-		return runtime.NewPoller[SchedulesClientDeleteResponse](resp, client.internal.Pipeline(), nil)
+		return runtime.NewPoller[SchedulesClientDeleteResponse](resp, client.pl, nil)
 	} else {
-		return runtime.NewPollerFromResumeToken[SchedulesClientDeleteResponse](options.ResumeToken, client.internal.Pipeline(), nil)
+		return runtime.NewPollerFromResumeToken[SchedulesClientDeleteResponse](options.ResumeToken, client.pl, nil)
 	}
 }
 
 // Delete - Delete schedule.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
 func (client *SchedulesClient) deleteOperation(ctx context.Context, resourceGroupName string, workspaceName string, name string, options *SchedulesClientBeginDeleteOptions) (*http.Response, error) {
 	req, err := client.deleteCreateRequest(ctx, resourceGroupName, workspaceName, name, options)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +180,7 @@ func (client *SchedulesClient) deleteCreateRequest(ctx context.Context, resource
 		return nil, errors.New("parameter name cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{name}", url.PathEscape(name))
-	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -186,18 +193,17 @@ func (client *SchedulesClient) deleteCreateRequest(ctx context.Context, resource
 
 // Get - Get schedule.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - name - Schedule name.
-//   - options - SchedulesClientGetOptions contains the optional parameters for the SchedulesClient.Get method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// name - Schedule name.
+// options - SchedulesClientGetOptions contains the optional parameters for the SchedulesClient.Get method.
 func (client *SchedulesClient) Get(ctx context.Context, resourceGroupName string, workspaceName string, name string, options *SchedulesClientGetOptions) (SchedulesClientGetResponse, error) {
 	req, err := client.getCreateRequest(ctx, resourceGroupName, workspaceName, name, options)
 	if err != nil {
 		return SchedulesClientGetResponse{}, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return SchedulesClientGetResponse{}, err
 	}
@@ -226,7 +232,7 @@ func (client *SchedulesClient) getCreateRequest(ctx context.Context, resourceGro
 		return nil, errors.New("parameter name cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{name}", url.PathEscape(name))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -247,11 +253,10 @@ func (client *SchedulesClient) getHandleResponse(resp *http.Response) (Schedules
 }
 
 // NewListPager - List schedules in specified workspace.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - options - SchedulesClientListOptions contains the optional parameters for the SchedulesClient.NewListPager method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// options - SchedulesClientListOptions contains the optional parameters for the SchedulesClient.List method.
 func (client *SchedulesClient) NewListPager(resourceGroupName string, workspaceName string, options *SchedulesClientListOptions) *runtime.Pager[SchedulesClientListResponse] {
 	return runtime.NewPager(runtime.PagingHandler[SchedulesClientListResponse]{
 		More: func(page SchedulesClientListResponse) bool {
@@ -268,7 +273,7 @@ func (client *SchedulesClient) NewListPager(resourceGroupName string, workspaceN
 			if err != nil {
 				return SchedulesClientListResponse{}, err
 			}
-			resp, err := client.internal.Pipeline().Do(req)
+			resp, err := client.pl.Do(req)
 			if err != nil {
 				return SchedulesClientListResponse{}, err
 			}
@@ -295,7 +300,7 @@ func (client *SchedulesClient) listCreateRequest(ctx context.Context, resourceGr
 		return nil, errors.New("parameter workspaceName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{workspaceName}", url.PathEscape(workspaceName))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}

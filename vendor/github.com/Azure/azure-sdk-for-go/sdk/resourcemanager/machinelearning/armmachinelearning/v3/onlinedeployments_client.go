@@ -14,6 +14,8 @@ import (
 	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
+	armruntime "github.com/Azure/azure-sdk-for-go/sdk/azcore/arm/runtime"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"net/http"
@@ -25,59 +27,66 @@ import (
 // OnlineDeploymentsClient contains the methods for the OnlineDeployments group.
 // Don't use this type directly, use NewOnlineDeploymentsClient() instead.
 type OnlineDeploymentsClient struct {
-	internal       *arm.Client
+	host           string
 	subscriptionID string
+	pl             runtime.Pipeline
 }
 
 // NewOnlineDeploymentsClient creates a new instance of OnlineDeploymentsClient with the specified values.
-//   - subscriptionID - The ID of the target subscription.
-//   - credential - used to authorize requests. Usually a credential from azidentity.
-//   - options - pass nil to accept the default values.
+// subscriptionID - The ID of the target subscription.
+// credential - used to authorize requests. Usually a credential from azidentity.
+// options - pass nil to accept the default values.
 func NewOnlineDeploymentsClient(subscriptionID string, credential azcore.TokenCredential, options *arm.ClientOptions) (*OnlineDeploymentsClient, error) {
-	cl, err := arm.NewClient(moduleName+".OnlineDeploymentsClient", moduleVersion, credential, options)
+	if options == nil {
+		options = &arm.ClientOptions{}
+	}
+	ep := cloud.AzurePublic.Services[cloud.ResourceManager].Endpoint
+	if c, ok := options.Cloud.Services[cloud.ResourceManager]; ok {
+		ep = c.Endpoint
+	}
+	pl, err := armruntime.NewPipeline(moduleName, moduleVersion, credential, runtime.PipelineOptions{}, options)
 	if err != nil {
 		return nil, err
 	}
 	client := &OnlineDeploymentsClient{
 		subscriptionID: subscriptionID,
-		internal:       cl,
+		host:           ep,
+		pl:             pl,
 	}
 	return client, nil
 }
 
 // BeginCreateOrUpdate - Create or update Inference Endpoint Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - deploymentName - Inference Endpoint Deployment name.
-//   - body - Inference Endpoint entity to apply during operation.
-//   - options - OnlineDeploymentsClientBeginCreateOrUpdateOptions contains the optional parameters for the OnlineDeploymentsClient.BeginCreateOrUpdate
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// deploymentName - Inference Endpoint Deployment name.
+// body - Inference Endpoint entity to apply during operation.
+// options - OnlineDeploymentsClientBeginCreateOrUpdateOptions contains the optional parameters for the OnlineDeploymentsClient.BeginCreateOrUpdate
+// method.
 func (client *OnlineDeploymentsClient) BeginCreateOrUpdate(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, body OnlineDeployment, options *OnlineDeploymentsClientBeginCreateOrUpdateOptions) (*runtime.Poller[OnlineDeploymentsClientCreateOrUpdateResponse], error) {
 	if options == nil || options.ResumeToken == "" {
 		resp, err := client.createOrUpdate(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, body, options)
 		if err != nil {
 			return nil, err
 		}
-		return runtime.NewPoller[OnlineDeploymentsClientCreateOrUpdateResponse](resp, client.internal.Pipeline(), nil)
+		return runtime.NewPoller[OnlineDeploymentsClientCreateOrUpdateResponse](resp, client.pl, nil)
 	} else {
-		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientCreateOrUpdateResponse](options.ResumeToken, client.internal.Pipeline(), nil)
+		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientCreateOrUpdateResponse](options.ResumeToken, client.pl, nil)
 	}
 }
 
 // CreateOrUpdate - Create or update Inference Endpoint Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
 func (client *OnlineDeploymentsClient) createOrUpdate(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, body OnlineDeployment, options *OnlineDeploymentsClientBeginCreateOrUpdateOptions) (*http.Response, error) {
 	req, err := client.createOrUpdateCreateRequest(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, body, options)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +119,7 @@ func (client *OnlineDeploymentsClient) createOrUpdateCreateRequest(ctx context.C
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodPut, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -123,36 +132,34 @@ func (client *OnlineDeploymentsClient) createOrUpdateCreateRequest(ctx context.C
 
 // BeginDelete - Delete Inference Endpoint Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - deploymentName - Inference Endpoint Deployment name.
-//   - options - OnlineDeploymentsClientBeginDeleteOptions contains the optional parameters for the OnlineDeploymentsClient.BeginDelete
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// deploymentName - Inference Endpoint Deployment name.
+// options - OnlineDeploymentsClientBeginDeleteOptions contains the optional parameters for the OnlineDeploymentsClient.BeginDelete
+// method.
 func (client *OnlineDeploymentsClient) BeginDelete(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, options *OnlineDeploymentsClientBeginDeleteOptions) (*runtime.Poller[OnlineDeploymentsClientDeleteResponse], error) {
 	if options == nil || options.ResumeToken == "" {
 		resp, err := client.deleteOperation(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, options)
 		if err != nil {
 			return nil, err
 		}
-		return runtime.NewPoller[OnlineDeploymentsClientDeleteResponse](resp, client.internal.Pipeline(), nil)
+		return runtime.NewPoller[OnlineDeploymentsClientDeleteResponse](resp, client.pl, nil)
 	} else {
-		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientDeleteResponse](options.ResumeToken, client.internal.Pipeline(), nil)
+		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientDeleteResponse](options.ResumeToken, client.pl, nil)
 	}
 }
 
 // Delete - Delete Inference Endpoint Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
 func (client *OnlineDeploymentsClient) deleteOperation(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, options *OnlineDeploymentsClientBeginDeleteOptions) (*http.Response, error) {
 	req, err := client.deleteCreateRequest(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, options)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -185,7 +192,7 @@ func (client *OnlineDeploymentsClient) deleteCreateRequest(ctx context.Context, 
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodDelete, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -198,19 +205,18 @@ func (client *OnlineDeploymentsClient) deleteCreateRequest(ctx context.Context, 
 
 // Get - Get Inference Deployment Deployment.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - deploymentName - Inference Endpoint Deployment name.
-//   - options - OnlineDeploymentsClientGetOptions contains the optional parameters for the OnlineDeploymentsClient.Get method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// deploymentName - Inference Endpoint Deployment name.
+// options - OnlineDeploymentsClientGetOptions contains the optional parameters for the OnlineDeploymentsClient.Get method.
 func (client *OnlineDeploymentsClient) Get(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, options *OnlineDeploymentsClientGetOptions) (OnlineDeploymentsClientGetResponse, error) {
 	req, err := client.getCreateRequest(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, options)
 	if err != nil {
 		return OnlineDeploymentsClientGetResponse{}, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return OnlineDeploymentsClientGetResponse{}, err
 	}
@@ -243,7 +249,7 @@ func (client *OnlineDeploymentsClient) getCreateRequest(ctx context.Context, res
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -265,21 +271,20 @@ func (client *OnlineDeploymentsClient) getHandleResponse(resp *http.Response) (O
 
 // GetLogs - Polls an Endpoint operation.
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - deploymentName - The name and identifier for the endpoint.
-//   - body - The request containing parameters for retrieving logs.
-//   - options - OnlineDeploymentsClientGetLogsOptions contains the optional parameters for the OnlineDeploymentsClient.GetLogs
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// deploymentName - The name and identifier for the endpoint.
+// body - The request containing parameters for retrieving logs.
+// options - OnlineDeploymentsClientGetLogsOptions contains the optional parameters for the OnlineDeploymentsClient.GetLogs
+// method.
 func (client *OnlineDeploymentsClient) GetLogs(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, body DeploymentLogsRequest, options *OnlineDeploymentsClientGetLogsOptions) (OnlineDeploymentsClientGetLogsResponse, error) {
 	req, err := client.getLogsCreateRequest(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, body, options)
 	if err != nil {
 		return OnlineDeploymentsClientGetLogsResponse{}, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return OnlineDeploymentsClientGetLogsResponse{}, err
 	}
@@ -312,7 +317,7 @@ func (client *OnlineDeploymentsClient) getLogsCreateRequest(ctx context.Context,
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -333,13 +338,11 @@ func (client *OnlineDeploymentsClient) getLogsHandleResponse(resp *http.Response
 }
 
 // NewListPager - List Inference Endpoint Deployments.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - options - OnlineDeploymentsClientListOptions contains the optional parameters for the OnlineDeploymentsClient.NewListPager
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// options - OnlineDeploymentsClientListOptions contains the optional parameters for the OnlineDeploymentsClient.List method.
 func (client *OnlineDeploymentsClient) NewListPager(resourceGroupName string, workspaceName string, endpointName string, options *OnlineDeploymentsClientListOptions) *runtime.Pager[OnlineDeploymentsClientListResponse] {
 	return runtime.NewPager(runtime.PagingHandler[OnlineDeploymentsClientListResponse]{
 		More: func(page OnlineDeploymentsClientListResponse) bool {
@@ -356,7 +359,7 @@ func (client *OnlineDeploymentsClient) NewListPager(resourceGroupName string, wo
 			if err != nil {
 				return OnlineDeploymentsClientListResponse{}, err
 			}
-			resp, err := client.internal.Pipeline().Do(req)
+			resp, err := client.pl.Do(req)
 			if err != nil {
 				return OnlineDeploymentsClientListResponse{}, err
 			}
@@ -387,7 +390,7 @@ func (client *OnlineDeploymentsClient) listCreateRequest(ctx context.Context, re
 		return nil, errors.New("parameter endpointName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{endpointName}", url.PathEscape(endpointName))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -417,14 +420,13 @@ func (client *OnlineDeploymentsClient) listHandleResponse(resp *http.Response) (
 }
 
 // NewListSKUsPager - List Inference Endpoint Deployment Skus.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Inference endpoint name.
-//   - deploymentName - Inference Endpoint Deployment name.
-//   - options - OnlineDeploymentsClientListSKUsOptions contains the optional parameters for the OnlineDeploymentsClient.NewListSKUsPager
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Inference endpoint name.
+// deploymentName - Inference Endpoint Deployment name.
+// options - OnlineDeploymentsClientListSKUsOptions contains the optional parameters for the OnlineDeploymentsClient.ListSKUs
+// method.
 func (client *OnlineDeploymentsClient) NewListSKUsPager(resourceGroupName string, workspaceName string, endpointName string, deploymentName string, options *OnlineDeploymentsClientListSKUsOptions) *runtime.Pager[OnlineDeploymentsClientListSKUsResponse] {
 	return runtime.NewPager(runtime.PagingHandler[OnlineDeploymentsClientListSKUsResponse]{
 		More: func(page OnlineDeploymentsClientListSKUsResponse) bool {
@@ -441,7 +443,7 @@ func (client *OnlineDeploymentsClient) NewListSKUsPager(resourceGroupName string
 			if err != nil {
 				return OnlineDeploymentsClientListSKUsResponse{}, err
 			}
-			resp, err := client.internal.Pipeline().Do(req)
+			resp, err := client.pl.Do(req)
 			if err != nil {
 				return OnlineDeploymentsClientListSKUsResponse{}, err
 			}
@@ -476,7 +478,7 @@ func (client *OnlineDeploymentsClient) listSKUsCreateRequest(ctx context.Context
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodGet, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
@@ -504,37 +506,35 @@ func (client *OnlineDeploymentsClient) listSKUsHandleResponse(resp *http.Respons
 
 // BeginUpdate - Update Online Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
-//   - resourceGroupName - The name of the resource group. The name is case insensitive.
-//   - workspaceName - Name of Azure Machine Learning workspace.
-//   - endpointName - Online Endpoint name.
-//   - deploymentName - Inference Endpoint Deployment name.
-//   - body - Online Endpoint entity to apply during operation.
-//   - options - OnlineDeploymentsClientBeginUpdateOptions contains the optional parameters for the OnlineDeploymentsClient.BeginUpdate
-//     method.
+// resourceGroupName - The name of the resource group. The name is case insensitive.
+// workspaceName - Name of Azure Machine Learning workspace.
+// endpointName - Online Endpoint name.
+// deploymentName - Inference Endpoint Deployment name.
+// body - Online Endpoint entity to apply during operation.
+// options - OnlineDeploymentsClientBeginUpdateOptions contains the optional parameters for the OnlineDeploymentsClient.BeginUpdate
+// method.
 func (client *OnlineDeploymentsClient) BeginUpdate(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, body PartialMinimalTrackedResourceWithSKU, options *OnlineDeploymentsClientBeginUpdateOptions) (*runtime.Poller[OnlineDeploymentsClientUpdateResponse], error) {
 	if options == nil || options.ResumeToken == "" {
 		resp, err := client.update(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, body, options)
 		if err != nil {
 			return nil, err
 		}
-		return runtime.NewPoller[OnlineDeploymentsClientUpdateResponse](resp, client.internal.Pipeline(), nil)
+		return runtime.NewPoller[OnlineDeploymentsClientUpdateResponse](resp, client.pl, nil)
 	} else {
-		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientUpdateResponse](options.ResumeToken, client.internal.Pipeline(), nil)
+		return runtime.NewPollerFromResumeToken[OnlineDeploymentsClientUpdateResponse](options.ResumeToken, client.pl, nil)
 	}
 }
 
 // Update - Update Online Deployment (asynchronous).
 // If the operation fails it returns an *azcore.ResponseError type.
-//
 // Generated from API version 2022-10-01
 func (client *OnlineDeploymentsClient) update(ctx context.Context, resourceGroupName string, workspaceName string, endpointName string, deploymentName string, body PartialMinimalTrackedResourceWithSKU, options *OnlineDeploymentsClientBeginUpdateOptions) (*http.Response, error) {
 	req, err := client.updateCreateRequest(ctx, resourceGroupName, workspaceName, endpointName, deploymentName, body, options)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.internal.Pipeline().Do(req)
+	resp, err := client.pl.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -567,7 +567,7 @@ func (client *OnlineDeploymentsClient) updateCreateRequest(ctx context.Context, 
 		return nil, errors.New("parameter deploymentName cannot be empty")
 	}
 	urlPath = strings.ReplaceAll(urlPath, "{deploymentName}", url.PathEscape(deploymentName))
-	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.internal.Endpoint(), urlPath))
+	req, err := runtime.NewRequest(ctx, http.MethodPatch, runtime.JoinPaths(client.host, urlPath))
 	if err != nil {
 		return nil, err
 	}
