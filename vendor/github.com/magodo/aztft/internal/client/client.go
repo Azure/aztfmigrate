@@ -10,6 +10,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datashare/armdatashare"
@@ -31,6 +32,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagepool/armstoragepool"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/streamanalytics/armstreamanalytics"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/synapse/armsynapse"
@@ -475,6 +477,14 @@ func (b *ClientBuilder) NewNetworkPacketCapturesClient(subscriptionId string) (*
 	)
 }
 
+func (b *ClientBuilder) NewNetworkManagementDeploymentStatusClient(subscriptionId string) (*armnetwork.ManagerDeploymentStatusClient, error) {
+	return armnetwork.NewManagerDeploymentStatusClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewFrontdoorPoliciesClient(subscriptionId string) (*armfrontdoor.PoliciesClient, error) {
 	return armfrontdoor.NewPoliciesClient(
 		subscriptionId,
@@ -540,6 +550,31 @@ func (b *ClientBuilder) NewSiteRecoveryReplicationProtectionContainerMappingsCli
 		vaultName,
 		resourceGroupName,
 		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewSiteRecoveryReplicationNetworkMappingsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationNetworkMappingsClient, error) {
+	return armrecoveryservicessiterecovery.NewReplicationNetworkMappingsClient(
+		vaultName,
+		resourceGroupName,
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewStorageMoverEndpointsClient(subscriptionId string) (*armstoragemover.EndpointsClient, error) {
+	return armstoragemover.NewEndpointsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewCostManagementScheduledActionsClient() (*armcostmanagement.ScheduledActionsClient, error) {
+	return armcostmanagement.NewScheduledActionsClient(
 		b.Cred,
 		&b.ClientOpt,
 	)

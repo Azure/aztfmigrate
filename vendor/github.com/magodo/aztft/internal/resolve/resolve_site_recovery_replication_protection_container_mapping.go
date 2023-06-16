@@ -12,7 +12,13 @@ import (
 type siteRecoveryReplicationProtectionContainerMappingResolver struct{}
 
 func (siteRecoveryReplicationProtectionContainerMappingResolver) ResourceTypes() []string {
-	return []string{"azurerm_site_recovery_hyperv_replication_policy_association", "azurerm_site_recovery_protection_container_mapping"}
+	return []string{
+		"azurerm_site_recovery_hyperv_replication_policy_association",
+		"azurerm_site_recovery_protection_container_mapping",
+
+		// There is no SDk defined proverSpecificDetails type for this type, so just ingoring it for now
+		"azurerm_site_recovery_vmware_replication_policy_association",
+	}
 }
 
 func (siteRecoveryReplicationProtectionContainerMappingResolver) Resolve(b *client.ClientBuilder, id armid.ResourceId) (string, error) {
