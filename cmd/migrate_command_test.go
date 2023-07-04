@@ -2,6 +2,7 @@ package cmd_test
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -9,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Azure/azapi2azurerm/azurerm"
 	"github.com/Azure/azapi2azurerm/cmd"
 	"github.com/Azure/azapi2azurerm/tf"
 	"github.com/hashicorp/hcl/v2"
@@ -61,7 +63,7 @@ provider "azurerm" {
 	if err != nil {
 		t.Fatal(err)
 	}
-	terraform, err := tf.NewTerraform(dir, false, false)
+	terraform, err := tf.NewTerraform(dir, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -93,8 +95,28 @@ provider "azurerm" {
 			ErrorWriter: os.Stderr,
 		},
 	}
-	planCommand := cmd.PlanCommand{Ui: ui}
-	resources, updateResources := planCommand.Plan(terraform, false)
+	p, err := terraform.Plan()
+	if err != nil {
+		log.Fatal(err)
+	}
+	resources := terraform.ListGenericResources(p)
+	updateResources := terraform.ListGenericUpdateResources(p)
+	for i, r := range resources {
+		resourceId := r.Instances[0].ResourceId
+		resourceTypes, _, err := azurerm.GetAzureRMResourceType(resourceId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resources[i].ResourceType = resourceTypes[0]
+	}
+	for i, r := range updateResources {
+		resourceId := r.Id
+		resourceTypes, _, err := azurerm.GetAzureRMResourceType(resourceId)
+		if err != nil {
+			t.Fatal(err)
+		}
+		updateResources[i].ResourceType = resourceTypes[0]
+	}
 	migrateCommand := cmd.MigrateCommand{Ui: ui}
 	migrateCommand.MigrateGenericResource(terraform, resources)
 	migrateCommand.MigrateGenericUpdateResource(terraform, updateResources)
@@ -104,6 +126,7 @@ provider "azurerm" {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Logf("migration result: \n%s", string(config))
 	file, diag := hclwrite.ParseConfig(config, filename, hcl.InitialPos)
 	if diag != nil && diag.HasErrors() {
 		t.Fatal(diag.Error())
@@ -180,7 +203,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 provider "azapi" {

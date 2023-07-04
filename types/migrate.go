@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	tfjson "github.com/hashicorp/terraform-json"
+	"strings"
 )
 
 type Reference struct {
@@ -84,11 +85,21 @@ func (r GenericResource) NewAddress(index interface{}) string {
 }
 
 func (r GenericResource) EmptyImportConfig() string {
-	countStatement := ""
-	if r.IsMultipleResources() && !r.IsForEach() {
-		countStatement = fmt.Sprintf("count = %d", len(r.Instances))
+	if r.IsMultipleResources() {
+		if !r.IsForEach() {
+			return fmt.Sprintf(`resource "%s" "%s" {
+  count = %d
+}`, r.ResourceType, r.Label, len(r.Instances))
+		}
+		keys := make([]string, 0)
+		for _, instance := range r.Instances {
+			keys = append(keys, fmt.Sprintf(`"%s"`, instance.Index))
+		}
+		return fmt.Sprintf(`resource "%s" "%s" {
+	  for_each = toset([%s])
+}`, r.ResourceType, r.Label, strings.Join(keys, ","))
 	}
-	return fmt.Sprintf("resource \"%s\" \"%s\" {%s}\n", r.ResourceType, r.Label, countStatement)
+	return fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
 }
 
 func (r GenericResource) IsMultipleResources() bool {

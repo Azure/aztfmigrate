@@ -51,7 +51,7 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 		t.Fatal(err)
 	}
 
-	terraform, err := tf.NewTerraform(dir, false, false)
+	terraform, err := tf.NewTerraform(dir, false)
 	if err != nil {
 		t.Fatal(err)
 	}
