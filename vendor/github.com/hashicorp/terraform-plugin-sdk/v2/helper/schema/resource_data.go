@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package schema
 
 import (
@@ -528,7 +531,7 @@ func (d *ResourceData) getChange(
 func (d *ResourceData) get(addr []string, source getSource) getResult {
 	d.once.Do(d.init)
 
-	level := "set"
+	var level string
 	flags := source & ^getSourceLevelMask
 	exact := flags&getSourceExact != 0
 	source = source & getSourceLevelMask

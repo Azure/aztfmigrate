@@ -175,6 +175,9 @@ func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{
 			}
 
 			// update
+			if new.Body().GetAttribute(attrName) == nil {
+				continue
+			}
 			old.Body().SetAttributeRaw(attrName, new.Body().GetAttribute(attrName).Expr().BuildTokens(nil))
 		}
 	}

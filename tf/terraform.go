@@ -10,10 +10,9 @@ import (
 	"strings"
 
 	"github.com/Azure/azapi2azurerm/types"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/hashicorp/terraform-exec/tfinstall"
 	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/magodo/tfadd/tfadd"
 )
 
 type Terraform struct {
@@ -24,24 +23,10 @@ type Terraform struct {
 
 const planfile = "tfplan"
 
-// The required terraform version that has the `terraform add` command.
-var minRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20210630"))
-var maxRequiredTFVersion = version.Must(version.NewSemver("v1.1.0-alpha20211006"))
-
-func NewTerraform(workingDirectory string, logEnabled bool, isDevVersion bool) (*Terraform, error) {
-	execPath := ""
-	if isDevVersion {
-		devExecPath, err := FindTerraform(context.TODO(), minRequiredTFVersion, maxRequiredTFVersion)
-		if err != nil {
-			return nil, fmt.Errorf("error finding a terraform exectuable: %w", err)
-		}
-		execPath = devExecPath
-	} else {
-		curExecPath, err := tfinstall.LookPath().ExecPath(context.TODO())
-		if err != nil {
-			return nil, err
-		}
-		execPath = curExecPath
+func NewTerraform(workingDirectory string, logEnabled bool) (*Terraform, error) {
+	execPath, err := FindTerraform(context.Background())
+	if err != nil {
+		return nil, err
 	}
 	tf, err := tfexec.NewTerraform(workingDirectory, execPath)
 	if err != nil {
@@ -220,13 +205,14 @@ func (t *Terraform) ImportAdd(address string, id string) (string, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tpl, err := t.exec.Add(context.TODO(), address, tfexec.FromState(true))
-	// remove comments
-	tpl = tpl[strings.Index(tpl, `resource "`):]
+	outputs, err := tfadd.StateForTargets(context.TODO(), t.exec, []string{address}, tfadd.Full(true))
 	if err != nil {
 		return "", fmt.Errorf("converting terraform state to config for resource %s: %w", address, err)
 	}
-	return tpl, nil
+	if len(outputs) == 0 {
+		return "", fmt.Errorf("resource %s not found in state", address)
+	}
+	return string(outputs[0]), nil
 }
 
 func (t *Terraform) Import(address string, id string) error {

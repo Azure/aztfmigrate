@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package tftypes
 
 import (
@@ -284,9 +287,9 @@ type AttributePathStepper interface {
 	ApplyTerraform5AttributePathStep(AttributePathStep) (interface{}, error)
 }
 
-// WalkAttributePath will return the value that `path` is pointing to, using
-// `in` as the root. If an error is returned, the AttributePath returned will
-// indicate the steps that remained to be applied when the error was
+// WalkAttributePath will return the Type or Value that `path` is pointing to,
+// using `in` as the root. If an error is returned, the AttributePath returned
+// will indicate the steps that remained to be applied when the error was
 // encountered.
 //
 // map[string]interface{} and []interface{} types have built-in support. Other
@@ -324,17 +327,17 @@ func builtinAttributePathStepper(in interface{}) (AttributePathStepper, bool) {
 type mapStringInterfaceAttributePathStepper map[string]interface{}
 
 func (m mapStringInterfaceAttributePathStepper) ApplyTerraform5AttributePathStep(step AttributePathStep) (interface{}, error) {
-	_, isAttributeName := step.(AttributeName)
-	_, isElementKeyString := step.(ElementKeyString)
+	attributeName, isAttributeName := step.(AttributeName)
+	elementKeyString, isElementKeyString := step.(ElementKeyString)
 	if !isAttributeName && !isElementKeyString {
 		return nil, ErrInvalidStep
 	}
 	var stepValue string
 	if isAttributeName {
-		stepValue = string(step.(AttributeName))
+		stepValue = string(attributeName)
 	}
 	if isElementKeyString {
-		stepValue = string(step.(ElementKeyString))
+		stepValue = string(elementKeyString)
 	}
 	v, ok := m[stepValue]
 	if !ok {

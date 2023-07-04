@@ -43,7 +43,7 @@ func (c PlanCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}

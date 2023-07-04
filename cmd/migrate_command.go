@@ -53,7 +53,7 @@ func (c MigrateCommand) Run(args []string) int {
 
 	log.Printf("[INFO] initializing terraform...")
 	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
+	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,7 +108,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 		// write empty config to temp dir for import
 		tempDirectoryCreate(workingDirectory)
 		tempPath := filepath.Join(workingDirectory, tempDir)
-		devTerraform, err := tf.NewTerraform(tempPath, c.Verbose, true)
+		tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -128,7 +128,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 		if !r.IsMultipleResources() {
 			instance := r.Instances[0]
 			log.Printf("[INFO] importing %s to %s and generating config...", instance.ResourceId, r.NewAddress(nil))
-			if block, err := importAndGenerateConfig(devTerraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType, false); err == nil {
+			if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(nil), instance.ResourceId, r.ResourceType, false); err == nil {
 				resources[index].Block = block
 				valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress(nil))
 				for i, output := range resources[index].Instances[0].Outputs {
@@ -154,7 +154,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 			log.Printf("[INFO] generating config...")
 			blocks := make([]*hclwrite.Block, 0)
 			for _, instance := range r.Instances {
-				if block, err := importAndGenerateConfig(devTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
+				if block, err := importAndGenerateConfig(tempTerraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
 					blocks = append(blocks, block)
 				}
 			}
@@ -221,7 +221,7 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	}
 
 	// remove from config
-	if err := os.Remove(filepath.Join(workingDirectory, filenameImport)); err != nil {
+	if err := os.RemoveAll(filepath.Join(workingDirectory, filenameImport)); err != nil {
 		log.Fatal(err)
 	}
 	for _, r := range resources {
@@ -268,11 +268,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	workingDirectory := terraform.GetWorkingDirectory()
 	tempDirectoryCreate(workingDirectory)
 	tempPath := filepath.Join(workingDirectory, tempDir)
-	devTerraform, err := tf.NewTerraform(tempPath, c.Verbose, true)
-	if err != nil {
-		log.Fatal(err)
-	}
-	userTerraform, err := tf.NewTerraform(workingDirectory, c.Verbose, false)
+	tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -284,7 +280,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	newAddrs := make([]string, 0)
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
-		if block, err := importAndGenerateConfig(devTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
+		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
 			resources[index].Block = block
 			valuePropMap := helper.GetValuePropMap(resources[index].Block, resources[index].NewAddress())
 			for i := range resources[index].Outputs {
@@ -338,7 +334,7 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	}
 
 	log.Println("[INFO] refreshing state for migrated resources...")
-	err = userTerraform.RefreshState(newAddrs)
+	err = terraform.RefreshState(newAddrs)
 	if err != nil {
 		log.Printf("refreshing state: %+v", err)
 	}
