@@ -52,7 +52,6 @@ main() {
     cp -r "$MYDIR/generate-provider-schema" "$provider_dir/internal/tools"
     pushd $provider_dir > /dev/null
     git checkout "$provider_version" || die "failed to checkout provider version $provider_version"
-    go mod tidy || die "failed to run go mod tidy"
     go mod vendor || die "failed to run go mod vendor"
     out=$(go run "$provider_dir/internal/tools/generate-provider-schema/main.go") || die "failed to generate provider schema"
     cat << EOF > "$ROOTDIR/azurerm/schema/provider_gen.go"
