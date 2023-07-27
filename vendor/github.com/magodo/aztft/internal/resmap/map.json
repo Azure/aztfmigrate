@@ -1194,14 +1194,14 @@
   "azurerm_application_insights_standard_web_test": {
     "management_plane": {
       "scopes": [
-        "/subscriptions"
+        "/subscriptions/resourceGroups"
       ],
       "provider": "Microsoft.Insights",
       "types": [
         "webTests"
       ],
       "import_specs": [
-        "/subscriptions/Microsoft.Insights/webTests"
+        "/subscriptions/resourceGroups/Microsoft.Insights/webTests"
       ]
     }
   },
@@ -1315,6 +1315,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines/extensions"
+      ]
+    }
+  },
+  "azurerm_arc_private_link_scope": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.HyrbidCompute",
+      "types": [
+        "privateLinkScopes"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.HyrbidCompute/privateLinkScopes"
       ]
     }
   },
@@ -1921,11 +1935,16 @@
   "azurerm_blueprint_assignment": {
     "management_plane": {
       "scopes": [
-        "any"
+          "/subscriptions",
+          "/Microsoft.Management/managementGroups"
       ],
       "provider": "Microsoft.Blueprint",
       "types": [
         "blueprintAssignments"
+      ],
+      "import_specs": [
+        "/subscriptions/Microsoft.Blueprint/blueprintAssignments",
+        "/Microsoft.Management/managementGroups/providers/Microsoft.Blueprint/blueprintAssignments"
       ]
     }
   },
@@ -5382,6 +5401,20 @@
       ]
     }
   },
+  "azurerm_graph_account": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.GraphServices",
+      "types": [
+        "accounts"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.GraphServices/accounts"
+      ]
+    }
+  },
   "azurerm_hdinsight_hadoop_cluster": {
     "management_plane": {
       "scopes": [
@@ -5675,10 +5708,10 @@
       ],
       "provider": "Microsoft.Security",
       "types": [
-        "ioTSecuritySolutions"
+        "iotSecuritySolutions"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.Security/ioTSecuritySolutions"
+        "/subscriptions/resourceGroups/Microsoft.Security/iotSecuritySolutions"
       ]
     }
   },
@@ -6366,6 +6399,22 @@
       ]
     }
   },
+  "azurerm_kusto_cosmosdb_data_connection": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Kusto",
+      "types": [
+        "clusters",
+        "databases",
+        "dataConnections"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Kusto/clusters/databases/dataConnections"
+      ]
+    }
+  },
   "azurerm_kusto_database": {
     "management_plane": {
       "scopes": [
@@ -6976,8 +7025,6 @@
     }
   },
   "azurerm_logic_app_action_custom": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6993,8 +7040,6 @@
     }
   },
   "azurerm_logic_app_action_http": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -7158,8 +7203,6 @@
     }
   },
   "azurerm_logic_app_trigger_custom": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -7175,8 +7218,6 @@
     }
   },
   "azurerm_logic_app_trigger_http_request": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -7192,8 +7233,6 @@
     }
   },
   "azurerm_logic_app_trigger_recurrence": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -7320,10 +7359,10 @@
       "provider": "Microsoft.MachineLearningServices",
       "types": [
         "workspaces",
-        "datastores"
+        "dataStores"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/datastores"
+        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/dataStores"
       ]
     }
   },
@@ -7335,10 +7374,10 @@
       "provider": "Microsoft.MachineLearningServices",
       "types": [
         "workspaces",
-        "datastores"
+        "dataStores"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/datastores"
+        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/dataStores"
       ]
     }
   },
@@ -7350,10 +7389,10 @@
       "provider": "Microsoft.MachineLearningServices",
       "types": [
         "workspaces",
-        "datastores"
+        "dataStores"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/datastores"
+        "/subscriptions/resourceGroups/Microsoft.MachineLearningServices/workspaces/dataStores"
       ]
     }
   },
@@ -7506,12 +7545,12 @@
       "scopes": [
         "/subscriptions/resourceGroups"
       ],
-      "provider": "microsoft.compute",
+      "provider": "Microsoft.Compute",
       "types": [
         "disks"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/microsoft.compute/disks"
+        "/subscriptions/resourceGroups/Microsoft.Compute/disks"
       ]
     }
   },
@@ -7782,7 +7821,7 @@
       "provider": "Microsoft.Media",
       "types": [
         "mediaServices",
-        "liveeEents"
+        "liveEvents"
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Media/mediaServices/liveEvents"
@@ -7905,6 +7944,22 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks"
+      ]
+    }
+  },
+  "azurerm_mobile_network_attached_data_network": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.MobileNetwork",
+      "types": [
+        "packetCoreControlPlanes",
+        "packetCoreDataPlanes",
+        "attachedDataNetworks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/packetCoreControlPlanes/packetCoreDataPlanes/attachedDataNetworks"
       ]
     }
   },
@@ -9266,6 +9321,21 @@
       ]
     }
   },
+  "azurerm_network_manager_security_admin_configuration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "securityAdminConfigurations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/securityAdminConfigurations"
+      ]
+    }
+  },
   "azurerm_network_manager_static_member": {
     "management_plane": {
       "scopes": [
@@ -9327,21 +9397,6 @@
       ]
     }
   },
-  "azurerm_network_security_admin_configuration": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.Network",
-      "types": [
-        "networkManagers",
-        "securityAdminConfigurations"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/securityAdminConfigurations"
-      ]
-    }
-  },
   "azurerm_network_security_group": {
     "management_plane": {
       "scopes": [
@@ -9397,6 +9452,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Network/networkWatchers/flowLogs"
+      ]
+    }
+  },
+  "azurerm_new_relic_monitor": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "NewRelic.Observability",
+      "types": [
+        "monitors"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/NewRelic.Observability/monitors"
       ]
     }
   },
@@ -13915,8 +13984,6 @@
     }
   },
   "azurerm_virtual_machine": {
-    "is_removed": true,
-    "remove_reason": "This is deprecated in favor of `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -14380,11 +14447,11 @@
       ],
       "provider": "Microsoft.SignalRService",
       "types": [
-        "WebPubSub",
+        "webPubSub",
         "customDomains"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.SignalRService/WebPubSub/customDomains"
+        "/subscriptions/resourceGroups/Microsoft.SignalRService/webPubSub/customDomains"
       ]
     }
   },

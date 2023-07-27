@@ -85,7 +85,7 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 	switch rt {
 	case "azurerm_app_service_slot_virtual_network_swift_connection":
 		rid.AttrTypes[2] = "config"
-	case "azurerm_iot_time_series_insights_access_policy":
+	case "azurerm_app_service_virtual_network_swift_connection":
 		rid.AttrTypes[1] = "config"
 	case "azurerm_synapse_workspace_sql_aad_admin":
 		rid.AttrTypes[1] = "sqlAdministrators"
