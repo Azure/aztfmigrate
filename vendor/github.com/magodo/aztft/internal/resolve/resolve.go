@@ -181,6 +181,15 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.COSTMANAGEMENT/SCHEDULEDACTIONS": {
 		"/SUBSCRIPTIONS": costmanagementScheduleActionsResolver{},
 	},
+	"/MICROSOFT.INSIGHTS/WEBTESTS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": applicationInsightsWebTestsResolver{},
+	},
+	"/MICROSOFT.LOGIC/WORKFLOWS/ACTIONS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": logicAppAction{},
+	},
+	"/MICROSOFT.LOGIC/WORKFLOWS/TRIGGERS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": logicAppTrigger{},
+	},
 }
 
 type ResolveError struct {

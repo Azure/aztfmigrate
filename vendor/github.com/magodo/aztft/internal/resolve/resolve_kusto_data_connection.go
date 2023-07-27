@@ -12,7 +12,7 @@ import (
 type kustoDataConnectionsResolver struct{}
 
 func (kustoDataConnectionsResolver) ResourceTypes() []string {
-	return []string{"azurerm_kusto_eventgrid_data_connection", "azurerm_kusto_eventhub_data_connection", "azurerm_kusto_iothub_data_connection"}
+	return []string{"azurerm_kusto_eventgrid_data_connection", "azurerm_kusto_eventhub_data_connection", "azurerm_kusto_iothub_data_connection", "azurerm_kusto_cosmosdb_data_connection"}
 }
 
 func (kustoDataConnectionsResolver) Resolve(b *client.ClientBuilder, id armid.ResourceId) (string, error) {
@@ -36,6 +36,8 @@ func (kustoDataConnectionsResolver) Resolve(b *client.ClientBuilder, id armid.Re
 		return "azurerm_kusto_eventhub_data_connection", nil
 	case *armkusto.IotHubDataConnection:
 		return "azurerm_kusto_iothub_data_connection", nil
+	case *armkusto.CosmosDbDataConnection:
+		return "azurerm_kusto_cosmosdb_data_connection", nil
 	default:
 		return "", fmt.Errorf("unknown data connection type %T", model)
 	}

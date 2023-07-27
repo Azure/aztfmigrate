@@ -107,30 +107,31 @@ func queryType(idStr string, apiOpt *APIOption) ([]Type, bool, error) {
 		return nil, false, fmt.Errorf("invalid resource id: %v", err)
 	}
 
-	l := getARMId2TFMapItems(id)
-	if len(l) == 0 {
-		return nil, false, nil
-	}
+	var (
+		result []Type
+		exact  bool
+	)
 
-	var result []Type
+	if apiOpt == nil {
+		l := getARMId2TFMapItems(id)
+		if len(l) == 0 {
+			return nil, false, nil
+		}
 
-	exact := len(l) == 1
-	if apiOpt != nil {
-		// Resolve ambiguous resources
-		if len(l) > 1 {
-			rt, err := resolve.Resolve(id, apiOpt.Cred, apiOpt.ClientOption)
-			if err != nil {
-				return nil, false, err
-			}
-			for _, item := range l {
-				if item.ResourceType == rt {
-					l = []resmap.ARMId2TFMapItem{item}
-					break
-				}
-			}
-			if len(l) > 1 {
-				return nil, false, fmt.Errorf("the ambiguity list doesn't have an item with resource type %q, please open an issue for this", rt)
-			}
+		exact = len(l) == 1
+		for _, item := range l {
+			result = append(result, Type{
+				AzureId: id,
+				TFType:  item.ResourceType,
+			})
+		}
+	} else {
+		entry, err := mapEntryById(id, *apiOpt)
+		if err != nil {
+			return nil, false, fmt.Errorf("mapping entry by id %s: %v", id, err)
+		}
+		if entry == nil {
+			return nil, false, nil
 		}
 
 		// There must be only one resource type, try to populate any property like resources for it.
@@ -138,33 +139,27 @@ func queryType(idStr string, apiOpt *APIOption) ([]Type, bool, error) {
 		result = []Type{
 			{
 				AzureId: id,
-				TFType:  l[0].ResourceType,
+				TFType:  entry.ResourceType,
 			},
 		}
 
-		rt := l[0].ResourceType
+		rt := entry.ResourceType
 		propLikeResIds, err := populate.Populate(id, rt, apiOpt.Cred, apiOpt.ClientOption)
 		if err != nil {
 			return nil, false, fmt.Errorf("populating property-like resources for %s: %v", rt, err)
 		}
 
 		for _, propLikeResId := range propLikeResIds {
-			tmpl := getARMId2TFMapItems(propLikeResId)
-			// The resource id of property like resources are hypothetic "unique" resource id, they should have no ambiguity. Otherwise, it is a bug.
-			if len(tmpl) != 1 {
-				return nil, false, fmt.Errorf("expect 1 TF resource matched for resource id %q, but got %d. Please open an issue for this", propLikeResId, len(tmpl))
+			entry, err := mapEntryById(propLikeResId, *apiOpt)
+			if err != nil {
+				return nil, false, fmt.Errorf("mapping entry by id %s: %v", id, err)
 			}
-			item := tmpl[0]
+			if entry == nil {
+				continue
+			}
 			result = append(result, Type{
 				AzureId: propLikeResId,
-				TFType:  item.ResourceType,
-			})
-		}
-	} else {
-		for _, item := range l {
-			result = append(result, Type{
-				AzureId: id,
-				TFType:  item.ResourceType,
+				TFType:  entry.ResourceType,
 			})
 		}
 	}
@@ -177,4 +172,28 @@ func queryType(idStr string, apiOpt *APIOption) ([]Type, bool, error) {
 	})
 
 	return result, exact, nil
+}
+
+func mapEntryById(id armid.ResourceId, apiOpt APIOption) (*resmap.ARMId2TFMapItem, error) {
+	l := getARMId2TFMapItems(id)
+	if len(l) == 0 {
+		return nil, nil
+	}
+	// Resolve ambiguous resources
+	if len(l) > 1 {
+		rt, err := resolve.Resolve(id, apiOpt.Cred, apiOpt.ClientOption)
+		if err != nil {
+			return nil, err
+		}
+		for _, item := range l {
+			if item.ResourceType == rt {
+				l = []resmap.ARMId2TFMapItem{item}
+				break
+			}
+		}
+		if len(l) > 1 {
+			return nil, fmt.Errorf("the ambiguity list doesn't have an item with resource type %q", rt)
+		}
+	}
+	return &l[0], nil
 }
