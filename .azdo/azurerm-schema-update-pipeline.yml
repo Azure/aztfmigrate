@@ -10,7 +10,7 @@ parameters:
     default: main
 
 pool:
-  vmImage: ubuntu-latest
+  name: pool-ubuntu-2004
 
 variables:
   GOBIN:  '$(GOPATH)/bin' # Go binaries path
