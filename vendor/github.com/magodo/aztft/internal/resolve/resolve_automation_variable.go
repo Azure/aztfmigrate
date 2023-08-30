@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 
+	"encoding/json"
+
 	"github.com/magodo/armid"
 	"github.com/magodo/aztft/internal/client"
 )
@@ -18,6 +20,7 @@ func (automationVariablesResolver) ResourceTypes() []string {
 		"azurerm_automation_variable_string",
 		"azurerm_automation_variable_bool",
 		"azurerm_automation_variable_int",
+		"azurerm_automation_variable_object",
 	}
 }
 
@@ -56,6 +59,11 @@ func (automationVariablesResolver) Resolve(b *client.ClientBuilder, id armid.Res
 	}
 	if _, err = strconv.ParseBool(*value); err == nil {
 		return "azurerm_automation_variable_bool", nil
+	}
+
+	var object interface{}
+	if json.Unmarshal([]byte(*value), &object) == nil {
+		return "azurerm_automation_variable_object", nil
 	}
 	return "", fmt.Errorf("can't resolve resource type from value: %q", *value)
 }

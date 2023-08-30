@@ -28,6 +28,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts"
@@ -592,6 +593,14 @@ func (b *ClientBuilder) NewApplicationInsightsWebTestsClient(subscriptionId stri
 
 func (b *ClientBuilder) NewLogicWorkflowsClient(subscriptionId string) (*armlogic.WorkflowsClient, error) {
 	return armlogic.NewWorkflowsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewPaloalToNetworkFirewallsClient(subscriptionId string) (*armpanngfw.FirewallsClient, error) {
+	return armpanngfw.NewFirewallsClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,

@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/terraform-exec v0.18.1
 	github.com/hashicorp/terraform-json v0.17.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
-	github.com/magodo/aztft v0.3.1-0.20230721030203-db4a4bcab2b3
+	github.com/magodo/aztft v0.3.1-0.20230825031936-c246852b4337
 	github.com/magodo/tfadd v0.10.1-0.20230512075749-9c0bab46fdb8
 	github.com/mitchellh/cli v1.1.5
 	github.com/zclconf/go-cty v1.13.2
@@ -44,6 +44,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor v0.7.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork v1.1.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights v1.1.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw v1.0.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup v1.0.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery v1.1.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts v1.0.0 // indirect

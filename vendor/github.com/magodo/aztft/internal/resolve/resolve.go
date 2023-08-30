@@ -190,6 +190,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.LOGIC/WORKFLOWS/TRIGGERS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": logicAppTrigger{},
 	},
+	"/PALOALTONETWORKS.CLOUDNGFW/FIREWALLS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": paloalToNetworkFirewall{},
+	},
 }
 
 type ResolveError struct {
