@@ -119,13 +119,20 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
 		}
 		return pid.String(), nil
+	case "azurerm_role_definition":
+		scopeId := id.Parent()
+		if scopeId == nil {
+			scopeId = id.ParentScope()
+		}
+		scopePart := scopeId.String()
+		routePart := strings.TrimPrefix(id.String(), scopePart)
+		return routePart + "|" + scopePart, nil
 	case "azurerm_network_manager_deployment":
 		managerId := id.Parent().Parent()
 		if err := managerId.Normalize(importSpec); err != nil {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", managerId.String(), rt, importSpec, err)
 		}
 		return managerId.String() + "/commit|" + id.Names()[1] + "|" + id.Names()[2], nil
-
 	// Porperty-like resources
 	case "azurerm_disk_pool_iscsi_target_lun":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_disk_pool_iscsi_target", "azurerm_managed_disk", "/lun|")
@@ -151,6 +158,15 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		"azurerm_subnet_network_security_group_association",
 		"azurerm_subnet_route_table_association":
 		return id.Parent().String(), nil
+	case "azurerm_api_management_api_operation_policy",
+		"azurerm_api_management_api_policy",
+		"azurerm_api_management_policy",
+		"azurerm_api_management_product_policy":
+		pid := id.Parent()
+		if err := pid.Normalize(importSpec); err != nil {
+			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
+		}
+		return pid.String(), nil
 	}
 
 	if importSpec != "" {

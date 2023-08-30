@@ -175,7 +175,7 @@
         "policies"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/apis/operations/policies"
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/apis/operations"
       ]
     }
   },
@@ -208,7 +208,7 @@
         "policies"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/apis/policies"
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/apis"
       ]
     }
   },
@@ -668,7 +668,7 @@
         "policies"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/policies"
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service"
       ]
     }
   },
@@ -731,7 +731,7 @@
         "policies"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/products/policies"
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/products"
       ]
     }
   },
@@ -1323,12 +1323,12 @@
       "scopes": [
         "/subscriptions/resourceGroups"
       ],
-      "provider": "Microsoft.HyrbidCompute",
+      "provider": "Microsoft.HybridCompute",
       "types": [
         "privateLinkScopes"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.HyrbidCompute/privateLinkScopes"
+        "/subscriptions/resourceGroups/Microsoft.HybridCompute/privateLinkScopes"
       ]
     }
   },
@@ -1661,6 +1661,21 @@
     }
   },
   "azurerm_automation_variable_int": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Automation",
+      "types": [
+        "automationAccounts",
+        "variables"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/variables"
+      ]
+    }
+  },
+  "azurerm_automation_variable_object": {
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -3174,6 +3189,20 @@
       ]
     }
   },
+  "azurerm_custom_ip_prefix": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "customIPPrefixes"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/customIPPrefixes"
+      ]
+    }
+  },
   "azurerm_custom_provider": {
     "management_plane": {
       "scopes": [
@@ -4239,6 +4268,22 @@
     }
   },
   "azurerm_databricks_workspace_customer_managed_key": {
+    "is_removed": true,
+    "remove_reason": "This is a property rather than a resource",
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Databricks",
+      "types": [
+        "workspaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Databricks/workspaces"
+      ]
+    }
+  },
+  "azurerm_databricks_workspace_root_dbfs_customer_managed_key": {
     "is_removed": true,
     "remove_reason": "This is a property rather than a resource",
     "management_plane": {
@@ -5402,6 +5447,22 @@
     }
   },
   "azurerm_graph_account": {
+    "is_removed": true,
+    "remove_reason": "This is deprecated in favor of `azurerm_graph_service_account`",
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.GraphServices",
+      "types": [
+        "accounts"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.GraphServices/accounts"
+      ]
+    }
+  },
+  "azurerm_graph_services_account": {
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6293,6 +6354,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ContainerService/managedClusters/agentPools"
+      ]
+    }
+  },
+  "azurerm_kubernetes_cluster_trusted_access_role_binding": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ContainerService",
+      "types": [
+        "managedClusters",
+        "trustedAccessRoleBindings"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ContainerService/managedClusters/trustedAccessRoleBindings"
       ]
     }
   },
@@ -7554,6 +7630,20 @@
       ]
     }
   },
+  "azurerm_managed_lustre_file_system": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.StorageCache",
+      "types": [
+        "amlFilesystems"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.StorageCache/amlFilesystems"
+      ]
+    }
+  },
   "azurerm_management_group": {
     "management_plane": {
       "provider": "Microsoft.Management",
@@ -7748,6 +7838,20 @@
       ],
       "import_specs": [
         "/subscriptions/Microsoft.MarketplaceOrdering/agreements/offers/plans"
+      ]
+    }
+  },
+  "azurerm_marketplace_role_assignment": {
+    "management_plane": {
+      "scopes": [
+        "/Microsoft.Marketplace"
+      ],
+      "provider": "Microsoft.Authorization",
+      "types": [
+        "roleAssignments"
+      ],
+      "import_specs": [
+        "/Microsoft.Marketplace/Microsoft.Authorization/roleAssignments"
       ]
     }
   },
@@ -8019,6 +8123,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/services"
+      ]
+    }
+  },
+  "azurerm_mobile_network_sim": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.MobileNetwork",
+      "types": [
+        "simGroups",
+        "sims"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/simGroups/sims"
       ]
     }
   },
@@ -8755,6 +8874,35 @@
       ]
     }
   },
+  "azurerm_mssql_virtual_machine_availability_group_listener": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.SqlVirtualMachine",
+      "types": [
+        "sqlVirtualMachineGroups",
+        "availabilityGroupListeners"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.SqlVirtualMachine/sqlVirtualMachineGroups/availabilityGroupListeners"
+      ]
+    }
+  },
+  "azurerm_mssql_virtual_machine_group": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.SqlVirtualMachine",
+      "types": [
+        "sqlVirtualMachineGroups"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.SqlVirtualMachine/sqlVirtualMachineGroups"
+      ]
+    }
+  },
   "azurerm_mssql_virtual_network_rule": {
     "management_plane": {
       "scopes": [
@@ -9104,6 +9252,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Network/ddosProtectionPlans"
+      ]
+    }
+  },
+  "azurerm_network_function_azure_traffic_collector": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.NetworkFunction",
+      "types": [
+        "azureTrafficCollectors"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.NetworkFunction/azureTrafficCollectors"
       ]
     }
   },
@@ -9612,6 +9774,150 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachineScaleSets"
+      ]
+    }
+  },
+  "azurerm_palo_alto_local_rulestack": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "localRulestacks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/localRulestacks"
+      ]
+    }
+  },
+  "azurerm_palo_alto_local_rulestack_certificate": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "localRulestacks",
+        "certificates"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/localRulestacks/certificates"
+      ]
+    }
+  },
+  "azurerm_palo_alto_local_rulestack_fqdn_list": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "localRulestacks",
+        "fqdnLists"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/localRulestacks/fqdnLists"
+      ]
+    }
+  },
+  "azurerm_palo_alto_local_rulestack_prefix_list": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "localRulestacks",
+        "prefixLists"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/localRulestacks/prefixLists"
+      ]
+    }
+  },
+  "azurerm_palo_alto_local_rulestack_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "localRulestacks",
+        "localRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/localRulestacks/localRules"
+      ]
+    }
+  },
+  "azurerm_palo_alto_next_generation_firewall_virtual_hub_local_rulestack": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
+  "azurerm_palo_alto_next_generation_firewall_virtual_hub_panorama": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
+  "azurerm_palo_alto_next_generation_firewall_virtual_network_local_rulestack": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
+  "azurerm_palo_alto_next_generation_firewall_virtual_network_panorama": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
+  "azurerm_palo_alto_virtual_network_appliance": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkVirtualAppliances"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkVirtualAppliances"
       ]
     }
   },
@@ -10517,6 +10823,18 @@
       "provider": "Microsoft.PolicyInsights",
       "types": [
         "remediations"
+      ]
+    }
+  },
+  "azurerm_resource_provider_registration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions"
+      ],
+      "provider": "Microsoft.PolicyInsights",
+      "types": [],
+      "import_specs": [
+        "/subscriptions/Microsoft.PolicyInsights"
       ]
     }
   },
@@ -14404,10 +14722,10 @@
       ],
       "provider": "Microsoft.Network",
       "types": [
-        "ApplicationGatewayWebApplicationFirewallPolicies"
+        "applicationGatewayWebApplicationFirewallPolicies"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies"
+        "/subscriptions/resourceGroups/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies"
       ]
     }
   },
