@@ -1247,6 +1247,35 @@
       ]
     }
   },
+  "azurerm_application_load_balancer": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ServiceNetworking",
+      "types": [
+        "trafficControllers"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ServiceNetworking/trafficControllers"
+      ]
+    }
+  },
+  "azurerm_application_load_balancer_frontend": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ServiceNetworking",
+      "types": [
+        "trafficControllers",
+        "frontends"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ServiceNetworking/trafficControllers/frontends"
+      ]
+    }
+  },
   "azurerm_application_security_group": {
     "management_plane": {
       "scopes": [
@@ -1329,6 +1358,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.HybridCompute/privateLinkScopes"
+      ]
+    }
+  },
+  "azurerm_arc_resource_bridge_appliance": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ResourceConnector",
+      "types": [
+        "appliances"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ResourceConnector/appliances"
       ]
     }
   },
@@ -1567,6 +1610,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/modules"
+      ]
+    }
+  },
+  "azurerm_automation_python3_package": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Automation",
+      "types": [
+        "automationAccounts",
+        "python3Packages"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/python3Packages"
       ]
     }
   },
@@ -3306,6 +3364,21 @@
       ]
     }
   },
+  "azurerm_data_factory_dataset_azure_sql_table": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataFactory",
+      "types": [
+        "factories",
+        "datasets"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/datasets"
+      ]
+    }
+  },
   "azurerm_data_factory_dataset_binary": {
     "management_plane": {
       "scopes": [
@@ -4386,6 +4459,34 @@
       ]
     }
   },
+  "azurerm_dev_center": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DevCenter",
+      "types": [
+        "devCenters"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DevCenter/devCenters"
+      ]
+    }
+  },
+  "azurerm_dev_center_project": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DevCenter",
+      "types": [
+        "projects"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DevCenter/projects"
+      ]
+    }
+  },
   "azurerm_dev_test_global_vm_shutdown_schedule": {
     "management_plane": {
       "scopes": [
@@ -5367,6 +5468,20 @@
       ]
     }
   },
+  "azurerm_function_app_connection": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups/Microsoft.Web/sites"
+      ],
+      "provider": "Microsoft.ServiceLinker",
+      "types": [
+        "linkers"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Web/sites/Microsoft.ServiceLinker/linkers"
+      ]
+    }
+  },
   "azurerm_function_app_function": {
     "management_plane": {
       "scopes": [
@@ -6011,9 +6126,7 @@
       ]
     }
   },
-  "azurerm_iothub_endpoint_eventhub": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
+  "azurerm_iothub_endpoint_cosmosdb_account": {
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6021,7 +6134,22 @@
       "provider": "Microsoft.Devices",
       "types": [
         "iotHubs",
-        "endpoints"
+        "endpointsCosmosdbAccount"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Devices/iotHubs/endpoints"
+      ]
+    }
+  },
+  "azurerm_iothub_endpoint_eventhub": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Devices",
+      "types": [
+        "iotHubs",
+        "endpointsEventhub"
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Devices/iotHubs/endpoints"
@@ -6029,8 +6157,6 @@
     }
   },
   "azurerm_iothub_endpoint_servicebus_queue": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6038,7 +6164,7 @@
       "provider": "Microsoft.Devices",
       "types": [
         "iotHubs",
-        "endpoints"
+        "endpointsServicebusQueue"
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Devices/iotHubs/endpoints"
@@ -6046,8 +6172,6 @@
     }
   },
   "azurerm_iothub_endpoint_servicebus_topic": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6055,7 +6179,7 @@
       "provider": "Microsoft.Devices",
       "types": [
         "iotHubs",
-        "endpoints"
+        "endpointsServicebusTopic"
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Devices/iotHubs/endpoints"
@@ -6063,8 +6187,6 @@
     }
   },
   "azurerm_iothub_endpoint_storage_container": {
-    "is_removed": true,
-    "remove_reason": "This is a property rather than a resource",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -6072,7 +6194,7 @@
       "provider": "Microsoft.Devices",
       "types": [
         "iotHubs",
-        "endpoints"
+        "endpointsStorageContainer"
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Devices/iotHubs/endpoints"
@@ -9226,6 +9348,23 @@
       ]
     }
   },
+  "azurerm_netapp_volume_quota_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.NetApp",
+      "types": [
+        "netAppAccounts",
+        "capacityPools",
+        "volumes",
+        "volumeQuotaRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.NetApp/netAppAccounts/capacityPools/volumes/volumeQuotaRules"
+      ]
+    }
+  },
   "azurerm_network_connection_monitor": {
     "management_plane": {
       "scopes": [
@@ -9266,6 +9405,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.NetworkFunction/azureTrafficCollectors"
+      ]
+    }
+  },
+  "azurerm_network_function_collector_policy": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.NetworkFunction",
+      "types": [
+        "azureTrafficCollectors",
+        "collectorPolicies"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.NetworkFunction/azureTrafficCollectors/collectorPolicies"
       ]
     }
   },
@@ -9628,6 +9782,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/NewRelic.Observability/monitors"
+      ]
+    }
+  },
+  "azurerm_new_relic_tag_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "NewRelic.Observability",
+      "types": [
+        "monitors",
+        "tagRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/NewRelic.Observability/monitors/tagRules"
       ]
     }
   },
@@ -10793,6 +10962,34 @@
       ]
     }
   },
+  "azurerm_resource_management_private_link": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Authorization",
+      "types": [
+        "resourceManagementPrivateLinks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Authorization/resourceManagementPrivateLinks"
+      ]
+    }
+  },
+  "azurerm_resource_management_private_link_association": {
+    "management_plane": {
+      "scopes": [
+        "/Microsoft.Management/managementGroups"
+      ],
+      "provider": "Microsoft.Authorization",
+      "types": [
+        "privateLinkAssociations"
+      ],
+      "import_specs": [
+        "/Microsoft.Management/managementGroups/Microsoft.Authorization/privateLinkAssociations"
+      ]
+    }
+  },
   "azurerm_resource_policy_assignment": {
     "management_plane": {
       "scopes": [
@@ -11086,6 +11283,20 @@
       ],
       "import_specs": [
         "/subscriptions/Microsoft.Security/settings"
+      ]
+    }
+  },
+  "azurerm_security_center_storage_defender": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups/Microsoft.Storage/storageAccounts"
+      ],
+      "provider": "Microsoft.Security",
+      "types": [
+        "defenderForStorageSettings"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Storage/storageAccounts/Microsoft.Security/defenderForStorageSettings"
       ]
     }
   },
@@ -12140,11 +12351,11 @@
       ],
       "provider": "Microsoft.AppPlatform",
       "types": [
-        "Spring",
+        "spring",
         "applicationAccelerators"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.AppPlatform/Spring/applicationAccelerators"
+        "/subscriptions/resourceGroups/Microsoft.AppPlatform/spring/applicationAccelerators"
       ]
     }
   },
@@ -12256,6 +12467,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.AppPlatform/spring/apps/bindings"
+      ]
+    }
+  },
+  "azurerm_spring_cloud_application_insights_application_performance_monitoring": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.AppPlatform",
+      "types": [
+        "spring",
+        "apms"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.AppPlatform/spring/apms"
       ]
     }
   },
@@ -12406,12 +12632,12 @@
       ],
       "provider": "Microsoft.AppPlatform",
       "types": [
-        "Spring",
+        "spring",
         "applicationAccelerators",
         "customizedAccelerators"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.AppPlatform/Spring/applicationAccelerators/customizedAccelerators"
+        "/subscriptions/resourceGroups/Microsoft.AppPlatform/spring/applicationAccelerators/customizedAccelerators"
       ]
     }
   },
@@ -14284,6 +14510,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Network/virtualHubs/hubRouteTables/routes"
+      ]
+    }
+  },
+  "azurerm_virtual_hub_routing_intent": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "virtualHubs",
+        "routingIntent"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/virtualHubs/routingIntent"
       ]
     }
   },

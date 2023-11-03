@@ -25,6 +25,7 @@ func (dataFactoryDatasetsResolver) ResourceTypes() []string {
 		"azurerm_data_factory_dataset_http",
 		"azurerm_data_factory_dataset_binary",
 		"azurerm_data_factory_dataset_mysql",
+		"azurerm_data_factory_dataset_azure_sql_table",
 	}
 }
 
@@ -67,6 +68,8 @@ func (dataFactoryDatasetsResolver) Resolve(b *client.ClientBuilder, id armid.Res
 		return "azurerm_data_factory_dataset_binary", nil
 	case *armdatafactory.MySQLTableDataset:
 		return "azurerm_data_factory_dataset_mysql", nil
+	case *armdatafactory.AzureSQLTableDataset:
+		return "azurerm_data_factory_dataset_azure_sql_table", nil
 	default:
 		return "", fmt.Errorf("unknown dataset type %T", props)
 	}
