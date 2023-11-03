@@ -193,6 +193,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/PALOALTONETWORKS.CLOUDNGFW/FIREWALLS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": paloalToNetworkFirewall{},
 	},
+	"/MICROSOFT.SERVICELINKER/LINKERS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS/MICROSOFT.WEB/SITES": serviceConnectorAppServiceResolver{},
+	},
 }
 
 type ResolveError struct {

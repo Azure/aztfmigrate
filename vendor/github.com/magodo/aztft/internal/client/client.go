@@ -21,6 +21,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/domainservices/armdomainservices"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/frontdoor/armfrontdoor"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/hdinsight/armhdinsight"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/iothub/armiothub"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/keyvault/armkeyvault"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic"
@@ -601,6 +602,14 @@ func (b *ClientBuilder) NewLogicWorkflowsClient(subscriptionId string) (*armlogi
 
 func (b *ClientBuilder) NewPaloalToNetworkFirewallsClient(subscriptionId string) (*armpanngfw.FirewallsClient, error) {
 	return armpanngfw.NewFirewallsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewIothubsClient(subscriptionId string) (*armiothub.ResourceClient, error) {
+	return armiothub.NewResourceClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,

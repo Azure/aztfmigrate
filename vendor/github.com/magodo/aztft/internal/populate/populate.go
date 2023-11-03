@@ -20,6 +20,7 @@ var populaters = map[string]populateFunc{
 	"azurerm_disk_pool_iscsi_target":    populateDiskPoolIscsiTarget,
 	"azurerm_subnet":                    populateSubnet,
 	"azurerm_logic_app_workflow":        populateLogicAppWorkflow,
+	"azurerm_iothub":                    populateIotHub,
 }
 
 func NeedsAPI(rt string) bool {

@@ -158,6 +158,14 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		"azurerm_subnet_network_security_group_association",
 		"azurerm_subnet_route_table_association":
 		return id.Parent().String(), nil
+	case "azurerm_iothub_endpoint_cosmosdb_account",
+		"azurerm_iothub_endpoint_eventhub",
+		"azurerm_iothub_endpoint_servicebus_queue",
+		"azurerm_iothub_endpoint_servicebus_topic",
+		"azurerm_iothub_endpoint_storage_container":
+		id := id.(*armid.ScopedResourceId)
+		id.AttrTypes[len(id.AttrTypes)-1] = "endpoints"
+		return id.String(), nil
 	case "azurerm_api_management_api_operation_policy",
 		"azurerm_api_management_api_policy",
 		"azurerm_api_management_policy",
