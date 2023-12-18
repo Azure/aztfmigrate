@@ -1259,6 +1259,21 @@
       ]
     }
   },
+  "azurerm_application_load_balancer_subnet_association": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ServiceNetworking",
+      "types": [
+        "trafficControllers",
+        "associations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ServiceNetworking/trafficControllers/associations"
+      ]
+    }
+  },
   "azurerm_application_security_group": {
     "management_plane": {
       "scopes": [
