@@ -89,7 +89,8 @@ func (r GenericResource) EmptyImportConfig() string {
 		if !r.IsForEach() {
 			return fmt.Sprintf(`resource "%s" "%s" {
   count = %d
-}`, r.ResourceType, r.Label, len(r.Instances))
+}
+`, r.ResourceType, r.Label, len(r.Instances))
 		}
 		keys := make([]string, 0)
 		for _, instance := range r.Instances {
@@ -97,7 +98,8 @@ func (r GenericResource) EmptyImportConfig() string {
 		}
 		return fmt.Sprintf(`resource "%s" "%s" {
 	  for_each = toset([%s])
-}`, r.ResourceType, r.Label, strings.Join(keys, ","))
+}
+`, r.ResourceType, r.Label, strings.Join(keys, ","))
 	}
 	return fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
 }
