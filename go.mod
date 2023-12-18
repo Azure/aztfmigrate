@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/terraform-exec v0.18.1
 	github.com/hashicorp/terraform-json v0.17.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
-	github.com/magodo/aztft v0.3.1-0.20231103032414-1c1646e4c907
+	github.com/magodo/aztft v0.3.1-0.20231201030233-529af349ed3c
 	github.com/magodo/tfadd v0.10.1-0.20230512075749-9c0bab46fdb8
 	github.com/mitchellh/cli v1.1.5
 	github.com/zclconf/go-cty v1.13.2
