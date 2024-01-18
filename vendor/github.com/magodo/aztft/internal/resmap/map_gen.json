@@ -1611,6 +1611,21 @@
       ]
     }
   },
+  "azurerm_automation_powershell72_module": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Automation",
+      "types": [
+        "automationAccounts",
+        "powerShell72Modules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/powerShell72Modules"
+      ]
+    }
+  },
   "azurerm_automation_python3_package": {
     "management_plane": {
       "scopes": [
@@ -3311,6 +3326,21 @@
       ]
     }
   },
+  "azurerm_data_factory_credential_user_managed_identity": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataFactory",
+      "types": [
+        "factories",
+        "credentials"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/credentials"
+      ]
+    }
+  },
   "azurerm_data_factory_custom_dataset": {
     "management_plane": {
       "scopes": [
@@ -4866,6 +4896,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Elastic/monitors"
+      ]
+    }
+  },
+  "azurerm_elastic_san": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ElasticSan",
+      "types": [
+        "elasticSans"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ElasticSan/elasticSans"
       ]
     }
   },
@@ -11115,6 +11159,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines/Microsoft.Security/serverVulnerabilityAssessments"
+      ]
+    }
+  },
+  "azurerm_security_center_server_vulnerability_assessments_setting": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions"
+      ],
+      "provider": "Microsoft.Security",
+      "types": [
+        "serverVulnerabilityAssessmentsSettings"
+      ],
+      "import_specs": [
+        "/subscriptions/Microsoft.Security/serverVulnerabilityAssessmentsSettings"
       ]
     }
   },
