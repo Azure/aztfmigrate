@@ -54,7 +54,7 @@ func getCoverage(props []string, operation, idPattern string) ([]string, []strin
 		propsSet := make(map[string]bool)
 		propsSet["name"] = true
 		for _, prop := range r.Properties {
-			parts := strings.Split(prop, "/")
+			parts := strings.Split(prop.Name, "/")
 			for i := range parts {
 				if index := strings.Index(parts[i], "{"); index != -1 {
 					parts[i] = parts[i][0:index]

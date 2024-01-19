@@ -9,9 +9,15 @@
     "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
     "operation": "GET",
     "properties": [
-      "location",
-      "properties/sku/name",
-      "tags"
+      {
+        "addr": "location"
+      },
+      {
+        "addr": "properties/sku/name"
+      },
+      {
+        "addr": "tags"
+      }
     ]
   },
   {
@@ -19,9 +25,15 @@
     "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
     "operation": "PUT",
     "properties": [
-      "location",
-      "properties/sku/name",
-      "tags"
+      {
+        "addr": "location"
+      },
+      {
+        "addr": "properties/sku/name"
+      },
+      {
+        "addr": "tags"
+      }
     ]
   },
   {
@@ -34,55 +46,327 @@
     "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES/{}/COMPUTES/{}",
     "operation": "GET",
     "properties": [
-      "id",
-      "identity/principalId",
-      "identity/tenantId",
-      "identity/type",
-      "identity/userAssignedIdentities",
-      "location",
-      "properties{AKS}/computeLocation",
-      "properties{AKS}/description",
-      "properties{AKS}/properties/clusterFqdn",
-      "properties{AKS}/properties/clusterPurpose",
-      "properties{AKS}/properties/sslConfiguration/cert",
-      "properties{AKS}/properties/sslConfiguration/cname",
-      "properties{AKS}/properties/sslConfiguration/key",
-      "properties{AKS}/properties/sslConfiguration/leafDomainLabel",
-      "properties{AKS}/properties/sslConfiguration/overwriteExistingDomain",
-      "properties{AKS}/properties/sslConfiguration/status",
-      "properties{AKS}/resourceId",
-      "properties{AmlCompute}/computeLocation",
-      "properties{AmlCompute}/description",
-      "properties{AmlCompute}/disableLocalAuth",
-      "properties{AmlCompute}/properties/remoteLoginPortPublicAccess",
-      "properties{AmlCompute}/properties/scaleSettings/maxNodeCount",
-      "properties{AmlCompute}/properties/scaleSettings/minNodeCount",
-      "properties{AmlCompute}/properties/scaleSettings/nodeIdleTimeBeforeScaleDown",
-      "properties{AmlCompute}/properties/subnet/id",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserName",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserPassword",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserSshPublicKey",
-      "properties{AmlCompute}/properties/vmPriority",
-      "properties{AmlCompute}/properties/vmSize",
-      "properties{ComputeInstance}/computeLocation",
-      "properties{ComputeInstance}/description",
-      "properties{ComputeInstance}/disableLocalAuth",
-      "properties{ComputeInstance}/properties/computeInstanceAuthorizationType",
-      "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/objectId",
-      "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/tenantId",
-      "properties{ComputeInstance}/properties/sshSettings/adminPublicKey",
-      "properties{ComputeInstance}/properties/sshSettings/adminUserName",
-      "properties{ComputeInstance}/properties/sshSettings/sshPort",
-      "properties{ComputeInstance}/properties/sshSettings/sshPublicAccess",
-      "properties{ComputeInstance}/properties/subnet/id",
-      "properties{ComputeInstance}/properties/vmSize",
-      "properties{SynapseSpark}/computeLocation",
-      "properties{SynapseSpark}/description",
-      "properties{SynapseSpark}/disableLocalAuth",
-      "properties{SynapseSpark}/properties",
-      "properties{SynapseSpark}/resourceId",
-      "sku",
-      "tags"
+      {
+        "addr": "id"
+      },
+      {
+        "addr": "identity/principalId"
+      },
+      {
+        "addr": "identity/tenantId"
+      },
+      {
+        "addr": "identity/type"
+      },
+      {
+        "addr": "identity/userAssignedIdentities"
+      },
+      {
+        "addr": "location",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/location"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/computeLocation"
+      },
+      {
+        "addr": "properties{AKS}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/properties/clusterFqdn"
+      },
+      {
+        "addr": "properties{AKS}/properties/clusterPurpose",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/cluster_purpose"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/cert"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/cname"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/key"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/leafDomainLabel"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/overwriteExistingDomain"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/status"
+      },
+      {
+        "addr": "properties{AKS}/resourceId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/kubernetes_cluster_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/computeLocation"
+      },
+      {
+        "addr": "properties{AmlCompute}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/enableNodePublicIp"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/remoteLoginPortPublicAccess"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/maxNodeCount",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/max_node_count"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/minNodeCount",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/min_node_count"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/nodeIdleTimeBeforeScaleDown",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/scale_down_nodes_after_idle_duration"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/subnet/id",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/subnet_resource_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserName",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/admin_username"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserPassword",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/admin_password"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserSshPublicKey",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/key_value"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/vmPriority",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/vm_priority"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/vmSize",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/vm_size"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/computeLocation"
+      },
+      {
+        "addr": "properties{ComputeInstance}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/computeInstanceAuthorizationType",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/authorization_type"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/connectivityEndpoints/publicIpAddress"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/enableNodePublicIp"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/objectId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/assign_to_user/0/object_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/tenantId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/assign_to_user/0/tenant_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/adminPublicKey",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/public_key"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/adminUserName",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/username"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/sshPort",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/port"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/sshPublicAccess"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/subnet/id",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/subnet_resource_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/vmSize",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/virtual_machine_size"
+          }
+        ]
+      },
+      {
+        "addr": "properties{SynapseSpark}/computeLocation"
+      },
+      {
+        "addr": "properties{SynapseSpark}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{SynapseSpark}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{SynapseSpark}/properties"
+      },
+      {
+        "addr": "properties{SynapseSpark}/resourceId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/synapse_spark_pool_id"
+          }
+        ]
+      },
+      {
+        "addr": "sku/name"
+      },
+      {
+        "addr": "sku/tier"
+      },
+      {
+        "addr": "tags"
+      }
     ]
   },
   {
@@ -90,55 +374,327 @@
     "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES/{}/COMPUTES/{}",
     "operation": "PUT",
     "properties": [
-      "id",
-      "identity/principalId",
-      "identity/tenantId",
-      "identity/type",
-      "identity/userAssignedIdentities",
-      "location",
-      "properties{AKS}/computeLocation",
-      "properties{AKS}/description",
-      "properties{AKS}/properties/clusterFqdn",
-      "properties{AKS}/properties/clusterPurpose",
-      "properties{AKS}/properties/sslConfiguration/cert",
-      "properties{AKS}/properties/sslConfiguration/cname",
-      "properties{AKS}/properties/sslConfiguration/key",
-      "properties{AKS}/properties/sslConfiguration/leafDomainLabel",
-      "properties{AKS}/properties/sslConfiguration/overwriteExistingDomain",
-      "properties{AKS}/properties/sslConfiguration/status",
-      "properties{AKS}/resourceId",
-      "properties{AmlCompute}/computeLocation",
-      "properties{AmlCompute}/description",
-      "properties{AmlCompute}/disableLocalAuth",
-      "properties{AmlCompute}/properties/remoteLoginPortPublicAccess",
-      "properties{AmlCompute}/properties/scaleSettings/maxNodeCount",
-      "properties{AmlCompute}/properties/scaleSettings/minNodeCount",
-      "properties{AmlCompute}/properties/scaleSettings/nodeIdleTimeBeforeScaleDown",
-      "properties{AmlCompute}/properties/subnet/id",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserName",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserPassword",
-      "properties{AmlCompute}/properties/userAccountCredentials/adminUserSshPublicKey",
-      "properties{AmlCompute}/properties/vmPriority",
-      "properties{AmlCompute}/properties/vmSize",
-      "properties{ComputeInstance}/computeLocation",
-      "properties{ComputeInstance}/description",
-      "properties{ComputeInstance}/disableLocalAuth",
-      "properties{ComputeInstance}/properties/computeInstanceAuthorizationType",
-      "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/objectId",
-      "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/tenantId",
-      "properties{ComputeInstance}/properties/sshSettings/adminPublicKey",
-      "properties{ComputeInstance}/properties/sshSettings/adminUserName",
-      "properties{ComputeInstance}/properties/sshSettings/sshPort",
-      "properties{ComputeInstance}/properties/sshSettings/sshPublicAccess",
-      "properties{ComputeInstance}/properties/subnet/id",
-      "properties{ComputeInstance}/properties/vmSize",
-      "properties{SynapseSpark}/computeLocation",
-      "properties{SynapseSpark}/description",
-      "properties{SynapseSpark}/disableLocalAuth",
-      "properties{SynapseSpark}/properties",
-      "properties{SynapseSpark}/resourceId",
-      "sku",
-      "tags"
+      {
+        "addr": "id"
+      },
+      {
+        "addr": "identity/principalId"
+      },
+      {
+        "addr": "identity/tenantId"
+      },
+      {
+        "addr": "identity/type"
+      },
+      {
+        "addr": "identity/userAssignedIdentities"
+      },
+      {
+        "addr": "location",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/location"
+          },
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/location"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/computeLocation"
+      },
+      {
+        "addr": "properties{AKS}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/properties/clusterFqdn"
+      },
+      {
+        "addr": "properties{AKS}/properties/clusterPurpose",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/cluster_purpose"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/cert"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/cname"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/key"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/leafDomainLabel"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/overwriteExistingDomain"
+      },
+      {
+        "addr": "properties{AKS}/properties/sslConfiguration/status"
+      },
+      {
+        "addr": "properties{AKS}/resourceId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_inference_cluster",
+            "addr": "/kubernetes_cluster_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/computeLocation"
+      },
+      {
+        "addr": "properties{AmlCompute}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/enableNodePublicIp"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/remoteLoginPortPublicAccess"
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/maxNodeCount",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/max_node_count"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/minNodeCount",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/min_node_count"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/scaleSettings/nodeIdleTimeBeforeScaleDown",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/scale_settings/0/scale_down_nodes_after_idle_duration"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/subnet/id",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/subnet_resource_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserName",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/admin_username"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserPassword",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/admin_password"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/userAccountCredentials/adminUserSshPublicKey",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/ssh/0/key_value"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/vmPriority",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/vm_priority"
+          }
+        ]
+      },
+      {
+        "addr": "properties{AmlCompute}/properties/vmSize",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_cluster",
+            "addr": "/vm_size"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/computeLocation"
+      },
+      {
+        "addr": "properties{ComputeInstance}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/computeInstanceAuthorizationType",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/authorization_type"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/connectivityEndpoints/publicIpAddress"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/enableNodePublicIp"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/objectId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/assign_to_user/0/object_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/personalComputeInstanceSettings/assignedUser/tenantId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/assign_to_user/0/tenant_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/adminPublicKey",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/public_key"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/adminUserName",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/username"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/sshPort",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/ssh/0/port"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/sshSettings/sshPublicAccess"
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/subnet/id",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/subnet_resource_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties{ComputeInstance}/properties/vmSize",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_compute_instance",
+            "addr": "/virtual_machine_size"
+          }
+        ]
+      },
+      {
+        "addr": "properties{SynapseSpark}/computeLocation"
+      },
+      {
+        "addr": "properties{SynapseSpark}/description",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/description"
+          }
+        ]
+      },
+      {
+        "addr": "properties{SynapseSpark}/disableLocalAuth"
+      },
+      {
+        "addr": "properties{SynapseSpark}/properties"
+      },
+      {
+        "addr": "properties{SynapseSpark}/resourceId",
+        "app_property_maps": [
+          {
+            "name": "azurerm_machine_learning_synapse_spark",
+            "addr": "/synapse_spark_pool_id"
+          }
+        ]
+      },
+      {
+        "addr": "sku/name"
+      },
+      {
+        "addr": "sku/tier"
+      },
+      {
+        "addr": "tags"
+      }
     ]
   }
 ]
