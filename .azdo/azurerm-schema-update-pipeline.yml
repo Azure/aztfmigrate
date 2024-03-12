@@ -28,8 +28,8 @@ steps:
     name: step1
 
   - script: |
-      wget https://go.dev/dl/go1.21.linux-amd64.tar.gz
-      sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.21.linux-amd64.tar.gz
+      wget https://go.dev/dl/go1.21.4.linux-amd64.tar.gz
+      sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz
       export GOROOT=/usr/local/go
       export PATH=$GOROOT/bin:$PATH
       go version
