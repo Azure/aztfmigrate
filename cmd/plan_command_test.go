@@ -40,34 +40,6 @@ func TestPlan_strictMode(t *testing.T) {
 	planTestCase(t, basic(), []string{}, true)
 }
 
-func TestPlan_basic_payload(t *testing.T) {
-	planTestCase(t, basic_payload(), []string{"azapi_resource.test2", "azapi_update_resource.test"}, false)
-}
-
-func TestPlan_foreach_payload(t *testing.T) {
-	planTestCase(t, foreach_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_nestedBlock_payload(t *testing.T) {
-	planTestCase(t, nestedBlock_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_count_payload(t *testing.T) {
-	planTestCase(t, count_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_nestedBlockUpdate_payload(t *testing.T) {
-	planTestCase(t, nestedBlockUpdate_payload(), []string{"azapi_update_resource.test"}, false)
-}
-
-func TestPlan_metaArguments_payload(t *testing.T) {
-	planTestCase(t, metaArguments_payload(), []string{"azapi_resource.test1"}, false)
-}
-
-func TestPlan_strictMode_payload(t *testing.T) {
-	planTestCase(t, basic_payload(), []string{}, true)
-}
-
 func planTestCase(t *testing.T, content string, expectMigratedAddresses []string, strictMode bool) {
 	if len(os.Getenv("TF_ACC")) == 0 {
 		t.Skipf("Set `TF_ACC=true` to enable this test")

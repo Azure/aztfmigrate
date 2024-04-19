@@ -39,12 +39,6 @@ func getOutputsForAddress(address string, refValueMap map[string]interface{}) []
 				Value:   value,
 			})
 		}
-		if strings.HasPrefix(key, fmt.Sprintf("%s.output_payload", address)) {
-			res = append(res, types.Output{
-				OldName: key,
-				Value:   value,
-			})
-		}
 	}
 	return res
 }
@@ -135,12 +129,6 @@ func getRefValueMap(p *tfjson.Plan) map[string]interface{} {
 						for key, value := range propValueMap {
 							refValueMap[key] = value
 						}
-					}
-				}
-				if payloadObj := beforeMap["payload"]; payloadObj != nil {
-					propValueMap := getPropValueMap(payloadObj, fmt.Sprintf("%s.output_payload", prefix))
-					for key, value := range propValueMap {
-						refValueMap[key] = value
 					}
 				}
 			}
@@ -234,23 +222,6 @@ func getInputProperties(address string, p *tfjson.Plan) []string {
 				}
 			}
 		}
-
-		if payloadObj := stateMap["payload"]; payloadObj != nil {
-			propValueMap := getPropValueMap(payloadObj, "")
-			propSet := make(map[string]bool)
-			for key := range propValueMap {
-				key = strings.TrimPrefix(key, ".")
-				if strings.HasPrefix(key, "tags") {
-					key = "tags"
-				}
-				propSet[key] = true
-			}
-			for key := range propSet {
-				key = removeIndexOfProp(key)
-				props = append(props, key)
-			}
-		}
-
 		return props
 	}
 	return nil
