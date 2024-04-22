@@ -33,13 +33,13 @@ func getId(value interface{}) string {
 func getOutputsForAddress(address string, refValueMap map[string]interface{}) []types.Output {
 	res := make([]types.Output, 0)
 	for key, value := range refValueMap {
-		if strings.HasPrefix(key, fmt.Sprintf("jsondecode(%s.output)", address)) {
+		if strings.HasPrefix(key, fmt.Sprintf("jsondecode(%s.output).", address)) {
 			res = append(res, types.Output{
 				OldName: key,
 				Value:   value,
 			})
 		}
-		if strings.HasPrefix(key, fmt.Sprintf("%s.output", address)) {
+		if strings.HasPrefix(key, fmt.Sprintf("%s.output.", address)) {
 			res = append(res, types.Output{
 				OldName: key,
 				Value:   value,
