@@ -33,13 +33,13 @@ func getId(value interface{}) string {
 func getOutputsForAddress(address string, refValueMap map[string]interface{}) []types.Output {
 	res := make([]types.Output, 0)
 	for key, value := range refValueMap {
-		if strings.HasPrefix(key, fmt.Sprintf("jsondecode(%s.output)", address)) {
+		if strings.HasPrefix(key, fmt.Sprintf("jsondecode(%s.output).", address)) {
 			res = append(res, types.Output{
 				OldName: key,
 				Value:   value,
 			})
 		}
-		if strings.HasPrefix(key, fmt.Sprintf("%s.output_payload", address)) {
+		if strings.HasPrefix(key, fmt.Sprintf("%s.output.", address)) {
 			res = append(res, types.Output{
 				OldName: key,
 				Value:   value,
@@ -135,12 +135,13 @@ func getRefValueMap(p *tfjson.Plan) map[string]interface{} {
 						for key, value := range propValueMap {
 							refValueMap[key] = value
 						}
-					}
-				}
-				if payloadObj := beforeMap["payload"]; payloadObj != nil {
-					propValueMap := getPropValueMap(payloadObj, fmt.Sprintf("%s.output_payload", prefix))
-					for key, value := range propValueMap {
-						refValueMap[key] = value
+					} else {
+						if outputObj := beforeMap["output"]; outputObj != nil {
+							propValueMap := getPropValueMap(outputObj, fmt.Sprintf("%s.output", prefix))
+							for key, value := range propValueMap {
+								refValueMap[key] = value
+							}
+						}
 					}
 				}
 			}
@@ -232,22 +233,22 @@ func getInputProperties(address string, p *tfjson.Plan) []string {
 						props = append(props, key)
 					}
 				}
-			}
-		}
-
-		if payloadObj := stateMap["payload"]; payloadObj != nil {
-			propValueMap := getPropValueMap(payloadObj, "")
-			propSet := make(map[string]bool)
-			for key := range propValueMap {
-				key = strings.TrimPrefix(key, ".")
-				if strings.HasPrefix(key, "tags") {
-					key = "tags"
+			} else {
+				if bodyObj := stateMap["body"]; bodyObj != nil {
+					propValueMap := getPropValueMap(bodyObj, "")
+					propSet := make(map[string]bool)
+					for key := range propValueMap {
+						key = strings.TrimPrefix(key, ".")
+						if strings.HasPrefix(key, "tags") {
+							key = "tags"
+						}
+						propSet[key] = true
+					}
+					for key := range propSet {
+						key = removeIndexOfProp(key)
+						props = append(props, key)
+					}
 				}
-				propSet[key] = true
-			}
-			for key := range propSet {
-				key = removeIndexOfProp(key)
-				props = append(props, key)
 			}
 		}
 

@@ -600,7 +600,7 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  payload = {
+  body = {
     properties = {
       sku = {
         name = local.AutomationSku
@@ -614,13 +614,13 @@ resource "azapi_resource" "test2" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
-        name = jsondecode(azapi_resource.test.output).properties.sku.name
+        name = azapi_resource.test.output.properties.sku.name
       }
     }
-  })
+  }
 }
 
 resource "azurerm_automation_account" "test1" {
@@ -634,19 +634,19 @@ resource "azapi_update_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
-  body = jsonencode({
+  body = {
     tags = {
       key = var.Label
     }
-  })
+  }
 }
 
 output "accountName" {
-  value = jsondecode(azapi_resource.test.output).name
+  value = azapi_resource.test.output.name
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azapi_update_resource.test.output).properties.sku.name
+  value = azapi_update_resource.test.output.properties.sku.name
 }
 `, template(), randomResourceName(), randomResourceName())
 }
@@ -684,7 +684,7 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  payload = {
+  body = {
     properties = {
       sku = {
         name = each.value.sku
@@ -724,7 +724,7 @@ resource "azapi_resource" "test" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
 
-  payload = {
+  body = {
     location = "westeurope"
     tags = {}
     properties = {
@@ -756,7 +756,7 @@ resource "azapi_resource" "test" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
-  payload = {
+  body = {
     properties = {
       sku = {
         name = "Basic"
@@ -801,7 +801,7 @@ variable "action" {
 resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
-  payload = {
+  body = {
 	properties = {
 		networkRuleSet = {
 			defaultAction = "Deny"
@@ -837,7 +837,7 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  payload = {
+  body = {
     properties = {
       sku = {
         name = "Basic"
@@ -868,7 +868,7 @@ resource "azapi_resource" "test1" {
     type = "SystemAssigned"
   }
 
-  payload = {
+  body = {
     properties = {
       sku = {
         name = "Basic"
