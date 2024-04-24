@@ -4,6 +4,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/alertsmanagement/armalertsmanagement"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/applicationinsights/armapplicationinsights"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice"
@@ -27,6 +28,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw"
@@ -41,14 +43,13 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/streamanalytics/armstreamanalytics"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/synapse/armsynapse"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/timeseriesinsights/armtimeseriesinsights"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/workloads/armworkloads"
 )
 
 type ClientBuilder struct {
 	Cred      azcore.TokenCredential
 	ClientOpt arm.ClientOptions
 }
-
-var defaultBuilder *ClientBuilder
 
 func (b *ClientBuilder) NewVirtualMachinesClient(subscriptionId string) (*armcompute.VirtualMachinesClient, error) {
 	return armcompute.NewVirtualMachinesClient(
@@ -549,6 +550,16 @@ func (b *ClientBuilder) NewSiteRecoveryReplicationFabricsClient(subscriptionId, 
 	)
 }
 
+func (b *ClientBuilder) NewSiteRecoveryReplicationProtectedItemsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationProtectedItemsClient, error) {
+	return armrecoveryservicessiterecovery.NewReplicationProtectedItemsClient(
+		vaultName,
+		resourceGroupName,
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewSiteRecoveryReplicationProtectionContainerMappingsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationProtectionContainerMappingsClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationProtectionContainerMappingsClient(
 		vaultName,
@@ -610,6 +621,30 @@ func (b *ClientBuilder) NewPaloalToNetworkFirewallsClient(subscriptionId string)
 
 func (b *ClientBuilder) NewIothubsClient(subscriptionId string) (*armiothub.ResourceClient, error) {
 	return armiothub.NewResourceClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewApiManagementApiClient(subscriptionId string) (*armapimanagement.APIClient, error) {
+	return armapimanagement.NewAPIClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewNetAppAccountClient(subscriptionId string) (*armnetapp.AccountsClient, error) {
+	return armnetapp.NewAccountsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewWorkloadSAPVirtualInstanceClient(subscriptionId string) (*armworkloads.SAPVirtualInstancesClient, error) {
+	return armworkloads.NewSAPVirtualInstancesClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,

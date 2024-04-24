@@ -31,12 +31,12 @@ type Provider struct {
 	newTracerFn func(name, version string) Tracer
 }
 
-// NewTracer creates a new Tracer for the specified name and version.
-//   - name - the name of the tracer object, typically the fully qualified name of the service client
-//   - version - the version of the module in which the service client resides
-func (p Provider) NewTracer(name, version string) (tracer Tracer) {
+// NewTracer creates a new Tracer for the specified module name and version.
+//   - module - the fully qualified name of the module
+//   - version - the version of the module
+func (p Provider) NewTracer(module, version string) (tracer Tracer) {
 	if p.newTracerFn != nil {
-		tracer = p.newTracerFn(name, version)
+		tracer = p.newTracerFn(module, version)
 	}
 	return
 }
@@ -149,7 +149,7 @@ type Span struct {
 
 // End terminates the span and MUST be called before the span leaves scope.
 // Any further updates to the span will be ignored after End is called.
-func (s Span) End(opts *SpanEndOptions) {
+func (s Span) End() {
 	if s.impl.End != nil {
 		s.impl.End()
 	}
@@ -175,11 +175,6 @@ func (s Span) SetStatus(code SpanStatus, desc string) {
 	if s.impl.SetStatus != nil {
 		s.impl.SetStatus(code, desc)
 	}
-}
-
-// SpanEndOptions contains the optional values for the Span.End() method.
-type SpanEndOptions struct {
-	// for future expansion
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

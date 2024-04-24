@@ -13,7 +13,12 @@ import (
 type dataProtectionBackupPoliciesResolver struct{}
 
 func (dataProtectionBackupPoliciesResolver) ResourceTypes() []string {
-	return []string{"azurerm_data_protection_backup_policy_postgresql", "azurerm_data_protection_backup_policy_disk", "azurerm_data_protection_backup_policy_blob_storage"}
+	return []string{
+		"azurerm_data_protection_backup_policy_postgresql",
+		"azurerm_data_protection_backup_policy_disk",
+		"azurerm_data_protection_backup_policy_blob_storage",
+		"azurerm_data_protection_backup_policy_kubernetes_cluster",
+	}
 }
 
 func (dataProtectionBackupPoliciesResolver) Resolve(b *client.ClientBuilder, id armid.ResourceId) (string, error) {
@@ -48,6 +53,8 @@ func (dataProtectionBackupPoliciesResolver) Resolve(b *client.ClientBuilder, id 
 		return "azurerm_data_protection_backup_policy_disk", nil
 	case "MICROSOFT.STORAGE/STORAGEACCOUNTS/BLOBSERVICES":
 		return "azurerm_data_protection_backup_policy_blob_storage", nil
+	case "MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS":
+		return "azurerm_data_protection_backup_policy_kubernetes_cluster", nil
 	default:
 		return "", fmt.Errorf("unknown data source type: %s", *pdt)
 	}

@@ -21,6 +21,7 @@ var populaters = map[string]populateFunc{
 	"azurerm_subnet":                    populateSubnet,
 	"azurerm_logic_app_workflow":        populateLogicAppWorkflow,
 	"azurerm_iothub":                    populateIotHub,
+	"azurerm_netapp_account":            populateNetAppAccount,
 }
 
 func NeedsAPI(rt string) bool {

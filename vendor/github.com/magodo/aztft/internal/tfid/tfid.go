@@ -34,6 +34,7 @@ var dynamicBuilders = map[string]builderFunc{
 	"azurerm_storage_table_entity":                                   buildStorageTableEntity,
 	"azurerm_storage_data_lake_gen2_filesystem":                      buildStorageDfs,
 	"azurerm_storage_data_lake_gen2_path":                            buildStorageDfsPath,
+	"azurerm_api_management_api":                                     buildApiManagementApi,
 }
 
 func NeedsAPI(rt string) bool {
@@ -170,6 +171,18 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		"azurerm_api_management_api_policy",
 		"azurerm_api_management_policy",
 		"azurerm_api_management_product_policy":
+		pid := id.Parent()
+		if err := pid.Normalize(importSpec); err != nil {
+			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
+		}
+		return pid.String(), nil
+	case "azurerm_netapp_account_encryption":
+		pid := id.Parent()
+		if err := pid.Normalize(importSpec); err != nil {
+			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
+		}
+		return pid.String(), nil
+	case "azurerm_storage_blob_inventory_policy":
 		pid := id.Parent()
 		if err := pid.Normalize(importSpec); err != nil {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
