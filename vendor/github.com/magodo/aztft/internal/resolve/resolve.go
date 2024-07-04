@@ -64,6 +64,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.DATAFACTORY/FACTORIES/INTEGRATIONRUNTIMES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": dataFactoryIntegrationRuntimesResolver{},
 	},
+	"/MICROSOFT.DATAFACTORY/FACTORIES/CREDENTIALS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": dataFactoryCredentialsResolver{},
+	},
 	"/MICROSOFT.KUSTO/CLUSTERS/DATABASES/DATACONNECTIONS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": kustoDataConnectionsResolver{},
 	},
@@ -204,6 +207,9 @@ var Resolvers = map[string]map[string]resolver{
 	},
 	"/MICROSOFT.WORKLOADS/SAPVIRTUALINSTANCES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": sapVirtualInstancesResolver{},
+	},
+	"/MICROSOFT.COMPUTE/VIRTUALMACHINES/DATADISKS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": virutalMachineDataDiskResolver{},
 	},
 }
 

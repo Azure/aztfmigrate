@@ -5,15 +5,16 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/alertsmanagement/armalertsmanagement"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/applicationinsights/armapplicationinsights"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v7"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datashare/armdatashare"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization"
@@ -163,6 +164,14 @@ func (b *ClientBuilder) NewDataFactoryIntegrationRuntimesClient(subscriptionId s
 	)
 }
 
+func (b *ClientBuilder) NewDataFactoryCredentialsClient(subscriptionId string) (*armdatafactory.CredentialOperationsClient, error) {
+	return armdatafactory.NewCredentialOperationsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewKustoDataConnectionsClient(subscriptionId string) (*armkusto.DataConnectionsClient, error) {
 	return armkusto.NewDataConnectionsClient(
 		subscriptionId,
@@ -220,6 +229,14 @@ func (b *ClientBuilder) NewAutomationConnectionClient(subscriptionId string) (*a
 
 func (b *ClientBuilder) NewAutomationVariableClient(subscriptionId string) (*armautomation.VariableClient, error) {
 	return armautomation.NewVariableClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewAutomationJobScheduleClient(subscriptionId string) (*armautomation.JobScheduleClient, error) {
+	return armautomation.NewJobScheduleClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
@@ -490,6 +507,14 @@ func (b *ClientBuilder) NewNetworkManagementDeploymentStatusClient(subscriptionI
 	)
 }
 
+func (b *ClientBuilder) NewNetworkLoadBalancersClient(subscriptionId string) (*armnetwork.LoadBalancersClient, error) {
+	return armnetwork.NewLoadBalancersClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewFrontdoorPoliciesClient(subscriptionId string) (*armfrontdoor.PoliciesClient, error) {
 	return armfrontdoor.NewPoliciesClient(
 		subscriptionId,
@@ -645,6 +670,14 @@ func (b *ClientBuilder) NewNetAppAccountClient(subscriptionId string) (*armnetap
 
 func (b *ClientBuilder) NewWorkloadSAPVirtualInstanceClient(subscriptionId string) (*armworkloads.SAPVirtualInstancesClient, error) {
 	return armworkloads.NewSAPVirtualInstancesClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewContainerAppEnvironmentsClient(subscriptionId string) (*armappcontainers.ManagedEnvironmentsClient, error) {
+	return armappcontainers.NewManagedEnvironmentsClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,

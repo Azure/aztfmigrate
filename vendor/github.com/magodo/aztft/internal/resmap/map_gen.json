@@ -668,6 +668,21 @@
       ]
     }
   },
+  "azurerm_api_management_policy_fragment": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "policyFragments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/policyFragments"
+      ]
+    }
+  },
   "azurerm_api_management_product": {
     "management_plane": {
       "scopes": [
@@ -1590,9 +1605,6 @@
       "types": [
         "automationAccounts",
         "jobSchedules"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/jobSchedules"
       ]
     }
   },
@@ -2719,6 +2731,20 @@
       ]
     }
   },
+  "azurerm_container_app_environment_custom_domain": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.App",
+      "types": [
+        "managedEnvironments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.App/managedEnvironments"
+      ]
+    }
+  },
   "azurerm_container_app_environment_dapr_component": {
     "management_plane": {
       "scopes": [
@@ -2746,6 +2772,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.App/managedEnvironments/storages"
+      ]
+    }
+  },
+  "azurerm_container_app_job": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.App",
+      "types": [
+        "jobs"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.App/jobs"
       ]
     }
   },
@@ -2804,6 +2844,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ContainerRegistry/registries/agentPools"
+      ]
+    }
+  },
+  "azurerm_container_registry_cache_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ContainerRegistry",
+      "types": [
+        "registries",
+        "cacheRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ContainerRegistry/registries/cacheRules"
       ]
     }
   },
@@ -3375,6 +3430,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DataFactory/factories"
+      ]
+    }
+  },
+  "azurerm_data_factory_credential_service_principal": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataFactory",
+      "types": [
+        "factories",
+        "credentials"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/credentials"
       ]
     }
   },
@@ -4159,6 +4229,21 @@
       ]
     }
   },
+  "azurerm_data_protection_backup_instance_postgresql_flexible_server": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataProtection",
+      "types": [
+        "backupVaults",
+        "backupInstances"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataProtection/backupVaults/backupInstances"
+      ]
+    }
+  },
   "azurerm_data_protection_backup_policy_blob_storage": {
     "management_plane": {
       "scopes": [
@@ -4205,6 +4290,21 @@
     }
   },
   "azurerm_data_protection_backup_policy_postgresql": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataProtection",
+      "types": [
+        "backupVaults",
+        "backupPolicies"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataProtection/backupVaults/backupPolicies"
+      ]
+    }
+  },
+  "azurerm_data_protection_backup_policy_postgresql_flexible_server": {
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -5067,6 +5167,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Communication/emailServices"
+      ]
+    }
+  },
+  "azurerm_email_communication_service_domain": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Communication",
+      "types": [
+        "emailServices",
+        "domains"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Communication/emailServices/domains"
       ]
     }
   },
@@ -7845,6 +7960,20 @@
       ]
     }
   },
+  "azurerm_maintenance_assignment_dynamic_scope": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions"
+      ],
+      "provider": "Microsoft.Maintenance",
+      "types": [
+        "configurationAssignments"
+      ],
+      "import_specs": [
+        "/subscriptions/Microsoft.Maintenance/configurationAssignments"
+      ]
+    }
+  },
   "azurerm_maintenance_assignment_virtual_machine": {
     "management_plane": {
       "scopes": [
@@ -9913,6 +10042,21 @@
       ]
     }
   },
+  "azurerm_nginx_configuration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Nginx.NginxPlus",
+      "types": [
+        "nginxDeployments",
+        "configurations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Nginx.NginxPlus/nginxDeployments/configurations"
+      ]
+    }
+  },
   "azurerm_nginx_deployment": {
     "management_plane": {
       "scopes": [
@@ -11189,6 +11333,17 @@
       "provider": "Microsoft.Authorization",
       "types": [
         "roleDefinitions"
+      ]
+    }
+  },
+  "azurerm_role_management_policy": {
+    "management_plane": {
+      "scopes": [
+        "any"
+      ],
+      "provider": "Microsoft.Authorization",
+      "types": [
+        "roleManagementPolicies"
       ]
     }
   },
@@ -13332,6 +13487,23 @@
       ]
     }
   },
+  "azurerm_storage_container_immutability_policy": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Storage",
+      "types": [
+        "storageAccounts",
+        "blobServices",
+        "containers",
+        "immutabilityPolicies"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies"
+      ]
+    }
+  },
   "azurerm_storage_data_lake_gen2_filesystem": {
     "management_plane": {
       "scopes": [
@@ -13585,6 +13757,22 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.StorageSync/storageSyncServices/syncGroups"
+      ]
+    }
+  },
+  "azurerm_storage_sync_server_endpoint": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.StorageSync",
+      "types": [
+        "storageSyncServices",
+        "syncGroups",
+        "serverEndpoints"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.StorageSync/storageSyncServices/syncGroups/serverEndpoints"
       ]
     }
   },
@@ -14468,6 +14656,20 @@
       ]
     }
   },
+  "azurerm_system_center_virtual_machine_manager_cloud": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ScVmm",
+      "types": [
+        "clouds"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ScVmm/clouds"
+      ]
+    }
+  },
   "azurerm_system_center_virtual_machine_manager_server": {
     "management_plane": {
       "scopes": [
@@ -14479,6 +14681,34 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ScVmm/vmmServers"
+      ]
+    }
+  },
+  "azurerm_system_center_virtual_machine_manager_virtual_machine_template": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ScVmm",
+      "types": [
+        "virtualMachineTemplates"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ScVmm/virtualMachineTemplates"
+      ]
+    }
+  },
+  "azurerm_system_center_virtual_machine_manager_virtual_network": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ScVmm",
+      "types": [
+        "virtualNetworks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ScVmm/virtualNetworks"
       ]
     }
   },
@@ -14817,6 +15047,20 @@
       ]
     }
   },
+  "azurerm_virtual_machine_automanage_configuration_assignment": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines"
+      ],
+      "provider": "Microsoft.AutoManage",
+      "types": [
+        "configurationProfileAssignments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines/Microsoft.AutoManage/configurationProfileAssignments"
+      ]
+    }
+  },
   "azurerm_virtual_machine_data_disk_attachment": {
     "management_plane": {
       "scopes": [
@@ -14844,6 +15088,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines/extensions"
+      ]
+    }
+  },
+  "azurerm_virtual_machine_implicit_data_disk_from_source": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Compute",
+      "types": [
+        "virtualMachines",
+        "dataDisks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines/dataDisks"
       ]
     }
   },

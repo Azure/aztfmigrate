@@ -14,6 +14,7 @@ type dataProtectionBackupInstancesResolver struct{}
 func (dataProtectionBackupInstancesResolver) ResourceTypes() []string {
 	return []string{
 		"azurerm_data_protection_backup_instance_postgresql",
+		"azurerm_data_protection_backup_instance_postgresql_flexible_server",
 		"azurerm_data_protection_backup_instance_disk",
 		"azurerm_data_protection_backup_instance_blob_storage",
 		"azurerm_data_protection_backup_instance_kubernetes_cluster",
@@ -43,8 +44,10 @@ func (dataProtectionBackupInstancesResolver) Resolve(b *client.ClientBuilder, id
 		return "", fmt.Errorf("unexpected nil properties.dataSourceInfo.dataSourceType in response")
 	}
 	switch strings.ToUpper(*pdt) {
-	case " MICROSOFT.DBFORPOSTGRESQL/SERVERS/DATABASES":
+	case "MICROSOFT.DBFORPOSTGRESQL/SERVERS/DATABASES":
 		return "azurerm_data_protection_backup_instance_postgresql", nil
+	case "MICROSOFT.DBFORPOSTGRESQL/FLEXIBLESERVERS":
+		return "azurerm_data_protection_backup_instance_postgresql_flexible_server", nil
 	case "MICROSOFT.COMPUTE/DISKS":
 		return "azurerm_data_protection_backup_instance_disk", nil
 	case "MICROSOFT.STORAGE/STORAGEACCOUNTS/BLOBSERVICES":
