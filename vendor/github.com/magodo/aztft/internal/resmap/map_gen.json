@@ -4684,6 +4684,36 @@
       ]
     }
   },
+  "azurerm_dev_center_dev_box_definition": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DevCenter",
+      "types": [
+        "devCenters",
+        "devBoxDefinitions"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DevCenter/devCenters/devBoxDefinitions"
+      ]
+    }
+  },
+  "azurerm_dev_center_environment_type": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DevCenter",
+      "types": [
+        "devCenters",
+        "environmentTypes"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DevCenter/devCenters/environmentTypes"
+      ]
+    }
+  },
   "azurerm_dev_center_gallery": {
     "management_plane": {
       "scopes": [
@@ -4696,6 +4726,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DevCenter/devCenters/galleries"
+      ]
+    }
+  },
+  "azurerm_dev_center_network_connection": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DevCenter",
+      "types": [
+        "networkConnections"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DevCenter/networkConnections"
       ]
     }
   },
@@ -13316,6 +13360,20 @@
       ]
     }
   },
+  "azurerm_stack_hci_logical_network": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.AzureStackHCI",
+      "types": [
+        "logicalNetworks"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.AzureStackHCI/logicalNetworks"
+      ]
+    }
+  },
   "azurerm_static_site": {
     "management_plane": {
       "scopes": [
@@ -15118,6 +15176,35 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Network/networkWatchers/packetCaptures"
+      ]
+    }
+  },
+  "azurerm_virtual_machine_restore_point": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Compute",
+      "types": [
+        "restorePointCollections",
+        "restorePoints"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Compute/restorePointCollections/restorePoints"
+      ]
+    }
+  },
+  "azurerm_virtual_machine_restore_point_collection": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Compute",
+      "types": [
+        "restorePointCollections"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Compute/restorePointCollections"
       ]
     }
   },
