@@ -36,16 +36,10 @@ func GetApiVersion(idPattern string) string {
 }
 
 func GetPutCoverage(props []string, idPattern string) ([]string, []string) {
-	if true {
-		return props, nil
-	}
 	return getCoverage(props, "PUT", idPattern)
 }
 
 func GetGetCoverage(props []string, idPattern string) ([]string, []string) {
-	if true {
-		return props, nil
-	}
 	return getCoverage(props, "GET", idPattern)
 }
 
