@@ -298,7 +298,6 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	}
 
 	// import and generate config
-	newAddrs := make([]string, 0)
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
 		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
@@ -309,7 +308,6 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 			}
 			resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 			resources[index].Migrated = true
-			newAddrs = append(newAddrs, r.NewAddress())
 			log.Printf("[INFO] %s has migrated to %s", r.OldAddress(), r.NewAddress())
 		} else {
 			log.Printf("[ERROR] %+v", err)
