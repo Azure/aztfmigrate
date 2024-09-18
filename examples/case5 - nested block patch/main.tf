@@ -46,23 +46,21 @@ variable "action" {
 resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
-  body        = <<BODY
-{
-    "properties": {
-        "networkRuleSet": {
-            "defaultAction": "Deny",
-            "ipRules": [
-                {
-                    "action": "${var.action}",
-                    "value": "7.7.7.7"
-                },
-                {
-                    "action": "${var.action}",
-                    "value": "2.2.2.2"
-                }
-            ]
-        }
+  body = {
+    properties = {
+      networkRuleSet = {
+        defaultAction = "Deny"
+        ipRules = [
+          {
+            action = var.action
+            value  = "7.7.7.7"
+          },
+          {
+            action = var.action
+            value  = "2.2.2.2"
+          }
+        ]
+      }
     }
-}
-    BODY
+  }
 }

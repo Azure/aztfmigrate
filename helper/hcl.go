@@ -10,6 +10,7 @@ import (
 
 	"github.com/Azure/azapi2azurerm/types"
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 )
 
@@ -38,7 +39,7 @@ func GetResourceBlock(workingDirectory, targetAddress string) (*hclwrite.Block, 
 }
 
 // ReplaceResourceBlock searches tf files in working directory and replace `targetAddress` block with `newBlock`
-func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlock *hclwrite.Block) error {
+func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlocks []*hclwrite.Block) error {
 	for _, file := range ListHclFiles(workingDirectory) {
 		// #nosec G304
 		src, err := os.ReadFile(filepath.Join(workingDirectory, file.Name()))
@@ -56,7 +57,9 @@ func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlock *hclw
 			if block != nil && block.Type() == "resource" {
 				address := strings.Join(block.Labels(), ".")
 				if targetAddress == address {
-					if newBlock != nil {
+					f.Body().AppendUnstructuredTokens(CommentOutBlock(block))
+					f.Body().AppendNewline()
+					for _, newBlock := range newBlocks {
 						f.Body().AppendBlock(newBlock)
 						f.Body().AppendNewline()
 					}
@@ -90,6 +93,9 @@ func ReplaceGenericOutputs(workingDirectory string, outputs []types.Output) erro
 			continue
 		}
 		for _, block := range f.Body().Blocks() {
+			if block.Type() == "removed" || block.Type() == "import" {
+				continue
+			}
 			if block != nil {
 				replaceOutputs(block, outputs)
 			}
@@ -374,4 +380,21 @@ func GetForEachConstants(instances []types.Instance, items map[string][]hclwrite
 	}
 	config = fmt.Sprintf("{\n%s}\n", config)
 	return config
+}
+
+func CommentOutBlock(block *hclwrite.Block) hclwrite.Tokens {
+	file := hclwrite.NewEmptyFile()
+	file.Body().AppendBlock(block)
+	content := string(file.Bytes())
+	lines := strings.Split(content, "\n")
+	for i, line := range lines {
+		lines[i] = fmt.Sprintf("# %s", line)
+	}
+	return hclwrite.Tokens{
+		&hclwrite.Token{
+			Type:         hclsyntax.TokenComment,
+			Bytes:        []byte(strings.Join(lines, "\n")),
+			SpacesBefore: 0,
+		},
+	}
 }

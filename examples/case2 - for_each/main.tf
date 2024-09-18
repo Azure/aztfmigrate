@@ -47,13 +47,13 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = each.value.sku
       }
     }
-  })
+  }
 
   for_each = var.accounts
 }
