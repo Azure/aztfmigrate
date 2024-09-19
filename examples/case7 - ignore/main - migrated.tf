@@ -46,13 +46,13 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = local.AutomationSku
       }
     }
-  })
+  }
 }
 
 resource "azapi_resource" "test2" {
@@ -60,13 +60,13 @@ resource "azapi_resource" "test2" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
-        name = jsondecode(azapi_resource.test.output).properties.sku.name
+        name azapi_resource.test.output.properties.sku.name
       }
     }
-  })
+  }
 }
 
 resource "azurerm_automation_account" "test1" {
@@ -80,17 +80,17 @@ resource "azapi_update_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
-  body = jsonencode({
+  body = {
     tags = {
       key = var.Label
     }
-  })
+  }
 }
 
 output "accountName" {
-  value = jsondecode(azapi_resource.test.output).name
+  value = azapi_resource.test.output.name
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azapi_update_resource.test.output).properties.sku.name
+  value = azapi_update_resource.test.output.properties.sku.name
 }

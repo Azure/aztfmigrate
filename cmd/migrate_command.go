@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/Azure/azapi2azurerm/azurerm"
@@ -17,26 +17,31 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
+	"github.com/zclconf/go-cty/cty"
 )
 
 const filenameImport = "imports.tf"
 const providerConfig = `
 provider "azurerm" {
   features {}
+  subscription_id = "%s"
 }
 `
 const tempDir = "temp"
 
 type MigrateCommand struct {
-	Ui      cli.Ui
-	Verbose bool
-	Strict  bool
+	Ui         cli.Ui
+	Verbose    bool
+	Strict     bool
+	workingDir string
 }
 
 func (c *MigrateCommand) flags() *flag.FlagSet {
 	fs := defaultFlagSet("plan")
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
+	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
+
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
 }
@@ -51,9 +56,13 @@ func (c MigrateCommand) Run(args []string) int {
 		return 1
 	}
 
+	if c.workingDir == "" {
+		c.workingDir, _ = os.Getwd()
+	}
+	log.Printf("[INFO] working directory: %s", c.workingDir)
+
 	log.Printf("[INFO] initializing terraform...")
-	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
+	terraform, err := tf.NewTerraform(c.workingDir, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,27 +92,11 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	log.Printf("[INFO] -----------------------------------------------")
 	log.Printf("[INFO] task: migrate azapi_resource")
 
-	// generate import config
-	config := ""
-	for _, resource := range resources {
-		config += resource.EmptyImportConfig()
-	}
 	workingDirectory := terraform.GetWorkingDirectory()
-	if err := os.WriteFile(filepath.Join(workingDirectory, filenameImport), []byte(config), 0600); err != nil {
-		log.Fatal(err)
-	}
 
 	// import and generate config
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s (%d instances) to resource %s...", r.OldAddress(nil), len(r.Instances), r.NewAddress(nil))
-		// import into real state
-		for _, instance := range r.Instances {
-			address := r.NewAddress(instance.Index)
-			log.Printf("[INFO] importing %s to %s...", instance.ResourceId, address)
-			if err := terraform.Import(address, instance.ResourceId); err != nil {
-				log.Printf("[Error] error importing %s : %s", address, instance.ResourceId)
-			}
-		}
 
 		// write empty config to temp dir for import
 		tempDirectoryCreate(workingDirectory)
@@ -113,7 +106,14 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 			log.Fatal(err)
 		}
 
-		config := providerConfig
+		subscriptionId := ""
+		for _, instance := range r.Instances {
+			if strings.HasPrefix(instance.ResourceId, "/subscriptions/") {
+				subscriptionId = strings.Split(instance.ResourceId, "/")[2]
+				break
+			}
+		}
+		config := fmt.Sprintf(providerConfig, subscriptionId)
 		for _, instance := range r.Instances {
 			if !r.IsMultipleResources() {
 				config += fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
@@ -195,17 +195,6 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	}
 	tempDirectoryCleanup(workingDirectory)
 
-	// remove from state
-	for _, r := range resources {
-		if r.Migrated {
-			log.Printf("[INFO] removing %s from state", r.OldAddress(nil))
-			exec := terraform.GetExec()
-			if err := exec.StateRm(context.TODO(), r.OldAddress(nil)); err != nil {
-				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(nil), err)
-			}
-		}
-	}
-
 	// migrate depends_on, lifecycle, provisioner
 	for index, r := range resources {
 		if existingBlock, err := helper.GetResourceBlock(workingDirectory, r.OldAddress(nil)); err == nil && existingBlock != nil {
@@ -221,15 +210,40 @@ func (c MigrateCommand) MigrateGenericResource(terraform *tf.Terraform, resource
 	}
 
 	// remove from config
-	if err := os.RemoveAll(filepath.Join(workingDirectory, filenameImport)); err != nil {
-		log.Fatal(err)
-	}
 	for _, r := range resources {
 		if r.Migrated {
 			log.Printf("[INFO] removing %s from config", r.OldAddress(nil))
-			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(nil), r.Block); err != nil {
+
+			importBlock := hclwrite.NewBlock("import", nil)
+			if r.IsMultipleResources() {
+				forEachMap := make(map[string]cty.Value)
+				for _, instance := range r.Instances {
+					switch v := instance.Index.(type) {
+					case string:
+						forEachMap[instance.ResourceId] = cty.StringVal(v)
+					default:
+						value, _ := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64)
+						forEachMap[instance.ResourceId] = cty.NumberIntVal(value)
+					}
+				}
+				importBlock.Body().SetAttributeValue("for_each", cty.MapVal(forEachMap))
+				importBlock.Body().SetAttributeTraversal("id", hcl.Traversal{hcl.TraverseRoot{Name: "each"}, hcl.TraverseAttr{Name: "key"}})
+				importBlock.Body().SetAttributeTraversal("to", hcl.Traversal{hcl.TraverseRoot{Name: r.ResourceType}, hcl.TraverseAttr{Name: fmt.Sprintf("%s[each.value]", r.Label)}})
+			} else {
+				importBlock.Body().SetAttributeValue("id", cty.StringVal(r.Instances[0].ResourceId))
+				importBlock.Body().SetAttributeTraversal("to", hcl.Traversal{hcl.TraverseRoot{Name: r.ResourceType}, hcl.TraverseAttr{Name: r.Label}})
+			}
+
+			removedBlock := hclwrite.NewBlock("removed", nil)
+			removedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: "azapi_resource"}, hcl.TraverseAttr{Name: r.Label}})
+			removedLifecycleBlock := hclwrite.NewBlock("lifecycle", nil)
+			removedLifecycleBlock.Body().SetAttributeValue("destroy", cty.BoolVal(false))
+			removedBlock.Body().AppendBlock(removedLifecycleBlock)
+
+			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(nil), []*hclwrite.Block{removedBlock, importBlock, r.Block}); err != nil {
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(nil), err)
 			}
+
 		}
 	}
 
@@ -259,7 +273,14 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	log.Printf("[INFO] task: migrate azapi_update_resource")
 
 	// generate import config
-	config := providerConfig
+	subscriptionId := ""
+	for _, instance := range resources {
+		if strings.HasPrefix(instance.Id, "/subscriptions/") {
+			subscriptionId = strings.Split(instance.Id, "/")[2]
+			break
+		}
+	}
+	config := fmt.Sprintf(providerConfig, subscriptionId)
 	for _, resource := range resources {
 		config += resource.EmptyImportConfig()
 	}
@@ -277,7 +298,6 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 	}
 
 	// import and generate config
-	newAddrs := make([]string, 0)
 	for index, r := range resources {
 		log.Printf("[INFO] migrating resource %s to resource %s", r.OldAddress(), r.NewAddress())
 		if block, err := importAndGenerateConfig(tempTerraform, r.NewAddress(), r.Id, r.ResourceType, true); err == nil {
@@ -288,7 +308,6 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 			}
 			resources[index].Block = helper.InjectReference(resources[index].Block, resources[index].References)
 			resources[index].Migrated = true
-			newAddrs = append(newAddrs, r.NewAddress())
 			log.Printf("[INFO] %s has migrated to %s", r.OldAddress(), r.NewAddress())
 		} else {
 			log.Printf("[ERROR] %+v", err)
@@ -312,31 +331,20 @@ func (c MigrateCommand) MigrateGenericUpdateResource(terraform *tf.Terraform, re
 		}
 	}
 
-	// remove from state
-	for _, r := range resources {
-		if r.Migrated {
-			log.Printf("[INFO] removing %s from state", r.OldAddress())
-			exec := terraform.GetExec()
-			if err := exec.StateRm(context.TODO(), r.OldAddress()); err != nil {
-				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(), err)
-			}
-		}
-	}
-
 	// remove from config
 	for _, r := range resources {
 		if r.Migrated {
 			log.Printf("[INFO] removing %s from config", r.OldAddress())
-			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(), nil); err != nil {
+			removedBlock := hclwrite.NewBlock("removed", nil)
+			removedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: "azapi_update_resource"}, hcl.TraverseAttr{Name: r.OldLabel}})
+			removedLifecycleBlock := hclwrite.NewBlock("lifecycle", nil)
+			removedLifecycleBlock.Body().SetAttributeValue("destroy", cty.BoolVal(false))
+			removedBlock.Body().AppendBlock(removedLifecycleBlock)
+
+			if err := helper.ReplaceResourceBlock(workingDirectory, r.OldAddress(), []*hclwrite.Block{removedBlock}); err != nil {
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(), err)
 			}
 		}
-	}
-
-	log.Println("[INFO] refreshing state for migrated resources...")
-	err = terraform.RefreshState(newAddrs)
-	if err != nil {
-		log.Printf("refreshing state: %+v", err)
 	}
 
 	tempDirectoryCleanup(workingDirectory)

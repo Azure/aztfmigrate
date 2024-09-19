@@ -275,27 +275,27 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = local.AutomationSku
       }
     }
-  })
+  }
 }
 
 resource "azapi_resource" "test2" {
-  name        = "${var.AutomationName}another"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
-  location    = azurerm_resource_group.test.location
-  body = jsonencode({
+  name      = "${var.AutomationName}another"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  location  = azurerm_resource_group.test.location
+  body = {
     properties = {
       sku = {
-        name = jsondecode(azapi_resource.test.output).properties.sku.name
+        name = azapi_resource.test.output.properties.sku.name
       }
     }
-  })
+  }
 }
 
 resource "azurerm_automation_account" "test1" {
@@ -309,19 +309,19 @@ resource "azapi_update_resource" "test" {
   resource_id            = azurerm_automation_account.test1.id
   type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   response_export_values = ["properties.sku"]
-  body = jsonencode({
+  body = {
     tags = {
       key = var.Label
     }
-  })
+  }
 }
 
 output "accountName" {
-  value = jsondecode(azapi_resource.test.output).name
+  value = azapi_resource.test.output.name
 }
 
 output "patchAccountSKU" {
-  value = jsondecode(azapi_update_resource.test.output).properties.sku.name
+  value = azapi_update_resource.test.output.properties.sku.name
 }
 `, template(), randomResourceName(), randomResourceName())
 }
@@ -350,22 +350,22 @@ variable "accounts" {
 
 
 resource "azapi_resource" "test" {
-  name        = "henglu${each.value.name}"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  name      = "henglu${each.value.name}"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location
   identity {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = each.value.sku
       }
     }
-  })
+  }
 
   for_each = var.accounts
 }
@@ -395,31 +395,29 @@ variable "defName" {
 }
 
 resource "azapi_resource" "test" {
-  name        = "%s"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
+  name      = "%s"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
 
-  body = <<BODY
-{
-    "location": "westeurope",
-    "tags": {},
-    "properties": {
-        "serviceEndpointPolicyDefinitions": [
-            {
-                "name": "${var.defName}",
-                "properties": {
-                    "service": "Microsoft.Storage",
-                    "description": "${var.description}",
-                    "serviceResources": [
-                        "${azurerm_storage_account.test.id}",
-                        "${azurerm_resource_group.test.id}"
-                    ]
-                }
-            }
-        ]
+  body = {
+    location = "westeurope"
+    tags     = {}
+    properties = {
+      serviceEndpointPolicyDefinitions = [
+        {
+          name = var.defName
+          properties = {
+            service     = "Microsoft.Storage"
+            description = var.description
+            serviceResources = [
+              azurerm_storage_account.test.id,
+              azurerm_resource_group.test.id
+            ]
+          }
+        }
+      ]
     }
-}
-  BODY
+  }
 }
 `, template(), randomResourceName(), randomResourceName())
 }
@@ -429,17 +427,17 @@ func count() string {
 %s
 
 resource "azapi_resource" "test" {
-  name        = "%s${count.index}"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
-  location    = azurerm_resource_group.test.location
-  body = jsonencode({
+  name      = "%s${count.index}"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  location  = azurerm_resource_group.test.location
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   count = 2
 }
@@ -478,25 +476,23 @@ variable "action" {
 resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
-  body        = <<BODY
-{
-    "properties": {
-        "networkRuleSet": {
-            "defaultAction": "Deny",
-            "ipRules": [
-                {
-                    "action": "${var.action}",
-                    "value": "7.7.7.7"
-                },
-                {
-                    "action": "${var.action}",
-                    "value": "2.2.2.2"
-                }
-            ]
-        }
+  body = {
+    properties = {
+      networkRuleSet = {
+        defaultAction = "Deny"
+        ipRules = [
+          {
+            action = var.action
+            value  = "7.7.7.7"
+          },
+          {
+            action = var.action
+            value  = "2.2.2.2"
+          }
+        ]
+      }
     }
-}
-    BODY
+  }
 }
 `, template(), randomResourceName())
 }
@@ -516,13 +512,13 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   depends_on = [azurerm_resource_group.test]
 
@@ -538,22 +534,22 @@ resource "azapi_resource" "test" {
 
 
 resource "azapi_resource" "test1" {
-  name                   = "%s"
-  parent_id              = azurerm_resource_group.test.id
-  type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  name      = "%s"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location
   identity {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   depends_on = [azurerm_resource_group.test, azapi_resource.test]
 
@@ -610,10 +606,10 @@ resource "azapi_resource" "test" {
 }
 
 resource "azapi_resource" "test2" {
-  name        = "${var.AutomationName}another"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
-  location    = azurerm_resource_group.test.location
+  name      = "${var.AutomationName}another"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  location  = azurerm_resource_group.test.location
   body = {
     properties = {
       sku = {
@@ -675,9 +671,9 @@ variable "accounts" {
 
 
 resource "azapi_resource" "test" {
-  name        = "henglu${each.value.name}"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  name      = "henglu${each.value.name}"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location
   identity {
@@ -720,27 +716,27 @@ variable "defName" {
 }
 
 resource "azapi_resource" "test" {
-  name        = "%s"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
+  name      = "%s"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
 
   body = {
     location = "westeurope"
-    tags = {}
+    tags     = {}
     properties = {
-        serviceEndpointPolicyDefinitions = [
-            {
-                name= var.defName
-                properties = {
-                    service = "Microsoft.Storage"
-                    description = var.description
-                    serviceResources= [
-                        azurerm_storage_account.test.id,
-                        azurerm_resource_group.test.id
-                    ]
-                }
-            }
-        ]
+      serviceEndpointPolicyDefinitions = [
+        {
+          name = var.defName
+          properties = {
+            service     = "Microsoft.Storage"
+            description = var.description
+            serviceResources = [
+              azurerm_storage_account.test.id,
+              azurerm_resource_group.test.id
+            ]
+          }
+        }
+      ]
     }
   }
 }
@@ -752,10 +748,10 @@ func count_payload() string {
 %s
 
 resource "azapi_resource" "test" {
-  name        = "%s${count.index}"
-  parent_id   = azurerm_resource_group.test.id
-  type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
-  location    = azurerm_resource_group.test.location
+  name      = "%s${count.index}"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  location  = azurerm_resource_group.test.location
   body = {
     properties = {
       sku = {
@@ -802,21 +798,21 @@ resource "azapi_update_resource" "test" {
   resource_id = azurerm_container_registry.test.id
   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
   body = {
-	properties = {
-		networkRuleSet = {
-			defaultAction = "Deny"
-			ipRules = [
-				{
-					action = var.action
-					value  = "7.7.7.7"
-				},
-				{
-					action = var.action
-					value  = "2.2.2.2"
-				}
-			]
-		}
-	}
+    properties = {
+      networkRuleSet = {
+        defaultAction = "Deny"
+        ipRules = [
+          {
+            action = var.action
+            value  = "7.7.7.7"
+          },
+          {
+            action = var.action
+            value  = "2.2.2.2"
+          }
+        ]
+      }
+    }
   }
 }
 `, template(), randomResourceName())
@@ -859,9 +855,9 @@ resource "azapi_resource" "test" {
 
 
 resource "azapi_resource" "test1" {
-  name                   = "%s"
-  parent_id              = azurerm_resource_group.test.id
-  type                   = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
+  name      = "%s"
+  parent_id = azurerm_resource_group.test.id
+  type      = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
 
   location = azurerm_resource_group.test.location
   identity {

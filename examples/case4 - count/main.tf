@@ -23,13 +23,13 @@ resource "azapi_resource" "test" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Automation/automationAccounts@2020-01-13-preview"
   location    = azurerm_resource_group.test.location
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   count = 2
 }

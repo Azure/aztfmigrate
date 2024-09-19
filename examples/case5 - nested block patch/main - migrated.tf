@@ -31,14 +31,13 @@ resource "azurerm_container_registry" "test" {
       ip_rule = [
         {
           action   = var.action
-          ip_range = "7.7.7.7/32"
+          ip_range = "2.2.2.2/32"
         },
         {
           action   = var.action
-          ip_range = "2.2.2.2/32"
+          ip_range = "7.7.7.7/32"
         }
       ]
-      virtual_network = []
     }
   ]
 }
@@ -48,3 +47,32 @@ variable "action" {
   default = "Allow"
 }
 
+# resource "azapi_update_resource" "test" {
+#   resource_id = azurerm_container_registry.test.id
+#   type        = "Microsoft.ContainerRegistry/registries@2019-05-01"
+#   body = {
+#     properties = {
+#       networkRuleSet = {
+#         defaultAction = "Deny"
+#         ipRules = [
+#           {
+#             action = var.action
+#             value  = "7.7.7.7"
+#           },
+#           {
+#             action = var.action
+#             value  = "2.2.2.2"
+#           }
+#         ]
+#       }
+#     }
+#   }
+# }
+# 
+
+removed {
+  from = azapi_update_resource.test
+  lifecycle {
+    destroy = false
+  }
+}

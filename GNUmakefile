@@ -17,3 +17,7 @@ test:
 lint:
 	@echo "==> Checking source code against linters..."
 	@if command -v golangci-lint; then (golangci-lint run ./...); else ($(GOPATH)/bin/golangci-lint run ./...); fi
+
+terrafmt:
+	@echo "==> Fixing acceptance test terraform blocks code with terrafmt..."
+	@find . | egrep "_test.go" | sort | while read f; do terrafmt fmt -f $$f; done

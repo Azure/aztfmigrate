@@ -29,13 +29,13 @@ resource "azapi_resource" "test" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   depends_on = [azurerm_resource_group.test]
 
@@ -60,13 +60,13 @@ resource "azapi_resource" "test1" {
     type = "SystemAssigned"
   }
 
-  body = jsonencode({
+  body = {
     properties = {
       sku = {
         name = "Basic"
       }
     }
-  })
+  }
 
   depends_on = [azurerm_resource_group.test, azapi_resource.test]
 

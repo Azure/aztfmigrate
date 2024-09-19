@@ -41,25 +41,23 @@ resource "azapi_resource" "test" {
   parent_id   = azurerm_resource_group.test.id
   type        = "Microsoft.Network/serviceEndpointPolicies@2020-11-01"
 
-  body = <<BODY
-{
-    "location": "westeurope",
-    "tags": {},
-    "properties": {
-        "serviceEndpointPolicyDefinitions": [
-            {
-                "name": "${var.defName}",
-                "properties": {
-                    "service": "Microsoft.Storage",
-                    "description": "${var.description}",
-                    "serviceResources": [
-                        "${azurerm_storage_account.test.id}",
-                        "${azurerm_resource_group.test.id}"
-                    ]
-                }
-            }
-        ]
+  body = {
+    location = "westeurope"
+    tags     = {}
+    properties = {
+      serviceEndpointPolicyDefinitions = [
+        {
+          name = var.defName
+          properties = {
+            service     = "Microsoft.Storage"
+            description = var.description
+            serviceResources = [
+              azurerm_storage_account.test.id,
+              azurerm_resource_group.test.id
+            ]
+          }
+        }
+      ]
     }
-}
-  BODY
+  }
 }

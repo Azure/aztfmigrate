@@ -18,15 +18,17 @@ import (
 )
 
 type PlanCommand struct {
-	Ui      cli.Ui
-	Verbose bool
-	Strict  bool
+	Ui         cli.Ui
+	Verbose    bool
+	Strict     bool
+	workingDir string
 }
 
 func (c *PlanCommand) flags() *flag.FlagSet {
 	fs := defaultFlagSet("plan")
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
+	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
 }
@@ -42,8 +44,10 @@ func (c PlanCommand) Run(args []string) int {
 	}
 
 	log.Printf("[INFO] initializing terraform...")
-	workingDirectory, _ := os.Getwd()
-	terraform, err := tf.NewTerraform(workingDirectory, c.Verbose)
+	if c.workingDir == "" {
+		c.workingDir, _ = os.Getwd()
+	}
+	terraform, err := tf.NewTerraform(c.workingDir, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
