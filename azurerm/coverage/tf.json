@@ -1,5 +1,311 @@
 [
   {
+    "api_version": "2023-06-01-preview",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/{}",
+    "operation": "DELETE"
+  },
+  {
+    "api_version": "2023-06-01-preview",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/{}",
+    "operation": "GET",
+    "properties": [
+      {
+        "addr": "identity/principalId"
+      },
+      {
+        "addr": "identity/tenantId"
+      },
+      {
+        "addr": "identity/type"
+      },
+      {
+        "addr": "identity/userAssignedIdentities"
+      },
+      {
+        "addr": "location",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/location"
+          }
+        ]
+      },
+      {
+        "addr": "properties/adminUserEnabled"
+      },
+      {
+        "addr": "properties/anonymousPullEnabled"
+      },
+      {
+        "addr": "properties/dataEndpointEnabled"
+      },
+      {
+        "addr": "properties/encryption/keyVaultProperties/identity",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/encryption/0/identity_client_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties/encryption/keyVaultProperties/keyIdentifier",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/encryption/0/key_vault_key_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties/encryption/status"
+      },
+      {
+        "addr": "properties/loginServer",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/login_server"
+          }
+        ]
+      },
+      {
+        "addr": "properties/networkRuleBypassOptions",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/network_rule_bypass_option"
+          }
+        ]
+      },
+      {
+        "addr": "properties/networkRuleSet/defaultAction",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/network_rule_set/0/default_action"
+          }
+        ]
+      },
+      {
+        "addr": "properties/networkRuleSet/ipRules/action"
+      },
+      {
+        "addr": "properties/networkRuleSet/ipRules/value"
+      },
+      {
+        "addr": "properties/policies/exportPolicy/status"
+      },
+      {
+        "addr": "properties/policies/quarantinePolicy/status"
+      },
+      {
+        "addr": "properties/policies/retentionPolicy/days"
+      },
+      {
+        "addr": "properties/policies/retentionPolicy/status"
+      },
+      {
+        "addr": "properties/policies/trustPolicy/status"
+      },
+      {
+        "addr": "properties/policies/trustPolicy/type"
+      },
+      {
+        "addr": "properties/publicNetworkAccess"
+      },
+      {
+        "addr": "properties/zoneRedundancy"
+      },
+      {
+        "addr": "sku/name"
+      },
+      {
+        "addr": "sku/tier",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/sku"
+          }
+        ]
+      },
+      {
+        "addr": "tags"
+      }
+    ]
+  },
+  {
+    "api_version": "2023-06-01-preview",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/{}",
+    "operation": "PUT",
+    "properties": [
+      {
+        "addr": "identity/principalId"
+      },
+      {
+        "addr": "identity/tenantId"
+      },
+      {
+        "addr": "identity/type"
+      },
+      {
+        "addr": "identity/userAssignedIdentities"
+      },
+      {
+        "addr": "properties/adminUserEnabled"
+      },
+      {
+        "addr": "properties/anonymousPullEnabled"
+      },
+      {
+        "addr": "properties/dataEndpointEnabled"
+      },
+      {
+        "addr": "properties/encryption/keyVaultProperties/identity",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/encryption/0/identity_client_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties/encryption/keyVaultProperties/keyIdentifier",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/encryption/0/key_vault_key_id"
+          }
+        ]
+      },
+      {
+        "addr": "properties/encryption/status"
+      },
+      {
+        "addr": "properties/networkRuleBypassOptions",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/network_rule_bypass_option"
+          }
+        ]
+      },
+      {
+        "addr": "properties/networkRuleSet/defaultAction",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/network_rule_set/0/default_action"
+          }
+        ]
+      },
+      {
+        "addr": "properties/networkRuleSet/ipRules/action"
+      },
+      {
+        "addr": "properties/networkRuleSet/ipRules/value"
+      },
+      {
+        "addr": "properties/policies/exportPolicy/status"
+      },
+      {
+        "addr": "properties/policies/quarantinePolicy/status"
+      },
+      {
+        "addr": "properties/policies/retentionPolicy/days"
+      },
+      {
+        "addr": "properties/policies/retentionPolicy/status"
+      },
+      {
+        "addr": "properties/policies/trustPolicy/status"
+      },
+      {
+        "addr": "properties/policies/trustPolicy/type"
+      },
+      {
+        "addr": "properties/publicNetworkAccess"
+      },
+      {
+        "addr": "sku/name"
+      },
+      {
+        "addr": "sku/tier",
+        "app_property_maps": [
+          {
+            "name": "azurerm_container_registry",
+            "addr": "/sku"
+          }
+        ]
+      },
+      {
+        "addr": "tags"
+      }
+    ]
+  },
+  {
+    "api_version": "2023-11-01",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.NETWORK/SERVICEENDPOINTPOLICIES/{}",
+    "operation": "GET",
+    "properties": [
+      {
+        "addr": "location",
+        "app_property_maps": [
+          {
+            "name": "azurerm_subnet_service_endpoint_storage_policy",
+            "addr": "/location"
+          }
+        ]
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/name"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/description"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/service"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/serviceResources"
+      },
+      {
+        "addr": "tags"
+      }
+    ]
+  },
+  {
+    "api_version": "2023-11-01",
+    "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.NETWORK/SERVICEENDPOINTPOLICIES/{}",
+    "operation": "PUT",
+    "properties": [
+      {
+        "addr": "location",
+        "app_property_maps": [
+          {
+            "name": "azurerm_subnet_service_endpoint_storage_policy",
+            "addr": "/location"
+          }
+        ]
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/name"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/description"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/service"
+      },
+      {
+        "addr": "properties/serviceEndpointPolicyDefinitions/properties/serviceResources"
+      },
+      {
+        "addr": "tags"
+      }
+    ]
+  },
+  {
     "api_version": "2015-10-31",
     "api_path": "/SUBSCRIPTIONS/{}/RESOURCEGROUPS/{}/PROVIDERS/MICROSOFT.AUTOMATION/AUTOMATIONACCOUNTS/{}",
     "operation": "DELETE"
@@ -16,6 +322,15 @@
         "addr": "properties/sku/name"
       },
       {
+        "addr": "identity/type"
+      },
+      {
+        "addr": "identity/tenantId"
+      },
+      {
+        "addr": "identity/principalId"
+      },
+      {
         "addr": "tags"
       }
     ]
@@ -30,6 +345,9 @@
       },
       {
         "addr": "properties/sku/name"
+      },
+      {
+        "addr": "identity/type"
       },
       {
         "addr": "tags"

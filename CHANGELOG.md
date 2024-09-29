@@ -1,3 +1,8 @@
+## Unreleased
+
+FEATURES:
+- Support migrating resources from `azurerm` provider to `azapi` provider.
+
 ## v2.0.0-beta
 
 Target azurerm version: v4.0.0
