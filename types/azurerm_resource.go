@@ -213,6 +213,7 @@ var pluralizeClient = pluralize.NewClient()
 func NewLabel(id string) string {
 	resourceType := ResourceTypeOfResourceId(id)
 	lastSegment := LastSegment(resourceType)
+	// #nosec G404
 	return fmt.Sprintf("%s_%d", pluralizeClient.Singular(lastSegment), rand.Intn(100))
 }
 
