@@ -1,5 +1,9 @@
 ## Unreleased
 
+BREAKING CHANGES:
+- The tool is renamed to `aztfmigrate` from `azapi2azurerm`.
+- The ignore file is renamed to `aztfmigrate.ignore` from `azapi2azurerm.ignore`.
+
 FEATURES:
 - Support migrating resources from `azurerm` provider to `azapi` provider.
 
