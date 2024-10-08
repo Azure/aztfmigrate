@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/tf"
-	"github.com/Azure/azapi2azurerm/types"
+	"github.com/Azure/aztfmigrate/tf"
+	"github.com/Azure/aztfmigrate/types"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
 )
@@ -79,8 +79,8 @@ func (c *MigrateCommand) Run(args []string) int {
 
 func (c *MigrateCommand) Help() string {
 	helpText := `
-Usage: azapi2azurerm migrate
-` + c.Synopsis() + "\nThe Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
+Usage: aztfmigrate migrate
+` + c.Synopsis() + "\nThe Terraform addresses listed in file `aztfmigrate.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }

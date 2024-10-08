@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/azapi2azurerm/cmd"
-	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/aztfmigrate/cmd"
+	"github.com/Azure/aztfmigrate/tf"
 	"github.com/mitchellh/cli"
 )
 

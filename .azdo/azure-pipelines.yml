@@ -15,7 +15,7 @@ stages:
   - stage: build
     pool:
       name: pool-ubuntu-2004
-    displayName: "Build azapi2azurerm"
+    displayName: "Build aztfmigrate"
     jobs:
       - job: build
         displayName: "Build Binaries"
@@ -60,9 +60,9 @@ stages:
           - script: |
               set -e
               mkdir build
-              name=azapi2azurerm
+              name=aztfmigrate
               if [[ $OS = windows ]]; then
-                  name=azapi2azurerm.exe
+                  name=aztfmigrate.exe
               fi
               GOOS="${OS}" GOARCH="${ARCH}" CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -X 'main.version=${VERSION}'" -o build/$name
             displayName: "Go Build"
@@ -128,7 +128,7 @@ stages:
               ARCH: amd64
         steps:
           - task: DownloadPipelineArtifact@2
-            displayName: "Download azapi2azurerm binary"
+            displayName: "Download aztfmigrate binary"
             inputs:
               artifact: windows-$(ARCH)
               path: $(system.defaultWorkingDirectory)/dist/bin
@@ -152,10 +152,10 @@ stages:
               cd $workdir/scripts/package/windows/build
               declare -A map=( [386]=x86 [amd64]=x64 )
               export VERSION=${VERSION:1}
-              cp $workdir/dist/bin/azapi2azurerm.exe .
+              cp $workdir/dist/bin/aztfmigrate.exe .
               candle.exe -arch ${map[$ARCH]} -o setup.wxobj ./setup.wxs
               mkdir $workdir/dist/output
-              light.exe -out $workdir/dist/output/azapi2azurerm.msi ./setup.wxobj
+              light.exe -out $workdir/dist/output/aztfmigrate.msi ./setup.wxobj
             env:
               workdir: $(system.defaultWorkingDirectory)
               VERSION: ${{ parameters.version }}
@@ -235,7 +235,7 @@ stages:
           - script: |
               set -e
 
-              chmod +x $WORKDIR/dist/source/azapi2azurerm
+              chmod +x $WORKDIR/dist/source/aztfmigrate
 
               declare -A deb_arch_map=( [386]=i386 [amd64]=amd64 [arm]=armhf [arm64]=arm64 )
               declare -A rpm_arch_map=( [386]=i686 [amd64]=x86_64 [arm]=armv7hl [arm64]=aarch64 )
@@ -243,44 +243,44 @@ stages:
 
               # Build the image
               cd $WORKDIR/scripts/package/linux/build
-              docker build -t azapi2azurermbuild .
+              docker build -t aztfmigratebuild .
 
               # Build deb package
               docker run -t --rm \
                 -v $WORKDIR/dist/source:/build/source \
                 -v $WORKDIR/dist/output:/build/output \
-                azapi2azurermbuild \
+                aztfmigratebuild \
                 fpm \
-                  --name azapi2azurerm \
+                  --name aztfmigrate \
                   --license MPL-2.0 \
                   --version $version \
                   --description "A tool to migrate terraform resources from azapi to azurerm" \
-                  --url "https://github.com/Azure/azapi2azurerm" \
+                  --url "https://github.com/Azure/aztfmigrate" \
                   --maintainer "henglu <henglu@microsoft.com>" \
                   --input-type dir \
                   --output-type deb \
                   --architecture ${deb_arch_map[$ARCH]} \
-                  --package /build/output/azapi2azurerm-$version-1-${deb_arch_map[$ARCH]}.deb \
-                  /build/source/azapi2azurerm=/usr/bin/azapi2azurerm
+                  --package /build/output/aztfmigrate-$version-1-${deb_arch_map[$ARCH]}.deb \
+                  /build/source/aztfmigrate=/usr/bin/aztfmigrate
 
               # Build rpm package
               echo $version
               docker run -t --rm \
                 -v $WORKDIR/dist/source:/build/source \
                 -v $WORKDIR/dist/output:/build/output \
-                azapi2azurermbuild \
+                aztfmigratebuild \
                 fpm \
-                  --name azapi2azurerm \
+                  --name aztfmigrate \
                   --license MPL-2.0 \
                   --version ${version} \
                   --description "A tool to migrate terraform resources from azapi to azurerm" \
-                  --url "https://github.com/Azure/azapi2azurerm" \
+                  --url "https://github.com/Azure/aztfmigrate" \
                   --maintainer "henglu <henglu@microsoft.com>" \
                   --input-type dir \
                   --output-type rpm \
                   --architecture ${rpm_arch_map[$ARCH]} \
-                  --package /build/output/azapi2azurerm-$version-1-${rpm_arch_map[$ARCH]}.rpm \
-                  /build/source/azapi2azurerm=/usr/bin/azapi2azurerm
+                  --package /build/output/aztfmigrate-$version-1-${rpm_arch_map[$ARCH]}.rpm \
+                  /build/source/aztfmigrate=/usr/bin/aztfmigrate
             displayName: "Build Packages"
             env:
               VERSION: ${{ parameters.version }}
@@ -339,7 +339,7 @@ stages:
                 runId: ${{ parameters.artifactBuildId }}
           - script: |
               set -e
-              NAME="azapi2azurerm"
+              NAME="aztfmigrate"
               OS_ARCH=(
                 "windows:amd64"
                 "windows:386"
@@ -354,17 +354,17 @@ stages:
               for os_arch in "${OS_ARCH[@]}" ; do
                 OS=${os_arch%%:*}
                 ARCH=${os_arch#*:}
-                name=azapi2azurerm
+                name=aztfmigrate
                 if [[ $OS = windows ]]; then
-                    name=azapi2azurerm.exe
+                    name=aztfmigrate.exe
                 fi
                 chmod +x dist/${OS}-${ARCH}/${name}
                 zip -j release/${NAME}_${VERSION}_${OS}_${ARCH}.zip dist/${OS}-${ARCH}/${name}
               done
 
               # Copy MSI
-              cp dist/windows-386-msi/azapi2azurerm.msi release/${NAME}_${VERSION}_x86.msi
-              cp dist/windows-amd64-msi/azapi2azurerm.msi release/${NAME}_${VERSION}_x64.msi
+              cp dist/windows-386-msi/aztfmigrate.msi release/${NAME}_${VERSION}_x86.msi
+              cp dist/windows-amd64-msi/aztfmigrate.msi release/${NAME}_${VERSION}_x64.msi
 
               cd release
               shasum -a 256 *.zip *.msi > ${NAME}_SHA256SUMS
@@ -400,7 +400,7 @@ stages:
           - task: GitHubRelease@1
             displayName: "Draft Github Release"
             inputs:
-              gitHubConnection: 'azapi2azurerm'
+              gitHubConnection: 'aztfmigrate'
               repositoryName: '$(Build.Repository.Name)'
               action: 'create'
               target: '$(Build.SourceVersion)'

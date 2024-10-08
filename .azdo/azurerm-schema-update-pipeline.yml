@@ -39,7 +39,7 @@ steps:
       git config --global user.email "henglu@microsoft.com"
       git config --global user.name "Heng Lu"
       git clone https://ms-henglu:$PAT@github.com/ms-henglu/terraform-provider-azurerm.git
-      git clone https://ms-henglu:$PAT@github.com/Azure/azapi2azurerm.git
+      git clone https://ms-henglu:$PAT@github.com/Azure/aztfmigrate.git
       cd terraform-provider-azurerm
       git remote add hashi https://ms-henglu:$PAT@github.com/hashicorp/terraform-provider-azurerm.git
       git remote
@@ -55,7 +55,7 @@ steps:
   - bash: |
       export GOROOT=/usr/local/go
       export PATH=$GOROOT/bin:$PATH
-      cd azapi2azurerm/.tools/generate-provider-schema
+      cd aztfmigrate/.tools/generate-provider-schema
       pwd
       chmod -R +x ./run.sh
       ./run.sh /mnt/vss/_work/1/s/terraform-provider-azurerm ${{ parameters.branch }}
@@ -65,7 +65,7 @@ steps:
       export GOROOT=/usr/local/go
       export PATH=$GOROOT/bin:$PATH
       export TAG=$(step1.TAG)
-      cd azapi2azurerm
+      cd aztfmigrate
       make fmt
       git add .
       git status

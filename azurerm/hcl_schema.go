@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/azurerm/schema"
+	"github.com/Azure/aztfmigrate/azurerm/schema"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"

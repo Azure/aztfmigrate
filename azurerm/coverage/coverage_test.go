@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Azure/azapi2azurerm/azurerm/coverage"
+	"github.com/Azure/aztfmigrate/azurerm/coverage"
 )
 
 func Test_GetCoverage(t *testing.T) {

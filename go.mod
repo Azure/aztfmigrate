@@ -1,4 +1,4 @@
-module github.com/Azure/azapi2azurerm
+module github.com/Azure/aztfmigrate
 
 go 1.22.0
 

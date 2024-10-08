@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Azure/azapi2azurerm/azurerm"
-	"github.com/Azure/azapi2azurerm/cmd"
-	"github.com/Azure/azapi2azurerm/tf"
-	"github.com/Azure/azapi2azurerm/types"
+	"github.com/Azure/aztfmigrate/azurerm"
+	"github.com/Azure/aztfmigrate/cmd"
+	"github.com/Azure/aztfmigrate/tf"
+	"github.com/Azure/aztfmigrate/types"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
@@ -199,7 +199,7 @@ func init() {
 }
 
 func tempDir(t *testing.T) string {
-	tmpDir := filepath.Join(os.TempDir(), "azapi2azurerm", t.Name())
+	tmpDir := filepath.Join(os.TempDir(), "aztfmigrate", t.Name())
 	err := os.MkdirAll(tmpDir, 0o755)
 	if err != nil && !os.IsExist(err) {
 		t.Fatal(err)

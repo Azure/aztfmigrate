@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/azurerm/coverage"
-	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/aztfmigrate/azurerm/coverage"
+	"github.com/Azure/aztfmigrate/tf"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	tfjson "github.com/hashicorp/terraform-json"

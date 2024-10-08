@@ -13,10 +13,10 @@ count=1
 while ((count <= total)); do
     echo "Try ($count/$total)"
     apt-get update
-    apt-get install -y azapi2azurerm && break
+    apt-get install -y aztfmigrate && break
 
     sleep 1m
     ((count++))
 done
 
-grep $version <(azapi2azurerm -v)
+grep $version <(aztfmigrate -v)

@@ -1,4 +1,4 @@
-# azapi2azurerm
+# aztfmigrate
 
 ## Introduction
 This tool is used to migrate resources between terraform `azapi` provider and `azurerm` provider.
@@ -6,8 +6,8 @@ This tool is used to migrate resources between terraform `azapi` provider and `a
 
 ## Command Usage
 ```
-PS C:\Users\henglu\go\src\github.com\Azure\azapi2azurerm> azapi2azurerm.exe            
-Usage: azapi2azurerm [--version] [--help] <command> [<args>]
+PS C:\Users\henglu\go\src\github.com\Azure\aztfmigrate> aztfmigrate.exe            
+Usage: aztfmigrate [--version] [--help] <command> [<args>]
 
 Available commands are:
     migrate    Migrate azapi resources to azurerm resources in current working directory
@@ -15,9 +15,9 @@ Available commands are:
     version    Displays the version of the migration tool
 ```
 
-1. Run `azapi2azurerm plan -target-provider=azurerm` under your terraform working directory, 
+1. Run `aztfmigrate plan -target-provider=azurerm` under your terraform working directory, 
    it will list all resources that can be migrated from `azapi` provider to `azurerm` provider.
-   The Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.
+   The Terraform addresses listed in file `aztfmigrate.ignore` will be ignored during migration.
 ```
 2022/01/25 14:34:46 [INFO] searching azapi_resource & azapi_update_resource...
 2022/01/25 14:34:55 [INFO]
@@ -33,31 +33,31 @@ azapi_resource.test: input properties not supported: [], output properties not s
 
 The following resources will be ignored in migration:
    ```
-2. Run `azapi2azurerm migrate -target-provider=azurerm` under your terraform working directory, 
+2. Run `aztfmigrate migrate -target-provider=azurerm` under your terraform working directory, 
    it will migrate above resources from `azapi` provider to `azurerm` provider, 
    both terraform configuration and state.
-   The Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.
+   The Terraform addresses listed in file `aztfmigrate.ignore` will be ignored during migration.
    
 ## Examples
 There're some examples to show the migration results.
-1. [case1 - basic](https://github.com/Azure/azapi2azurerm/tree/master/examples/case1%20-%20basic)
-2. [case2 - for_each](https://github.com/Azure/azapi2azurerm/tree/master/examples/case2%20-%20for_each)
-3. [case3 - nested block](https://github.com/Azure/azapi2azurerm/tree/master/examples/case3%20-%20nested%20block)
-4. [case4 - count](https://github.com/Azure/azapi2azurerm/tree/master/examples/case4%20-%20count)
-5. [case5 - nested block patch](https://github.com/Azure/azapi2azurerm/tree/master/examples/case5%20-%20nested%20block%20patch)
-6. [case6 - meta argument](https://github.com/Azure/azapi2azurerm/tree/master/examples/case6%20-%20meta%20arguments)
-7. [case7 - ignore](https://github.com/Azure/azapi2azurerm/tree/master/examples/case7%20-%20ignore)
+1. [case1 - basic](https://github.com/Azure/aztfmigrate/tree/master/examples/case1%20-%20basic)
+2. [case2 - for_each](https://github.com/Azure/aztfmigrate/tree/master/examples/case2%20-%20for_each)
+3. [case3 - nested block](https://github.com/Azure/aztfmigrate/tree/master/examples/case3%20-%20nested%20block)
+4. [case4 - count](https://github.com/Azure/aztfmigrate/tree/master/examples/case4%20-%20count)
+5. [case5 - nested block patch](https://github.com/Azure/aztfmigrate/tree/master/examples/case5%20-%20nested%20block%20patch)
+6. [case6 - meta argument](https://github.com/Azure/aztfmigrate/tree/master/examples/case6%20-%20meta%20arguments)
+7. [case7 - ignore](https://github.com/Azure/aztfmigrate/tree/master/examples/case7%20-%20ignore)
 
 
 ## Install
 
 ### From Release
 
-Precompiled binaries and Window MSI are available at [Releases](https://github.com/Azure/azapi2azurerm/releases).
+Precompiled binaries and Window MSI are available at [Releases](https://github.com/Azure/aztfmigrate/releases).
 
 For Mac OS users, you need to run the following command to remove the quarantine flag.
 ```bash
-xattr -d com.apple.quarantine azapi2azurerm 
+xattr -d com.apple.quarantine aztfmigrate 
 ```
 
 ### From Package Manager
@@ -85,7 +85,7 @@ Supported versions:
 3. Install:
 
     ```
-    dnf install azapi2azurerm
+    dnf install aztfmigrate
     ```
 
 #### apt (Linux)
@@ -111,13 +111,13 @@ Supported versions:
 3. Install:
 
     ```
-    apt-get install azapi2azurerm
+    apt-get install aztfmigrate
     ```
 
 #### AUR (Linux)
 
 ```bash
-yay -S azapi2azurerm
+yay -S aztfmigrate
 ```
    
 ## Features
@@ -130,7 +130,7 @@ yay -S azapi2azurerm
 - [x] Support dependency injection in Map and other complicated struct value.
 - [x] Support user input when there're multiple/none `azurerm` resource match for the resource id
 - [x] Support migration based on `azurerm` provider's property coverage
-- [x] Support ignore terraform addresses listed in file `azapi2azurerm.ignore`
+- [x] Support ignore terraform addresses listed in file `aztfmigrate.ignore`
 - [ ] Support data source `azapi_resource` migration.
 
 ## Known limitations

@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/helper"
-	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/aztfmigrate/helper"
+	"github.com/Azure/aztfmigrate/tf"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/gertd/go-pluralize"
 	_ "github.com/gertd/go-pluralize"
