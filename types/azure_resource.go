@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/Azure/azapi2azurerm/tf"
+	"github.com/Azure/aztfmigrate/tf"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 )
 

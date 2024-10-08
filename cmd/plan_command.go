@@ -9,9 +9,9 @@ import (
 	"path"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/azurerm"
-	"github.com/Azure/azapi2azurerm/tf"
-	"github.com/Azure/azapi2azurerm/types"
+	"github.com/Azure/aztfmigrate/azurerm"
+	"github.com/Azure/aztfmigrate/tf"
+	"github.com/Azure/aztfmigrate/types"
 	"github.com/mitchellh/cli"
 )
 
@@ -65,8 +65,8 @@ func (c *PlanCommand) Run(args []string) int {
 
 func (c *PlanCommand) Help() string {
 	helpText := `
-Usage: azapi2azurerm plan
-` + c.Synopsis() + "\nThe Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
+Usage: aztfmigrate plan
+` + c.Synopsis() + "\nThe Terraform addresses listed in file `aztfmigrate.ignore` will be ignored during migration.\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)
 }
@@ -87,7 +87,7 @@ func (c *PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) []types.Azu
 	unsupportedMessage := "The following resources can't be migrated:\n"
 	ignoreMessage := "The following resources will be ignored in migration:\n"
 	ignoreSet := make(map[string]bool)
-	if file, err := os.ReadFile(path.Join(terraform.GetWorkingDirectory(), "azapi2azurerm.ignore")); err == nil {
+	if file, err := os.ReadFile(path.Join(terraform.GetWorkingDirectory(), "aztfmigrate.ignore")); err == nil {
 		lines := strings.Split(string(file), "\n")
 		for _, line := range lines {
 			line = strings.TrimSpace(line)

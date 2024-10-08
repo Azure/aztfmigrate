@@ -6,13 +6,13 @@
     <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?endif ?>
 
-	<Product Id="*" Name="azapi2azurerm" Language="1033" Version="$(env.VERSION)" Manufacturer="Microsoft" UpgradeCode="1ac52465-d10f-4f22-a52b-1c369d8faf5d">
+	<Product Id="*" Name="aztfmigrate" Language="1033" Version="$(env.VERSION)" Manufacturer="Microsoft" UpgradeCode="1ac52465-d10f-4f22-a52b-1c369d8faf5d">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of azapi2azurerm is already installed." />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of aztfmigrate is already installed." />
 		<MediaTemplate EmbedCab="yes" />
 
-		<Feature Id="ProductFeature" Title="azapi2azurerm" Level="1">
+		<Feature Id="ProductFeature" Title="aztfmigrate" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 	</Product>
@@ -20,7 +20,7 @@
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="$(var.PlatformProgramFilesFolder)">
-				<Directory Id="INSTALLFOLDER" Name="azapi2azurerm" />
+				<Directory Id="INSTALLFOLDER" Name="aztfmigrate" />
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -28,7 +28,7 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="ProductComponent">
-				<File Id="FILE_azapi2azurermEXE" Source="azapi2azurerm.exe" KeyPath="yes" />
+				<File Id="FILE_aztfmigrateEXE" Source="aztfmigrate.exe" KeyPath="yes" />
 				<Environment
 					Id = "EnvPath"
 					Action = "set"

@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Azure/azapi2azurerm/azurerm/schema"
+	"github.com/Azure/aztfmigrate/azurerm/schema"
 	"github.com/mitchellh/cli"
 )
 
@@ -75,7 +75,7 @@ func (c *VersionCommand) Run(args []string) int {
 
 func (c *VersionCommand) Help() string {
 	helpText := `
-Usage: azapi2azurerm version [-json]
+Usage: aztfmigrate version [-json]
 ` + c.Synopsis() + "\n\n" + helpForFlags(c.flags())
 
 	return strings.TrimSpace(helpText)

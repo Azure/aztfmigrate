@@ -3,13 +3,13 @@ package main
 import (
 	"os"
 
-	"github.com/Azure/azapi2azurerm/cmd"
+	"github.com/Azure/aztfmigrate/cmd"
 	"github.com/mitchellh/cli"
 )
 
 func main() {
 	c := &cli.CLI{
-		Name:       "azapi2azurerm",
+		Name:       "aztfmigrate",
 		Version:    version,
 		Args:       os.Args[1:],
 		HelpWriter: os.Stdout,
