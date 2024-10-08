@@ -1,12 +1,11 @@
+// This is derived from github.com/hashicorp/terraform/internal/configs/configschema/empty_value.go (c395d90b375e2b230384d0c213fe26a06b76222b)
+
 package jsonschema
 
 import (
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/zclconf/go-cty/cty"
 )
-
-// This file is a mimic of: https://github.com/hashicorp/terraform/blob/20e9d8e28c32de78ebb8ae0ba2a3a00b70ee89f4/internal/configs/configschema/empty_value.go
-// But instead of processing on the configschema.Block as the core does, here it processes the `tfjson.SchemaBlock`.
 
 // SchemaBlockEmptyValue returns the "empty value" for the recieving block, which for
 // a block type is a non-null object where all of the attribute values are
@@ -26,13 +25,11 @@ func SchemaBlockEmptyValue(b *tfjson.SchemaBlock) cty.Value {
 // the value that would be returned if there were no definition of the attribute
 // at all, ignoring any required constraint.
 func SchemaAttributeEmptyValue(a *tfjson.SchemaAttribute) cty.Value {
-	if a.AttributeNestedType != nil {
-		return cty.NullVal(SchemaNestedAttributeTypeImpliedType(a.AttributeNestedType))
-	}
-	return cty.NullVal(a.AttributeType)
+	return cty.NullVal(SchemaAttributeImpliedType(a))
 }
 
-//  SchemaBlockTypeEmptyValue returns the "empty value" for when there are zero nested blocks
+//	SchemaBlockTypeEmptyValue returns the "empty value" for when there are zero nested blocks
+//
 // present of the receiving type.
 func SchemaBlockTypeEmptyValue(b *tfjson.SchemaBlockType) cty.Value {
 	switch b.NestingMode {

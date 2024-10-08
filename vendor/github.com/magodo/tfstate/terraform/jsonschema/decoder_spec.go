@@ -1,7 +1,6 @@
-package jsonschema
+// This is derived from github.com/hashicorp/terraform/internal/configs/configschema/decoder_spec.go (c395d90b375e2b230384d0c213fe26a06b76222b)
 
-// This file is a mimic of the: https://github.com/hashicorp/terraform/blob/20e9d8e28c32de78ebb8ae0ba2a3a00b70ee89f4/internal/configs/configschema/decoder_spec.go.
-// But instead of processing on the configschema.Block as the core does, here it processes the `tfjson.SchemaBlock`.
+package jsonschema
 
 import (
 	"runtime"
@@ -180,11 +179,11 @@ func DecoderSpec(b *tfjson.SchemaBlock) hcldec.Spec {
 }
 
 func decoderSpec(a *tfjson.SchemaAttribute, name string) hcldec.Spec {
-	ret := &hcldec.AttrSpec{Name: name}
-	if a == nil {
-		return ret
+	if a == nil || (a.AttributeType == cty.NilType && a.AttributeNestedType == nil) {
+		panic("Invalid attribute schema: schema is nil.")
 	}
 
+	ret := &hcldec.AttrSpec{Name: name}
 	if a.AttributeNestedType != nil {
 		if a.AttributeType != cty.NilType {
 			panic("Invalid attribute schema: NestedType and Type cannot both be set. This is a bug in the provider.")

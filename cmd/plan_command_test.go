@@ -13,62 +13,34 @@ import (
 )
 
 func TestPlan_basic(t *testing.T) {
-	planTestCase(t, basic(), []string{"azapi_resource.test2", "azapi_update_resource.test"}, false)
+	planTestCase(t, basic(), []string{"azapi_resource.test", "azapi_resource.test2", "azapi_update_resource.test"}, false, "azurerm")
 }
 
 func TestPlan_foreach(t *testing.T) {
-	planTestCase(t, foreach(), []string{"azapi_resource.test"}, false)
+	planTestCase(t, foreach(), []string{"azapi_resource.test"}, false, "azurerm")
 }
 
 func TestPlan_nestedBlock(t *testing.T) {
-	planTestCase(t, nestedBlock(), []string{"azapi_resource.test"}, false)
+	planTestCase(t, nestedBlock(), []string{"azapi_resource.test"}, false, "azurerm")
 }
 
 func TestPlan_count(t *testing.T) {
-	planTestCase(t, count(), []string{"azapi_resource.test"}, false)
+	planTestCase(t, count(), []string{"azapi_resource.test"}, false, "azurerm")
 }
 
 func TestPlan_nestedBlockUpdate(t *testing.T) {
-	planTestCase(t, nestedBlockUpdate(), []string{"azapi_update_resource.test"}, false)
+	planTestCase(t, nestedBlockUpdate(), []string{"azapi_update_resource.test"}, false, "azurerm")
 }
 
 func TestPlan_metaArguments(t *testing.T) {
-	planTestCase(t, metaArguments(), []string{"azapi_resource.test1"}, false)
+	planTestCase(t, metaArguments(), []string{"azapi_resource.test", "azapi_resource.test1"}, false, "azurerm")
 }
 
 func TestPlan_strictMode(t *testing.T) {
-	planTestCase(t, basic(), []string{}, true)
+	planTestCase(t, basic(), []string{}, true, "azurerm")
 }
 
-func TestPlan_basic_payload(t *testing.T) {
-	planTestCase(t, basic_payload(), []string{"azapi_resource.test2", "azapi_update_resource.test"}, false)
-}
-
-func TestPlan_foreach_payload(t *testing.T) {
-	planTestCase(t, foreach_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_nestedBlock_payload(t *testing.T) {
-	planTestCase(t, nestedBlock_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_count_payload(t *testing.T) {
-	planTestCase(t, count_payload(), []string{"azapi_resource.test"}, false)
-}
-
-func TestPlan_nestedBlockUpdate_payload(t *testing.T) {
-	planTestCase(t, nestedBlockUpdate_payload(), []string{"azapi_update_resource.test"}, false)
-}
-
-func TestPlan_metaArguments_payload(t *testing.T) {
-	planTestCase(t, metaArguments_payload(), []string{"azapi_resource.test1"}, false)
-}
-
-func TestPlan_strictMode_payload(t *testing.T) {
-	planTestCase(t, basic_payload(), []string{}, true)
-}
-
-func planTestCase(t *testing.T, content string, expectMigratedAddresses []string, strictMode bool) {
+func planTestCase(t *testing.T, content string, expectMigratedAddresses []string, strictMode bool, targetProvider string) {
 	if len(os.Getenv("TF_ACC")) == 0 {
 		t.Skipf("Set `TF_ACC=true` to enable this test")
 	}
@@ -105,21 +77,21 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 			ErrorWriter: os.Stderr,
 		},
 	}
-	planCommand := cmd.PlanCommand{Ui: ui, Strict: strictMode}
-	resources, updateResources := planCommand.Plan(terraform, true)
+	planCommand := cmd.PlanCommand{Ui: ui, Strict: strictMode, TargetProvider: targetProvider}
+	resources := planCommand.Plan(terraform, true)
 
 	expectSet := make(map[string]bool)
 	for _, value := range expectMigratedAddresses {
 		expectSet[value] = true
 	}
+
+	if len(resources) != len(expectMigratedAddresses) {
+		t.Errorf("expect %d resources to be migrated, but got %d resources migrated", len(expectMigratedAddresses), len(resources))
+	}
+
 	for _, r := range resources {
 		if !expectSet[r.OldAddress(nil)] {
 			t.Fatalf("expect %s not migrated, but got it migrated", r.OldAddress(nil))
-		}
-	}
-	for _, r := range updateResources {
-		if !expectSet[r.OldAddress()] {
-			t.Fatalf("expect %s not migrated, but got it migrated", r.OldAddress())
 		}
 	}
 }

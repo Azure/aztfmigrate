@@ -8,7 +8,6 @@ import (
 
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/zclconf/go-cty/cty"
-	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
 type State struct {
@@ -159,13 +158,9 @@ func FromJSONStateResource(resource *tfjson.StateResource, schemas *tfjson.Provi
 		Tainted:         resource.Tainted,
 		DeposedKey:      resource.DeposedKey,
 	}
-	attrsJSON, err := json.Marshal(resource.AttributeValues)
+	val, err := UnmarshalToCty(resource.AttributeValues, jsonschema.SchemaBlockImpliedType(schema.Block))
 	if err != nil {
-		return nil, fmt.Errorf("marshal %q: %v", resource.AttributeValues, err)
-	}
-	val, err := ctyjson.Unmarshal(attrsJSON, jsonschema.SchemaBlockImpliedType(schema.Block))
-	if err != nil {
-		return nil, fmt.Errorf("cty json unmarshal %q: %v", attrsJSON, err)
+		return nil, fmt.Errorf("cty json unmarshal attributes: %v", err)
 	}
 	ret.Value = val
 	return ret, nil

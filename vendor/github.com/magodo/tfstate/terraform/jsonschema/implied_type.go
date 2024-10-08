@@ -1,7 +1,6 @@
-package jsonschema
+// This is derived from github.com/hashicorp/terraform/internal/configs/configschema/implied_type.go (c395d90b375e2b230384d0c213fe26a06b76222b)
 
-// This file is a mimic of: https://github.com/hashicorp/terraform/blob/20e9d8e28c32de78ebb8ae0ba2a3a00b70ee89f4/internal/configs/configschema/implied_type.go
-// But instead of processing on the configschema.Block as the core does, here it processes the `tfjson.SchemaBlock`.
+package jsonschema
 
 import (
 	"github.com/hashicorp/hcl/v2/hcldec"
@@ -61,4 +60,13 @@ func schemaNestedAttributeTypeSpecType(o *tfjson.SchemaNestedAttributeType) cty.
 	default: // Should never happen
 		return cty.EmptyObject
 	}
+}
+
+// ImpliedType returns the cty.Type that would result from decoding a
+// NestedType Attribute using the receiving block schema.
+func SchemaAttributeImpliedType(o *tfjson.SchemaAttribute) cty.Type {
+	if o.AttributeNestedType != nil {
+		return schemaNestedAttributeTypeSpecType(o.AttributeNestedType).WithoutOptionalAttributesDeep()
+	}
+	return o.AttributeType
 }

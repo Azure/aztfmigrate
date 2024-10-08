@@ -1,7 +1,7 @@
 # azapi2azurerm
 
 ## Introduction
-This tool is used to migrate resources from terraform `azapi` provider to `azurerm` provider.
+This tool is used to migrate resources between terraform `azapi` provider and `azurerm` provider.
 
 
 ## Command Usage
@@ -11,11 +11,11 @@ Usage: azapi2azurerm [--version] [--help] <command> [<args>]
 
 Available commands are:
     migrate    Migrate azapi resources to azurerm resources in current working directory
-    plan       Show azapi resources which can migrate to azurerm resources in current working directory
+    plan       Show terraform resources which can be migrated to azurerm or azapi resources in current working directory
     version    Displays the version of the migration tool
 ```
 
-1. Run `azapi2azurerm plan` under your terraform working directory, 
+1. Run `azapi2azurerm plan -target-provider=azurerm` under your terraform working directory, 
    it will list all resources that can be migrated from `azapi` provider to `azurerm` provider.
    The Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.
 ```
@@ -33,7 +33,7 @@ azapi_resource.test: input properties not supported: [], output properties not s
 
 The following resources will be ignored in migration:
    ```
-2. Run `azapi2azurerm migrate` under your terraform working directory, 
+2. Run `azapi2azurerm migrate -target-provider=azurerm` under your terraform working directory, 
    it will migrate above resources from `azapi` provider to `azurerm` provider, 
    both terraform configuration and state.
    The Terraform addresses listed in file `azapi2azurerm.ignore` will be ignored during migration.
