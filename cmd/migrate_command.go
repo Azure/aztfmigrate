@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -16,7 +17,7 @@ import (
 
 const filenameImport = "imports.tf"
 
-const tempDir = "temp"
+const tempFolderName = "aztfmigrate_temp"
 
 type MigrateCommand struct {
 	Ui             cli.Ui
@@ -31,7 +32,7 @@ func (c *MigrateCommand) flags() *flag.FlagSet {
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
-	fs.StringVar(&c.TargetProvider, "target-provider", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
+	fs.StringVar(&c.TargetProvider, "to", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
 
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
@@ -41,6 +42,11 @@ func (c *MigrateCommand) Run(args []string) int {
 	// AzureRM provider will honor env.var "AZURE_HTTP_USER_AGENT" when constructing for HTTP "User-Agent" header.
 	// #nosec G104
 	_ = os.Setenv("AZURE_HTTP_USER_AGENT", "mig")
+	// The following env.vars are used to disable enhanced validation and skip provider registration, to speed up the process.
+	// #nosec G104
+	_ = os.Setenv("ARM_PROVIDER_ENHANCED_VALIDATION", "false")
+	// #nosec G104
+	_ = os.Setenv("ARM_SKIP_PROVIDER_REGISTRATION", "true")
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
 		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
@@ -96,16 +102,24 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 
 	workingDirectory := terraform.GetWorkingDirectory()
 	// write empty config to temp dir for import
-	tempDirectoryCreate(workingDirectory)
-	tempPath := filepath.Join(workingDirectory, tempDir)
-	tempTerraform, err := tf.NewTerraform(tempPath, c.Verbose)
+	tempDir := filepath.Join(workingDirectory, tempFolderName)
+	if err := os.MkdirAll(tempDir, 0750); err != nil {
+		log.Fatalf("creating temp workspace %q: %+v", tempDir, err)
+	}
+	defer func() {
+		err := os.RemoveAll(path.Join(tempDir, "terraform.tfstate"))
+		if err != nil {
+			log.Printf("[ERROR] removing temp workspace %q: %+v", tempDir, err)
+		}
+	}()
+	tempTerraform, err := tf.NewTerraform(tempDir, c.Verbose)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	log.Printf("[INFO] generating import config...")
-	config := importConfig(resources, c.TargetProvider)
-	if err = os.WriteFile(filepath.Join(tempPath, filenameImport), []byte(config), 0600); err != nil {
+	config := importConfig(resources)
+	if err = os.WriteFile(filepath.Join(tempDir, filenameImport), []byte(config), 0600); err != nil {
 		log.Fatal(err)
 	}
 
@@ -116,8 +130,6 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 			log.Printf("[ERROR] %+v", err)
 		}
 	}
-
-	tempDirectoryCleanup(workingDirectory)
 
 	log.Printf("[INFO] updating config...")
 	updateResources := make([]types.AzapiUpdateResource, 0)
@@ -169,20 +181,19 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 	}
 }
 
-func importConfig(resources []types.AzureResource, targetProvider string) string {
+func importConfig(resources []types.AzureResource) string {
 	const providerConfig = `
-provider "azurerm" {
-  features {}
-  subscription_id = "%s"
-}
-`
-	const AzapiProviderConfig = `
 terraform {
   required_providers {
     azapi = {
       source = "Azure/azapi"
     }
   }
+}
+
+provider "azurerm" {
+  features {}
+  subscription_id = "%s"
 }
 
 provider "azapi" {
@@ -193,52 +204,26 @@ provider "azapi" {
 	for _, r := range resources {
 		config += r.EmptyImportConfig()
 	}
-	if targetProvider == "azurerm" {
-		subscriptionId := ""
-		for _, r := range resources {
-			switch resource := r.(type) {
-			case *types.AzapiResource:
-				for _, instance := range resource.Instances {
-					if strings.HasPrefix(instance.ResourceId, "/subscriptions/") {
-						subscriptionId = strings.Split(instance.ResourceId, "/")[2]
-						break
-					}
-				}
-			case *types.AzapiUpdateResource:
-				if strings.HasPrefix(resource.Id, "/subscriptions/") {
-					subscriptionId = strings.Split(resource.Id, "/")[2]
+	subscriptionId := ""
+	for _, r := range resources {
+		switch resource := r.(type) {
+		case *types.AzapiResource:
+			for _, instance := range resource.Instances {
+				if strings.HasPrefix(instance.ResourceId, "/subscriptions/") {
+					subscriptionId = strings.Split(instance.ResourceId, "/")[2]
+					break
 				}
 			}
-			if subscriptionId != "" {
-				break
+		case *types.AzapiUpdateResource:
+			if strings.HasPrefix(resource.Id, "/subscriptions/") {
+				subscriptionId = strings.Split(resource.Id, "/")[2]
 			}
 		}
-		config = fmt.Sprintf(providerConfig, subscriptionId) + config
-	} else {
-		config = AzapiProviderConfig + config
+		if subscriptionId != "" {
+			break
+		}
 	}
+	config = fmt.Sprintf(providerConfig, subscriptionId) + config
 
 	return config
-}
-
-func tempDirectoryCreate(workingDirectory string) {
-	tempPath := filepath.Join(workingDirectory, tempDir)
-	if _, err := os.Stat(tempPath); !os.IsNotExist(err) {
-		if err := os.RemoveAll(tempPath); err != nil {
-			log.Fatalf("error deleting %s: %+v", tempPath, err)
-		}
-	}
-	if err := os.MkdirAll(tempPath, 0750); err != nil {
-		log.Fatalf("creating temp workspace %q: %+v", tempPath, err)
-	}
-}
-
-func tempDirectoryCleanup(workingDirectory string) {
-	tempPath := filepath.Join(workingDirectory, tempDir)
-	// cleanup temp folder
-	if _, err := os.Stat(tempPath); !os.IsNotExist(err) {
-		if err := os.RemoveAll(tempPath); err != nil {
-			log.Printf("[WARN] error deleting %s: %+v", tempPath, err)
-		}
-	}
 }

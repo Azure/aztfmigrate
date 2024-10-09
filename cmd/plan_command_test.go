@@ -1,15 +1,12 @@
 package cmd_test
 
 import (
-	"math/rand"
-	"os"
-	"path/filepath"
-	"testing"
-	"time"
-
 	"github.com/Azure/aztfmigrate/cmd"
 	"github.com/Azure/aztfmigrate/tf"
 	"github.com/mitchellh/cli"
+	"os"
+	"path/filepath"
+	"testing"
 )
 
 func TestPlan_basic(t *testing.T) {
@@ -94,8 +91,4 @@ func planTestCase(t *testing.T, content string, expectMigratedAddresses []string
 			t.Fatalf("expect %s not migrated, but got it migrated", r.OldAddress(nil))
 		}
 	}
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }

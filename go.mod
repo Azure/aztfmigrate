@@ -2,8 +2,6 @@ module github.com/Azure/aztfmigrate
 
 go 1.22.0
 
-toolchain go1.23.1
-
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.9.2
 	github.com/gertd/go-pluralize v0.2.1
