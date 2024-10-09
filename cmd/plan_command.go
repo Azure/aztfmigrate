@@ -28,7 +28,7 @@ func (c *PlanCommand) flags() *flag.FlagSet {
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
-	fs.StringVar(&c.TargetProvider, "target-provider", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
+	fs.StringVar(&c.TargetProvider, "to", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
 }
