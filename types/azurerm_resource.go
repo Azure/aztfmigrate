@@ -65,6 +65,7 @@ func (r *AzurermResource) GenerateNewConfig(terraform *tf.Terraform) error {
 		} else {
 			log.Printf("[ERROR] %+v", err)
 		}
+		r.Block = InjectReference(r.Block, r.References)
 	} else {
 		// import and build combined block
 		log.Printf("[INFO] generating config...")
