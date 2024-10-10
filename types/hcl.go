@@ -100,7 +100,7 @@ func ReplaceGenericOutputs(workingDirectory string, outputs []Output) error {
 				continue
 			}
 			if block != nil {
-				replaceOutputs(block, outputs)
+				ReplaceOutputs(block, outputs)
 			}
 		}
 		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil {
@@ -110,7 +110,7 @@ func ReplaceGenericOutputs(workingDirectory string, outputs []Output) error {
 	return nil
 }
 
-func replaceOutputs(block *hclwrite.Block, outputs []Output) {
+func ReplaceOutputs(block *hclwrite.Block, outputs []Output) {
 	for attrName, attr := range block.Body().Attributes() {
 		attrValue := string(attr.Expr().BuildTokens(nil).Bytes())
 		for _, output := range outputs {
@@ -119,7 +119,7 @@ func replaceOutputs(block *hclwrite.Block, outputs []Output) {
 		block.Body().SetAttributeRaw(attrName, helper.GetTokensForExpression(attrValue))
 	}
 	for index := range block.Body().Blocks() {
-		replaceOutputs(block.Body().Blocks()[index], outputs)
+		ReplaceOutputs(block.Body().Blocks()[index], outputs)
 	}
 }
 
