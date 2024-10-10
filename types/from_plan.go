@@ -71,7 +71,7 @@ func ListResourcesFromPlan(p *tfjson.Plan) []AzureResource {
 						OldResourceType: resourceChange.Type,
 						OldLabel:        resourceChange.Name,
 						NewResourceType: "azapi_resource",
-						NewLabel:        NewLabel(id),
+						NewLabel:        NewLabel(id, resourceChange.Name),
 						Instances:       make([]Instance, 0),
 					}
 				}

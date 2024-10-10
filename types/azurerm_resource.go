@@ -3,7 +3,6 @@ package types
 import (
 	"fmt"
 	"log"
-	"math/rand"
 	"net/url"
 	"strconv"
 	"strings"
@@ -210,11 +209,11 @@ func (r *AzurermResource) IsForEach() bool {
 
 var pluralizeClient = pluralize.NewClient()
 
-func NewLabel(id string) string {
+func NewLabel(id string, oldLabel string) string {
 	resourceType := ResourceTypeOfResourceId(id)
 	lastSegment := LastSegment(resourceType)
 	// #nosec G404
-	return fmt.Sprintf("%s_%d", pluralizeClient.Singular(lastSegment), rand.Intn(100))
+	return fmt.Sprintf("%s_%s", pluralizeClient.Singular(lastSegment), oldLabel)
 }
 
 func LastSegment(input string) string {
