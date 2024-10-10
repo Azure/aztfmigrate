@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -151,6 +152,9 @@ func (r *AzapiResource) TargetProvider() string {
 }
 
 func (r *AzapiResource) CoverageCheck(strictMode bool) error {
+	if os.Getenv("AZTF_MIGRATE_SKIP_COVERAGE_CHECK") == "true" {
+		return nil
+	}
 	resourceId := r.Instances[0].ResourceId
 	idPattern, _ := GetIdPattern(resourceId)
 	if strictMode {

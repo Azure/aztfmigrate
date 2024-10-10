@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/Azure/aztfmigrate/azurerm/coverage"
@@ -80,6 +81,9 @@ func (r *AzapiUpdateResource) TargetProvider() string {
 }
 
 func (r *AzapiUpdateResource) CoverageCheck(strictMode bool) error {
+	if os.Getenv("AZTF_MIGRATE_SKIP_COVERAGE_CHECK") == "true" {
+		return nil
+	}
 	idPattern, _ := GetIdPattern(r.Id)
 	if strictMode {
 		azurermApiVersion := coverage.GetApiVersion(idPattern)
