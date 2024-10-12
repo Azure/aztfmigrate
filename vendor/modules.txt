@@ -60,6 +60,9 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn v1.1.1
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices v1.6.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5 v5.7.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5
@@ -281,7 +284,7 @@ github.com/huandu/xstrings
 # github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3
 ## explicit; go 1.18
 github.com/magodo/armid
-# github.com/magodo/aztft v0.3.1-0.20240802001407-2834614c6d9c
+# github.com/magodo/aztft v0.3.1-0.20241011060757-310738ca90dd
 ## explicit; go 1.19
 github.com/magodo/aztft/aztft
 github.com/magodo/aztft/internal/client

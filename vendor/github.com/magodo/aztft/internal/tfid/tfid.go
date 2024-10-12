@@ -109,12 +109,6 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
 		}
 		return pid.String(), nil
-	case "azurerm_servicebus_namespace_network_rule_set":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
 	case "azurerm_iotcentral_application_network_rule_set":
 		pid := id.Parent()
 		if err := pid.Normalize(importSpec); err != nil {
@@ -136,10 +130,6 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		}
 		return managerId.String() + "/commit|" + id.Names()[1] + "|" + id.Names()[2], nil
 	// Porperty-like resources
-	case "azurerm_disk_pool_iscsi_target_lun":
-		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_disk_pool_iscsi_target", "azurerm_managed_disk", "/lun|")
-	case "azurerm_disk_pool_managed_disk_attachment":
-		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_disk_pool", "azurerm_managed_disk", "/managedDisk|")
 	case "azurerm_nat_gateway_public_ip_association":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_nat_gateway", "azurerm_public_ip", "|")
 	case "azurerm_nat_gateway_public_ip_prefix_association":

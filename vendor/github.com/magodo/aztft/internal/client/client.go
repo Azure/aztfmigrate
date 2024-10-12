@@ -12,6 +12,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v7"
@@ -682,4 +683,8 @@ func (b *ClientBuilder) NewContainerAppEnvironmentsClient(subscriptionId string)
 		b.Cred,
 		&b.ClientOpt,
 	)
+}
+
+func (b *ClientBuilder) NewCognitiveServiceAccountsClient(subscriptionId string) (*armcognitiveservices.AccountsClient, error) {
+	return armcognitiveservices.NewAccountsClient(subscriptionId, b.Cred, &b.ClientOpt)
 }

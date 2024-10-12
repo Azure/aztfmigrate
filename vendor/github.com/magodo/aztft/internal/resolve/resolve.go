@@ -76,12 +76,6 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES/DATASTORES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": machineLearningDataStoresResolver{},
 	},
-	"/MICROSOFT.TIMESERIESINSIGHTS/ENVIRONMENTS": {
-		"/SUBSCRIPTIONS/RESOURCEGROUPS": timeSeriesInsightsEnvironmentResolver{},
-	},
-	"/MICROSOFT.TIMESERIESINSIGHTS/ENVIRONMENTS/EVENTSOURCES": {
-		"/SUBSCRIPTIONS/RESOURCEGROUPS": timeSeriesInsightsEventSourcesResolver{},
-	},
 	"/MICROSOFT.STORAGECACHE/CACHES/STORAGETARGETS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": storageCacheTargetsResolver{},
 	},
@@ -148,9 +142,6 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.WEB/SITES/HYBRIDCONNECTIONNAMESPACES/RELAYS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": appServiceSiteHybridConnectionsResolver{},
 	},
-	"/MICROSOFT.WEB/HOSTINGENVIRONMENTS": {
-		"/SUBSCRIPTIONS/RESOURCEGROUPS": appServiceEnvironemntsResolver{},
-	},
 	"/MICROSOFT.ALERTSMANAGEMENT/ACTIONRULES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": alertsManagementProcessingRulesResolver{},
 	},
@@ -210,6 +201,9 @@ var Resolvers = map[string]map[string]resolver{
 	},
 	"/MICROSOFT.COMPUTE/VIRTUALMACHINES/DATADISKS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": virutalMachineDataDiskResolver{},
+	},
+	"/MICROSOFT.COGNITIVESERVICES/ACCOUNTS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": cognitiveAccountsResolver{},
 	},
 }
 

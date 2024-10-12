@@ -24,6 +24,8 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice v
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice v1.1.1/go.mod h1:ojs9TglxCeuWMnDYKzvkpye1rT3w6NKoNcuo4TqzaD4=
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn v1.1.1 h1:CtE6GCP9YEDF6DjpFxl7xQBqklqfyCC/xkBKUGa/IAc=
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn v1.1.1/go.mod h1:b9yk+8vyxSsBsiEjk9kzrwxgyn+7+J4HzDOYUPznES4=
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices v1.6.0 h1:TiYjDq0LCNgtee1teMayYT5FjHmlunWUpthVANUXYPM=
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices v1.6.0/go.mod h1:yErdzWZBzjNJCnbC1DcUcSVhjTgllT4PyOenFSeXSJI=
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5 v5.7.0 h1:LkHbJbgF3YyvC53aqYGR+wWQDn2Rdp9AQdGndf9QvY4=
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5 v5.7.0/go.mod h1:QyiQdW4f4/BIfB8ZutZ2s+28RAgfa/pT+zS++ZHyM1I=
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2 v2.0.0 h1:xHWCrCQT1TUlDZ5yJ2kOilHx1FNSb0Y4vpPDL6EXfmk=
@@ -227,8 +229,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3 h1:ob6vk6PlChZvutcxcLnmPH/VNmJEuwz+TmCYCVtJqeA=
 github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3/go.mod h1:rR8E7zfGMbmfnSQvrkFiWYdhrfTqsVSltelnZB09BwA=
-github.com/magodo/aztft v0.3.1-0.20240802001407-2834614c6d9c h1:6H0Rxt63ep2TlQVbevMfOId7cojsp9FzKkNDFR0rnco=
-github.com/magodo/aztft v0.3.1-0.20240802001407-2834614c6d9c/go.mod h1:CHeYYR+/RTjUry+0bpkI49PvQ/1sTe7itA+9BqKE1/8=
+github.com/magodo/aztft v0.3.1-0.20241011060757-310738ca90dd h1:6UcyxroC+nV2KcalwYWrkD011QXTHyEwEF2JcoYeRjU=
+github.com/magodo/aztft v0.3.1-0.20241011060757-310738ca90dd/go.mod h1:KQixUbCSpXiFkjLyy0lrtZY+2doHvJ1EIdtyhmVs3KQ=
 github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d h1:dmS4jSfNIfshWkh43yK4n1Qx0BsaKrfxMiqRg0fKKYw=
 github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d/go.mod h1:G2Hc13YaLGHa+CPEP/HZzj9sIGyKDM5ZXInzQ8Dp86s=
 github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2 h1:Unxx8WLxzSxINnq7hItp4cXD7drihgfPltTd91efoBo=
