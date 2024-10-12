@@ -16,8 +16,6 @@ var populaters = map[string]populateFunc{
 	"azurerm_network_interface":         populateNetworkInterface,
 	"azurerm_virtual_desktop_workspace": populateVirtualDesktopWorkspace,
 	"azurerm_nat_gateway":               populateNatGateway,
-	"azurerm_disk_pool":                 populateDiskPool,
-	"azurerm_disk_pool_iscsi_target":    populateDiskPoolIscsiTarget,
 	"azurerm_subnet":                    populateSubnet,
 	"azurerm_logic_app_workflow":        populateLogicAppWorkflow,
 	"azurerm_iothub":                    populateIotHub,
