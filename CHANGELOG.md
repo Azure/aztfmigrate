@@ -1,4 +1,4 @@
-## Unreleased
+## v2.0.1
 
 FEATURES:
 - Support migrating resources from `azurerm` provider to `azapi` provider.
