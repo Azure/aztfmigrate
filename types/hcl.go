@@ -259,6 +259,9 @@ func recursiveUpdate(old *hclwrite.Block, new *hclwrite.Block, before interface{
 
 // InjectReference replaces `block`'s literal value with reference provided by `refs`
 func InjectReference(block *hclwrite.Block, refs []Reference) *hclwrite.Block {
+	if block.Body() == nil {
+		return block
+	}
 	search := make([]string, 0)
 	replacement := make([]string, 0)
 	for _, ref := range refs {
@@ -370,18 +373,29 @@ func CombineBlock(blocks []*hclwrite.Block, output *hclwrite.Block, isForEach bo
 
 // GetForEachConstants converts a map of difference to hcl object
 func GetForEachConstants(instances []Instance, items map[string][]hclwrite.Tokens) string {
+
 	config := ""
 	i := 0
 	for _, instance := range instances {
 		item := ""
 		for key := range items {
-			item += fmt.Sprintf("%s = %s", key, string(items[key][i].Bytes()))
+			item += fmt.Sprintf("%s = %s\n", quotedKey(key), string(items[key][i].Bytes()))
 		}
-		config += fmt.Sprintf("%s = {\n%s\n}\n", instance.Index, item)
+		config += fmt.Sprintf("%s = {\n%s\n}\n", quotedKey(fmt.Sprintf("%v", instance.Index)), item)
 		i++
 	}
 	config = fmt.Sprintf("{\n%s}\n", config)
 	return config
+}
+
+func quotedKey(input string) string {
+	if len(input) == 0 {
+		return input
+	}
+	if strings.Contains(input, ".") || strings.Contains(input, "/") || input[0] == '$' || input[0] >= '0' && input[0] <= '9' {
+		return fmt.Sprintf("\"%s\"", input)
+	}
+	return input
 }
 
 func CommentOutBlock(block *hclwrite.Block) hclwrite.Tokens {

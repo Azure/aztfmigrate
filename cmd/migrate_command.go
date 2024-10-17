@@ -106,6 +106,9 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 	if err := os.MkdirAll(tempDir, 0750); err != nil {
 		log.Fatalf("creating temp workspace %q: %+v", tempDir, err)
 	}
+	if err := os.RemoveAll(path.Join(tempDir, "terraform.tfstate")); err != nil {
+		log.Printf("[WARN] removing temp workspace %q: %+v", tempDir, err)
+	}
 	defer func() {
 		err := os.RemoveAll(path.Join(tempDir, "terraform.tfstate"))
 		if err != nil {

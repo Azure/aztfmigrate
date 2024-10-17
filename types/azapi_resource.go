@@ -107,7 +107,8 @@ func (r *AzapiResource) GenerateNewConfig(terraform *tf.Terraform) error {
 		// import and build combined block
 		blocks := make([]*hclwrite.Block, 0)
 		for _, instance := range r.Instances {
-			if block, err := importAndGenerateConfig(terraform, fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, instance.Index), instance.ResourceId, r.ResourceType, false); err == nil {
+			instanceAddress := fmt.Sprintf("%s.%s_%v", r.ResourceType, r.Label, strings.ReplaceAll(fmt.Sprintf("%v", instance.Index), "/", "_"))
+			if block, err := importAndGenerateConfig(terraform, instanceAddress, instance.ResourceId, r.ResourceType, false); err == nil {
 				blocks = append(blocks, block)
 			}
 		}
@@ -211,7 +212,7 @@ func (r *AzapiResource) EmptyImportConfig() string {
 		if !r.IsMultipleResources() {
 			config += fmt.Sprintf("resource \"%s\" \"%s\" {}\n", r.ResourceType, r.Label)
 		} else {
-			config += fmt.Sprintf("resource \"%s\" \"%s_%v\" {}\n", r.ResourceType, r.Label, instance.Index)
+			config += fmt.Sprintf("resource \"%s\" \"%s_%s\" {}\n", r.ResourceType, r.Label, strings.ReplaceAll(fmt.Sprintf("%v", instance.Index), "/", "_"))
 		}
 	}
 	return config

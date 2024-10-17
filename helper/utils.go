@@ -81,11 +81,18 @@ func ListHclFiles(workingDirectory string) []fs.DirEntry {
 
 // GetTokensForExpression convert a literal value to hclwrite.Tokens
 func GetTokensForExpression(expression string) hclwrite.Tokens {
-	f, dialog := hclwrite.ParseConfig([]byte(fmt.Sprintf("%s=%s", "temp", expression)), "", hcl.InitialPos)
-	if dialog == nil || !dialog.HasErrors() && f != nil {
-		return f.Body().GetAttribute("temp").Expr().BuildTokens(nil)
+	syntaxTokens, diags := hclsyntax.LexConfig([]byte(expression), "main.tf", hcl.InitialPos)
+	if diags.HasErrors() {
+		return nil
 	}
-	return nil
+	res := make([]*hclwrite.Token, 0)
+	for _, token := range syntaxTokens {
+		res = append(res, &hclwrite.Token{
+			Type:  token.Type,
+			Bytes: token.Bytes,
+		})
+	}
+	return res
 }
 
 // ParseHclArray parse `attrValue` to an array, example `attrValue` `["a", "b", 0]` will return ["\"a\"", "\"b\"", "0"]
@@ -121,9 +128,13 @@ func ToHclSearchReplace(input interface{}, search []string, replacement []string
 		}
 		attrs := make([]string, 0)
 		for k, v := range value {
+			if v == nil {
+				attrs = append(attrs, fmt.Sprintf("%s = null", quotedKey(k)))
+				continue
+			}
 			config, ok := ToHclSearchReplace(v, search, replacement)
 			found = found || ok
-			attrs = append(attrs, fmt.Sprintf("%s = %s", k, config))
+			attrs = append(attrs, fmt.Sprintf("%s = %s", quotedKey(k), config))
 		}
 		return fmt.Sprintf("{\n%s\n}", strings.Join(attrs, "\n")), found
 	case string:
@@ -132,7 +143,7 @@ func ToHclSearchReplace(input interface{}, search []string, replacement []string
 				return replacement[i], true
 			}
 		}
-		return fmt.Sprintf(`"%s"`, value), false
+		return fmt.Sprintf(`"%s"`, strings.ReplaceAll(value, "\"", "\\\"")), false
 	default:
 		return fmt.Sprintf("%v", value), false
 	}
@@ -149,4 +160,14 @@ func GetValueFromExpression(tokens hclwrite.Tokens) interface{} {
 		}
 	}
 	return nil
+}
+
+func quotedKey(input string) string {
+	if len(input) == 0 {
+		return input
+	}
+	if strings.Contains(input, ".") || strings.Contains(input, "/") || input[0] == '$' || input[0] >= '0' && input[0] <= '9' {
+		return fmt.Sprintf("\"%s\"", input)
+	}
+	return input
 }
