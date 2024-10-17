@@ -85,7 +85,7 @@ require (
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3 // indirect
 	github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2 // indirect
-	github.com/magodo/tfstate v0.0.0-20240829105815-03d52976fa13 // indirect
+	github.com/magodo/tfstate v0.0.0-20241016043929-2c95177bf0e6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect

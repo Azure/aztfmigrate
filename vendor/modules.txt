@@ -305,7 +305,7 @@ github.com/magodo/tfadd/tfadd/internal
 # github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2
 ## explicit; go 1.21
 github.com/magodo/tfpluginschema/schema
-# github.com/magodo/tfstate v0.0.0-20240829105815-03d52976fa13
+# github.com/magodo/tfstate v0.0.0-20241016043929-2c95177bf0e6
 ## explicit; go 1.18
 github.com/magodo/tfstate
 github.com/magodo/tfstate/terraform/jsonschema

@@ -286,6 +286,12 @@ func unmarshalDynamic(v interface{}, path cty.Path) (cty.Type, cty.Value, error)
 		return cty.Number, cty.NumberFloatVal(v), nil
 	case string:
 		return cty.String, cty.StringVal(v), nil
+	case json.Number:
+		val, err := cty.ParseNumberVal(v.String())
+		if err != nil {
+			return cty.NilType, cty.NilVal, path.NewError(err)
+		}
+		return cty.Number, val, nil
 	case []interface{}:
 		eTypes := []cty.Type{}
 		eVals := []cty.Value{}

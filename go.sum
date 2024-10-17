@@ -235,8 +235,8 @@ github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d h1:dmS4jSfNIfshWkh
 github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d/go.mod h1:G2Hc13YaLGHa+CPEP/HZzj9sIGyKDM5ZXInzQ8Dp86s=
 github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2 h1:Unxx8WLxzSxINnq7hItp4cXD7drihgfPltTd91efoBo=
 github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2/go.mod h1:mh3baLIzKdhegfmLrAX+mpXQBvs4sqiDRTGx5Z5FGo0=
-github.com/magodo/tfstate v0.0.0-20240829105815-03d52976fa13 h1:HhTCs5IKRuJxqx3NDI5gWfAD4WCNXiYGXM1dKyPp9rA=
-github.com/magodo/tfstate v0.0.0-20240829105815-03d52976fa13/go.mod h1:cm1odSE6eUeMQRjYRARg1sWLP3HPsWjwvmk/+T4eQxs=
+github.com/magodo/tfstate v0.0.0-20241016043929-2c95177bf0e6 h1:Uy+WlvEHfZEVTs1Xf5N+177FTdPHx+mWUvsXHR4tGM4=
+github.com/magodo/tfstate v0.0.0-20241016043929-2c95177bf0e6/go.mod h1:cm1odSE6eUeMQRjYRARg1sWLP3HPsWjwvmk/+T4eQxs=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=
