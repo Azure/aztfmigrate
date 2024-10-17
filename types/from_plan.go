@@ -29,6 +29,10 @@ func ListResourcesFromPlan(p *tfjson.Plan) []AzureResource {
 		if resourceChange == nil || resourceChange.Change == nil {
 			continue
 		}
+		if len(resourceChange.Change.Actions) != 0 && (resourceChange.Change.Actions[0] == tfjson.ActionCreate || resourceChange.Change.Actions[0] == tfjson.ActionDelete) {
+			log.Printf("[WARN] resource %s.%s's planned action is %v, which is not supported. Please apply the changes before running the migration tool", resourceChange.Type, resourceChange.Name, resourceChange.Change.Actions)
+			continue
+		}
 
 		switch resourceChange.Type {
 		case "azapi_resource":
