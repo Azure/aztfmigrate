@@ -96,7 +96,7 @@ func ReplaceGenericOutputs(workingDirectory string, outputs []Output) error {
 			continue
 		}
 		for _, block := range f.Body().Blocks() {
-			if block.Type() == "removed" || block.Type() == "import" {
+			if block.Type() == "removed" || block.Type() == "import" || block.Type() == "moved" {
 				continue
 			}
 			if block != nil {

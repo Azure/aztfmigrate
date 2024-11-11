@@ -30,6 +30,12 @@ type AzapiUpdateResource struct {
 	OutputProperties []string
 }
 
+func (r *AzapiUpdateResource) StateUpdateBlocks() []*hclwrite.Block {
+	blocks := make([]*hclwrite.Block, 0)
+	blocks = append(blocks, r.removedBlock())
+	return blocks
+}
+
 func (r *AzapiUpdateResource) Outputs() []Output {
 	res := make([]Output, 0)
 	res = append(res, r.outputs...)
@@ -63,11 +69,7 @@ func (r *AzapiUpdateResource) GenerateNewConfig(terraform *tf.Terraform) error {
 	return nil
 }
 
-func (r *AzapiUpdateResource) ImportBlock() *hclwrite.Block {
-	return nil
-}
-
-func (r *AzapiUpdateResource) RemovedBlock() *hclwrite.Block {
+func (r *AzapiUpdateResource) removedBlock() *hclwrite.Block {
 	removedBlock := hclwrite.NewBlock("removed", nil)
 	removedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: "azapi_update_resource"}, hcl.TraverseAttr{Name: r.OldLabel}})
 	removedLifecycleBlock := hclwrite.NewBlock("lifecycle", nil)

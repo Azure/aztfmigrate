@@ -3,6 +3,7 @@
 FEATURES:
 - Support `-var-file` option to specify the path to the terraform variable file.
 - Support migrating resources from `azurerm` provider to `azapi` provider.
+- When migrating resources from `azurerm` provider to `azapi` provider, it will generate `moved` block to modify the terraform state.
 
 ## v2.0.0-beta
 

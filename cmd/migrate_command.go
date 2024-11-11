@@ -168,9 +168,11 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 	for _, r := range resources {
 		if r.IsMigrated() {
 			log.Printf("[INFO] removing %s from config", r.OldAddress(nil))
-			importBlock := r.ImportBlock()
-			removedBlock := r.RemovedBlock()
-			if err := types.ReplaceResourceBlock(workingDirectory, r.OldAddress(nil), []*hclwrite.Block{removedBlock, importBlock, r.MigratedBlock()}); err != nil {
+			stateUpdateBlocks := r.StateUpdateBlocks()
+			newBlocks := make([]*hclwrite.Block, 0)
+			newBlocks = append(newBlocks, stateUpdateBlocks...)
+			newBlocks = append(newBlocks, r.MigratedBlock())
+			if err := types.ReplaceResourceBlock(workingDirectory, r.OldAddress(nil), newBlocks); err != nil {
 				log.Printf("[ERROR] error removing %s from state: %+v", r.OldAddress(nil), err)
 			}
 		}

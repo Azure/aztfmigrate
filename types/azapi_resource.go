@@ -29,6 +29,13 @@ type AzapiResource struct {
 	Migrated         bool
 }
 
+func (r *AzapiResource) StateUpdateBlocks() []*hclwrite.Block {
+	blocks := make([]*hclwrite.Block, 0)
+	blocks = append(blocks, r.removedBlock())
+	blocks = append(blocks, r.importBlock())
+	return blocks
+}
+
 func (r *AzapiResource) Outputs() []Output {
 	res := make([]Output, 0)
 	for _, instance := range r.Instances {
@@ -49,7 +56,7 @@ func (r *AzapiResource) IsMigrated() bool {
 	return r.Migrated
 }
 
-func (r *AzapiResource) ImportBlock() *hclwrite.Block {
+func (r *AzapiResource) importBlock() *hclwrite.Block {
 	importBlock := hclwrite.NewBlock("import", nil)
 	if r.IsMultipleResources() {
 		forEachMap := make(map[string]cty.Value)
@@ -72,7 +79,7 @@ func (r *AzapiResource) ImportBlock() *hclwrite.Block {
 	return importBlock
 }
 
-func (r *AzapiResource) RemovedBlock() *hclwrite.Block {
+func (r *AzapiResource) removedBlock() *hclwrite.Block {
 	removedBlock := hclwrite.NewBlock("removed", nil)
 	removedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: "azapi_resource"}, hcl.TraverseAttr{Name: r.Label}})
 	removedLifecycleBlock := hclwrite.NewBlock("lifecycle", nil)
