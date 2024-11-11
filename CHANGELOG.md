@@ -1,6 +1,7 @@
-## v2.0.1
+## v2.1.0 (unreleased)
 
 FEATURES:
+- Support `-var-file` option to specify the path to the terraform variable file.
 - Support migrating resources from `azurerm` provider to `azapi` provider.
 
 ## v2.0.0-beta

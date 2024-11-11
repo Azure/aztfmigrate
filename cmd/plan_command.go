@@ -20,6 +20,7 @@ type PlanCommand struct {
 	Verbose        bool
 	Strict         bool
 	workingDir     string
+	varFile        string
 	TargetProvider string
 }
 
@@ -28,6 +29,7 @@ func (c *PlanCommand) flags() *flag.FlagSet {
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
+	fs.StringVar(&c.varFile, "var-file", "", "path to the terraform variable file")
 	fs.StringVar(&c.TargetProvider, "to", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
 	return fs
@@ -78,7 +80,7 @@ func (c *PlanCommand) Synopsis() string {
 func (c *PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) []types.AzureResource {
 	// get azapi resource from state
 	log.Printf("[INFO] running terraform plan...")
-	p, err := terraform.Plan()
+	p, err := terraform.Plan(c.varFile)
 	if err != nil {
 		log.Fatal(err)
 	}
