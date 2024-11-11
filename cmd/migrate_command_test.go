@@ -111,7 +111,7 @@ provider "azurerm" {
 			ErrorWriter: os.Stderr,
 		},
 	}
-	p, err := terraform.Plan()
+	p, err := terraform.Plan(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -182,7 +182,7 @@ provider "azurerm" {
 	}
 
 	// check no plan-diff
-	plan, err := terraform.Plan()
+	plan, err := terraform.Plan(nil)
 	if err != nil {
 		t.Fatal(err)
 	}

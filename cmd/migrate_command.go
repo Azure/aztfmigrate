@@ -24,6 +24,7 @@ type MigrateCommand struct {
 	Verbose        bool
 	Strict         bool
 	workingDir     string
+	varFile        string
 	TargetProvider string
 }
 
@@ -32,6 +33,7 @@ func (c *MigrateCommand) flags() *flag.FlagSet {
 	fs.BoolVar(&c.Verbose, "v", false, "whether show terraform logs")
 	fs.BoolVar(&c.Strict, "strict", false, "strict mode: API versions must be matched")
 	fs.StringVar(&c.workingDir, "working-dir", "", "path to Terraform configuration files")
+	fs.StringVar(&c.varFile, "var-file", "", "path to the terraform variable file")
 	fs.StringVar(&c.TargetProvider, "to", "", "Specify the provider to migrate to. The allowed values are: azurerm and azapi. Default is azurerm.")
 
 	fs.Usage = func() { c.Ui.Error(c.Help()) }
@@ -76,6 +78,8 @@ func (c *MigrateCommand) Run(args []string) int {
 		Ui:             c.Ui,
 		Verbose:        c.Verbose,
 		Strict:         c.Strict,
+		workingDir:     c.workingDir,
+		varFile:        c.varFile,
 		TargetProvider: c.TargetProvider,
 	}
 	allResources := planCommand.Plan(terraform, false)
