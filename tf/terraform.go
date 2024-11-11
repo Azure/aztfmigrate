@@ -69,10 +69,10 @@ func (t *Terraform) Show() (*tfjson.State, error) {
 	return t.exec.Show(context.TODO())
 }
 
-func (t *Terraform) Plan(varFile string) (*tfjson.Plan, error) {
+func (t *Terraform) Plan(varFile *string) (*tfjson.Plan, error) {
 	planOptions := []tfexec.PlanOption{tfexec.Out(planfile)}
-	if varFile != "" {
-		planOptions = append(planOptions, tfexec.VarFile(varFile))
+	if varFile != nil && *varFile != "" {
+		planOptions = append(planOptions, tfexec.VarFile(*varFile))
 	}
 	_, err := t.exec.Plan(context.TODO(), planOptions...)
 	if err != nil {

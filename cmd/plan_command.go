@@ -80,7 +80,7 @@ func (c *PlanCommand) Synopsis() string {
 func (c *PlanCommand) Plan(terraform *tf.Terraform, isPlanOnly bool) []types.AzureResource {
 	// get azapi resource from state
 	log.Printf("[INFO] running terraform plan...")
-	p, err := terraform.Plan(c.varFile)
+	p, err := terraform.Plan(&c.varFile)
 	if err != nil {
 		log.Fatal(err)
 	}
