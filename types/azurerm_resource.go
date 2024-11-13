@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/Azure/aztfmigrate/helper"
@@ -14,7 +13,6 @@ import (
 	_ "github.com/gertd/go-pluralize"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/zclconf/go-cty/cty"
 )
 
 var _ AzureResource = &AzurermResource{}
@@ -28,6 +26,15 @@ type AzurermResource struct {
 	Instances       []Instance
 	References      []Reference
 	Migrated        bool
+}
+
+func (r *AzurermResource) StateUpdateBlocks() []*hclwrite.Block {
+	movedBlock := hclwrite.NewBlock("moved", nil)
+	movedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: r.OldResourceType}, hcl.TraverseAttr{Name: r.OldLabel}})
+	movedBlock.Body().SetAttributeTraversal("to", hcl.Traversal{hcl.TraverseRoot{Name: r.NewResourceType}, hcl.TraverseAttr{Name: r.NewLabel}})
+	blocks := make([]*hclwrite.Block, 0)
+	blocks = append(blocks, movedBlock)
+	return blocks
 }
 
 func (r *AzurermResource) Outputs() []Output {
@@ -109,40 +116,10 @@ func (r *AzurermResource) GenerateNewConfig(terraform *tf.Terraform) error {
 		}
 		r.Block = InjectReference(r.Block, r.References)
 	}
+
+	r.Block = sortAttributes(r.Block)
 	r.Migrated = true
 	return nil
-}
-
-func (r *AzurermResource) ImportBlock() *hclwrite.Block {
-	importBlock := hclwrite.NewBlock("import", nil)
-	if r.IsMultipleResources() {
-		forEachMap := make(map[string]cty.Value)
-		for _, instance := range r.Instances {
-			switch v := instance.Index.(type) {
-			case string:
-				forEachMap[instance.ResourceId] = cty.StringVal(v)
-			default:
-				value, _ := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64)
-				forEachMap[instance.ResourceId] = cty.NumberIntVal(value)
-			}
-		}
-		importBlock.Body().SetAttributeValue("for_each", cty.MapVal(forEachMap))
-		importBlock.Body().SetAttributeTraversal("id", hcl.Traversal{hcl.TraverseRoot{Name: "each"}, hcl.TraverseAttr{Name: "key"}})
-		importBlock.Body().SetAttributeTraversal("to", hcl.Traversal{hcl.TraverseRoot{Name: r.NewResourceType}, hcl.TraverseAttr{Name: fmt.Sprintf("%s[each.value]", r.NewLabel)}})
-	} else {
-		importBlock.Body().SetAttributeValue("id", cty.StringVal(r.Instances[0].ResourceId))
-		importBlock.Body().SetAttributeTraversal("to", hcl.Traversal{hcl.TraverseRoot{Name: r.NewResourceType}, hcl.TraverseAttr{Name: r.NewLabel}})
-	}
-	return importBlock
-}
-
-func (r *AzurermResource) RemovedBlock() *hclwrite.Block {
-	removedBlock := hclwrite.NewBlock("removed", nil)
-	removedBlock.Body().SetAttributeTraversal("from", hcl.Traversal{hcl.TraverseRoot{Name: r.OldResourceType}, hcl.TraverseAttr{Name: r.OldLabel}})
-	removedLifecycleBlock := hclwrite.NewBlock("lifecycle", nil)
-	removedLifecycleBlock.Body().SetAttributeValue("destroy", cty.BoolVal(false))
-	removedBlock.Body().AppendBlock(removedLifecycleBlock)
-	return removedBlock
 }
 
 func (r *AzurermResource) TargetProvider() string {
@@ -269,4 +246,34 @@ func ResourceTypeOfResourceId(input string) string {
 		}
 	}
 	return resourceType
+}
+
+func sortAttributes(input *hclwrite.Block) *hclwrite.Block {
+	output := hclwrite.NewBlock(input.Type(), input.Labels())
+	attrList := []string{"count", "for_each", "type", "parent_id", "name", "location", "identity", "body", "tags"}
+	usedAttr := make(map[string]bool)
+	for _, attr := range attrList {
+		if attribute := input.Body().GetAttribute(attr); attribute != nil {
+			output.Body().SetAttributeRaw(attr, attribute.Expr().BuildTokens(nil))
+			usedAttr[attr] = true
+		} else {
+			for _, block := range input.Body().Blocks() {
+				if block.Type() == attr {
+					output.Body().AppendBlock(block)
+					usedAttr[attr] = true
+				}
+			}
+		}
+	}
+	for attrName, attribute := range input.Body().Attributes() {
+		if _, ok := usedAttr[attrName]; !ok {
+			output.Body().SetAttributeRaw(attrName, attribute.Expr().BuildTokens(nil))
+		}
+	}
+	for _, block := range input.Body().Blocks() {
+		if _, ok := usedAttr[block.Type()]; !ok {
+			output.Body().AppendBlock(block)
+		}
+	}
+	return output
 }

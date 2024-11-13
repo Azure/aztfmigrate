@@ -16,8 +16,7 @@ type AzureResource interface {
 	GenerateNewConfig(terraform *tf.Terraform) error
 	EmptyImportConfig() string
 
-	ImportBlock() *hclwrite.Block
-	RemovedBlock() *hclwrite.Block
+	StateUpdateBlocks() []*hclwrite.Block
 	MigratedBlock() *hclwrite.Block
 
 	IsMigrated() bool
