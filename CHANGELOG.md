@@ -1,4 +1,4 @@
-## v2.1.0 (unreleased)
+## v2.1.0
 
 FEATURES:
 - Support `-var-file` option to specify the path to the terraform variable file.

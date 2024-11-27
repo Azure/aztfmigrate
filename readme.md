@@ -3,6 +3,10 @@
 ## Introduction
 This tool is used to migrate resources between terraform `azapi` provider and `azurerm` provider.
 
+## Guides
+
+- [Guide to migrate AzureRM resources to AzAPi in Module](./docs/migrate_to_azapi_in_module_guide.md)
+
 
 ## Command Usage
 ```
