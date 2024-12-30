@@ -18,6 +18,7 @@ func (dataProtectionBackupInstancesResolver) ResourceTypes() []string {
 		"azurerm_data_protection_backup_instance_disk",
 		"azurerm_data_protection_backup_instance_blob_storage",
 		"azurerm_data_protection_backup_instance_kubernetes_cluster",
+		"azurerm_data_protection_backup_instance_mysql_flexible_server",
 	}
 }
 
@@ -54,6 +55,8 @@ func (dataProtectionBackupInstancesResolver) Resolve(b *client.ClientBuilder, id
 		return "azurerm_data_protection_backup_instance_blob_storage", nil
 	case "MICROSOFT.CONTAINERSERVICE/MANAGEDCLUSTERS":
 		return "azurerm_data_protection_backup_instance_kubernetes_cluster", nil
+	case "MICROSOFT.DBFORMYSQL/FLEXIBLESERVERS":
+		return "azurerm_data_protection_backup_instance_mysql_flexible_server", nil
 	default:
 		return "", fmt.Errorf("unknown data source type: %s", *pdt)
 	}

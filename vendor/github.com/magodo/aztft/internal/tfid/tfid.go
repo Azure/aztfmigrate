@@ -17,7 +17,6 @@ type builderFunc func(*client.ClientBuilder, armid.ResourceId, string) (string, 
 var dynamicBuilders = map[string]builderFunc{
 	"azurerm_active_directory_domain_service":                        buildActiveDirectoryDomainService,
 	"azurerm_storage_object_replication":                             buildStorageObjectReplication,
-	"azurerm_storage_share":                                          buildStorageShare,
 	"azurerm_storage_container":                                      buildStorageContainer,
 	"azurerm_storage_queue":                                          buildStorageQueue,
 	"azurerm_storage_table":                                          buildStorageTable,
@@ -116,13 +115,12 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		}
 		return pid.String(), nil
 	case "azurerm_role_definition":
-		scopeId := id.Parent()
-		if scopeId == nil {
-			scopeId = id.ParentScope()
-		}
-		scopePart := scopeId.String()
-		routePart := strings.TrimPrefix(id.String(), scopePart)
-		return routePart + "|" + scopePart, nil
+		return id.String() + "|" + id.ParentScope().String(), nil
+	case "azurerm_role_assignment":
+		// This resource has scope any, causing it has no format string. Manually format the last segment.
+		id := id.(*armid.ScopedResourceId)
+		id.AttrTypes[len(id.AttrTypes)-1] = "roleAssignments"
+		return id.String(), nil
 	case "azurerm_network_manager_deployment":
 		managerId := id.Parent().Parent()
 		if err := managerId.Normalize(importSpec); err != nil {
@@ -173,7 +171,9 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
 		}
 		return pid.String(), nil
-	case "azurerm_storage_blob_inventory_policy":
+	case "azurerm_storage_blob_inventory_policy",
+		"azurerm_storage_account_queue_properties",
+		"azurerm_storage_account_static_website":
 		pid := id.Parent()
 		if err := pid.Normalize(importSpec); err != nil {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
