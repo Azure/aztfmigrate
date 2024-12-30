@@ -1,3 +1,6 @@
+## v2.2.0
+Target azurerm version: v4.14.0
+
 ## v2.1.0
 
 FEATURES:
