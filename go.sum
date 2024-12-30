@@ -229,8 +229,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3 h1:ob6vk6PlChZvutcxcLnmPH/VNmJEuwz+TmCYCVtJqeA=
 github.com/magodo/armid v0.0.0-20230511151020-27880e5961c3/go.mod h1:rR8E7zfGMbmfnSQvrkFiWYdhrfTqsVSltelnZB09BwA=
-github.com/magodo/aztft v0.3.1-0.20241011060757-310738ca90dd h1:6UcyxroC+nV2KcalwYWrkD011QXTHyEwEF2JcoYeRjU=
-github.com/magodo/aztft v0.3.1-0.20241011060757-310738ca90dd/go.mod h1:KQixUbCSpXiFkjLyy0lrtZY+2doHvJ1EIdtyhmVs3KQ=
+github.com/magodo/aztft v0.3.1-0.20241213223016-43bb09ff124f h1:zT4s8tR3Nwlla6k3F9aFiaoecbRdmoaXsJgJBbvawww=
+github.com/magodo/aztft v0.3.1-0.20241213223016-43bb09ff124f/go.mod h1:KQixUbCSpXiFkjLyy0lrtZY+2doHvJ1EIdtyhmVs3KQ=
 github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d h1:dmS4jSfNIfshWkh43yK4n1Qx0BsaKrfxMiqRg0fKKYw=
 github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d/go.mod h1:G2Hc13YaLGHa+CPEP/HZzj9sIGyKDM5ZXInzQ8Dp86s=
 github.com/magodo/tfpluginschema v0.0.0-20240902090353-0525d7d8c1c2 h1:Unxx8WLxzSxINnq7hItp4cXD7drihgfPltTd91efoBo=
