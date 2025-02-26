@@ -76,6 +76,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES/DATASTORES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": machineLearningDataStoresResolver{},
 	},
+	"/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES/OUTBOUNDRULES": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": machineLearningOutboundRulesResolver{},
+	},
 	"/MICROSOFT.STORAGECACHE/CACHES/STORAGETARGETS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": storageCacheTargetsResolver{},
 	},
@@ -204,6 +207,15 @@ var Resolvers = map[string]map[string]resolver{
 	},
 	"/MICROSOFT.COGNITIVESERVICES/ACCOUNTS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": cognitiveAccountsResolver{},
+	},
+	"/MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": hybridkubernetesConnectedClusterResolver{},
+	},
+	"/MICROSOFT.NETAPP/NETAPPACCOUNTS/VOLUMEGROUPS": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": netappVolumeGroupResolver{},
+	},
+	"/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": machineLearningWorkspaceResolver{},
 	},
 }
 

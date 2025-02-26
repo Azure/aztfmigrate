@@ -24,11 +24,12 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/domainservices/armdomainservices"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/frontdoor/armfrontdoor"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/hdinsight/armhdinsight"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/hybridkubernetes/armhybridkubernetes"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/iothub/armiothub"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/keyvault/armkeyvault"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v3"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v4"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork"
@@ -38,6 +39,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/sql/armsql"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover"
@@ -181,6 +183,14 @@ func (b *ClientBuilder) NewKustoDataConnectionsClient(subscriptionId string) (*a
 	)
 }
 
+func (b *ClientBuilder) NewMachineLearningWorkspaceClient(subscriptionId string) (*armmachinelearning.WorkspacesClient, error) {
+	return armmachinelearning.NewWorkspacesClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewMachineLearningComputeClient(subscriptionId string) (*armmachinelearning.ComputeClient, error) {
 	return armmachinelearning.NewComputeClient(
 		subscriptionId,
@@ -191,6 +201,14 @@ func (b *ClientBuilder) NewMachineLearningComputeClient(subscriptionId string) (
 
 func (b *ClientBuilder) NewMachineLearningDataStoreClient(subscriptionId string) (*armmachinelearning.DatastoresClient, error) {
 	return armmachinelearning.NewDatastoresClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewMachineLearningOutboundRulesClient(subscriptionId string) (*armmachinelearning.ManagedNetworkSettingsRuleClient, error) {
+	return armmachinelearning.NewManagedNetworkSettingsRuleClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
@@ -669,6 +687,14 @@ func (b *ClientBuilder) NewNetAppAccountClient(subscriptionId string) (*armnetap
 	)
 }
 
+func (b *ClientBuilder) NewNetAppVolumeGroupClient(subscriptionId string) (*armnetapp.VolumeGroupsClient, error) {
+	return armnetapp.NewVolumeGroupsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewWorkloadSAPVirtualInstanceClient(subscriptionId string) (*armworkloads.SAPVirtualInstancesClient, error) {
 	return armworkloads.NewSAPVirtualInstancesClient(
 		subscriptionId,
@@ -687,4 +713,12 @@ func (b *ClientBuilder) NewContainerAppEnvironmentsClient(subscriptionId string)
 
 func (b *ClientBuilder) NewCognitiveServiceAccountsClient(subscriptionId string) (*armcognitiveservices.AccountsClient, error) {
 	return armcognitiveservices.NewAccountsClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewHybridKubernetesConnectedClient(subscriptionId string) (*armhybridkubernetes.ConnectedClusterClient, error) {
+	return armhybridkubernetes.NewConnectedClusterClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewSqlJobsClient(subscriptionId string) (*armsql.JobsClient, error) {
+	return armsql.NewJobsClient(subscriptionId, b.Cred, &b.ClientOpt)
 }

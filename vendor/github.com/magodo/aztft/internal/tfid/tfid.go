@@ -17,7 +17,6 @@ type builderFunc func(*client.ClientBuilder, armid.ResourceId, string) (string, 
 var dynamicBuilders = map[string]builderFunc{
 	"azurerm_active_directory_domain_service":                        buildActiveDirectoryDomainService,
 	"azurerm_storage_object_replication":                             buildStorageObjectReplication,
-	"azurerm_storage_container":                                      buildStorageContainer,
 	"azurerm_storage_queue":                                          buildStorageQueue,
 	"azurerm_storage_table":                                          buildStorageTable,
 	"azurerm_key_vault_key":                                          buildKeyVaultKey,
@@ -84,12 +83,6 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 	}
 
 	switch rt {
-	case "azurerm_app_service_slot_virtual_network_swift_connection":
-		rid.AttrTypes[2] = "config"
-	case "azurerm_app_service_virtual_network_swift_connection":
-		rid.AttrTypes[1] = "config"
-	case "azurerm_synapse_workspace_sql_aad_admin":
-		rid.AttrTypes[1] = "sqlAdministrators"
 	case "azurerm_monitor_diagnostic_setting":
 		// input: <target id>/providers/Microsoft.Insights/diagnosticSettings/setting1
 		// tfid : <target id>|setting1
@@ -102,31 +95,14 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
 		}
 		return pid.String() + "|" + id.Names()[1], nil
-	case "azurerm_postgresql_active_directory_administrator":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_iotcentral_application_network_rule_set":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_role_definition":
-		return id.String() + "|" + id.ParentScope().String(), nil
-	case "azurerm_role_assignment":
-		// This resource has scope any, causing it has no format string. Manually format the last segment.
-		id := id.(*armid.ScopedResourceId)
-		id.AttrTypes[len(id.AttrTypes)-1] = "roleAssignments"
-		return id.String(), nil
+
 	case "azurerm_network_manager_deployment":
 		managerId := id.Parent().Parent()
 		if err := managerId.Normalize(importSpec); err != nil {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", managerId.String(), rt, importSpec, err)
 		}
 		return managerId.String() + "/commit|" + id.Names()[1] + "|" + id.Names()[2], nil
+
 	// Porperty-like resources
 	case "azurerm_nat_gateway_public_ip_association":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_nat_gateway", "azurerm_public_ip", "|")
@@ -135,7 +111,7 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 	case "azurerm_network_interface_application_gateway_backend_address_pool_association":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "fake_azurerm_network_interface_ipconfig", "fake_azurerm_application_gateway_backend_address_pool", "|")
 	case "azurerm_network_interface_application_security_group_association":
-		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "fake_azurerm_network_interface_ipconfig", "azurerm_application_security_group", "|")
+		return buildIdForPropertyLikeResource(id.Parent().Parent(), lastItem(id.Names()), "azurerm_network_interface", "azurerm_application_security_group", "|")
 	case "azurerm_network_interface_backend_address_pool_association":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "fake_azurerm_network_interface_ipconfig", "azurerm_lb_backend_address_pool", "|")
 	case "azurerm_network_interface_nat_rule_association":
@@ -144,54 +120,52 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_network_interface", "azurerm_network_security_group", "|")
 	case "azurerm_virtual_desktop_workspace_application_group_association":
 		return buildIdForPropertyLikeResource(id.Parent(), lastItem(id.Names()), "azurerm_virtual_desktop_workspace", "azurerm_virtual_desktop_application_group", "|")
-	case "azurerm_subnet_nat_gateway_association",
-		"azurerm_subnet_network_security_group_association",
-		"azurerm_subnet_route_table_association":
-		return id.Parent().String(), nil
+	case "azurerm_role_management_policy":
+		parentScopeId := id.ParentScope()
+		return id.String() + "|" + parentScopeId.String(), nil
+	case "azurerm_role_definition":
+		return id.String() + "|" + id.ParentScope().String(), nil
+
+	///
+	// Non-early return branches below
 	case "azurerm_iothub_endpoint_cosmosdb_account",
 		"azurerm_iothub_endpoint_eventhub",
 		"azurerm_iothub_endpoint_servicebus_queue",
 		"azurerm_iothub_endpoint_servicebus_topic",
 		"azurerm_iothub_endpoint_storage_container":
+		rid.AttrTypes[len(rid.AttrTypes)-1] = "endpoints"
+	case "azurerm_app_service_slot_virtual_network_swift_connection":
+		rid.AttrTypes[2] = "config"
+	case "azurerm_app_service_virtual_network_swift_connection":
+		rid.AttrTypes[1] = "config"
+	case "azurerm_synapse_workspace_sql_aad_admin":
+		rid.AttrTypes[1] = "sqlAdministrators"
+	case "azurerm_role_assignment":
+		// This resource has scope any, causing it has no format string. Manually format the last segment.
 		id := id.(*armid.ScopedResourceId)
-		id.AttrTypes[len(id.AttrTypes)-1] = "endpoints"
-		return id.String(), nil
-	case "azurerm_api_management_api_operation_policy",
+		id.AttrTypes[len(id.AttrTypes)-1] = "roleAssignments"
+
+	// Parent ID
+	case "azurerm_postgresql_active_directory_administrator",
+		"azurerm_iotcentral_application_network_rule_set",
+		"azurerm_api_management_api_operation_policy",
 		"azurerm_api_management_api_policy",
 		"azurerm_api_management_policy",
-		"azurerm_api_management_product_policy":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_netapp_account_encryption":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_storage_blob_inventory_policy",
+		"azurerm_api_management_product_policy",
+		"azurerm_netapp_account_encryption",
+		"azurerm_storage_blob_inventory_policy",
 		"azurerm_storage_account_queue_properties",
-		"azurerm_storage_account_static_website":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_container_app_environment_custom_domain":
-		pid := id.Parent()
-		if err := pid.Normalize(importSpec); err != nil {
-			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", pid.String(), rt, importSpec, err)
-		}
-		return pid.String(), nil
-	case "azurerm_role_management_policy":
-		parentScopeId := id.ParentScope()
-		return id.String() + "|" + parentScopeId.String(), nil
+		"azurerm_storage_account_static_website",
+		"azurerm_container_app_environment_custom_domain",
+		"azurerm_subnet_nat_gateway_association",
+		"azurerm_subnet_network_security_group_association",
+		"azurerm_subnet_route_table_association",
+		"azurerm_mssql_job_schedule":
+		id = id.Parent()
 	}
 
 	if importSpec != "" {
-		if err := rid.Normalize(importSpec); err != nil {
+		if err := id.Normalize(importSpec); err != nil {
 			return "", fmt.Errorf("normalizing id %q for %q with import spec %q: %v", id.String(), rt, importSpec, err)
 		}
 	}
