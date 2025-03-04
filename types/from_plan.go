@@ -71,6 +71,9 @@ func ListResourcesFromPlan(p *tfjson.Plan) []AzureResource {
 				address := fmt.Sprintf("%s.%s", resourceChange.Type, resourceChange.Name)
 				id := getId(resourceChange.Change.Before)
 				if azurermResourceMap[address] == nil {
+					if azureId, err := AzurermIdToAzureId(resourceChange.Type, id); err == nil {
+						id = azureId
+					}
 					azurermResourceMap[address] = &AzurermResource{
 						OldResourceType: resourceChange.Type,
 						OldLabel:        resourceChange.Name,

@@ -1,6 +1,9 @@
 ## v2.3.0
 Target azurerm version: v4.20.0
 
+BUG FIXES:
+- Fix a bug that some azurerm resources could not be migrated correctly because the azurerm ID is not the same as the azure resource ID.
+
 ## v2.2.0
 Target azurerm version: v4.14.0
 
