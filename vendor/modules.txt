@@ -203,6 +203,8 @@ github.com/fatih/color
 github.com/gertd/go-pluralize
 # github.com/go-git/go-git/v5 v5.13.2
 ## explicit; go 1.21
+# github.com/golang-jwt/jwt/v5 v5.2.2
+## explicit; go 1.18
 # github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8
 ## explicit; go 1.20
 # github.com/golang/protobuf v1.5.4
