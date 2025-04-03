@@ -18,6 +18,9 @@ func (appServiceSitesResolver) ResourceTypes() []string {
 		"azurerm_windows_function_app",
 		"azurerm_linux_web_app",
 		"azurerm_windows_web_app",
+
+		// Although this is put here, it won't be resolved to for now.
+		"azurerm_function_app_flex_consumption",
 	}
 }
 
@@ -55,6 +58,7 @@ func (appServiceSitesResolver) Resolve(b *client.ClientBuilder, id armid.Resourc
 
 	if m["functionapp"] {
 		if m["linux"] {
+
 			return "azurerm_linux_function_app", nil
 		}
 		return "azurerm_windows_function_app", nil

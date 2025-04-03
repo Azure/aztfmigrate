@@ -160,7 +160,8 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		"azurerm_subnet_nat_gateway_association",
 		"azurerm_subnet_network_security_group_association",
 		"azurerm_subnet_route_table_association",
-		"azurerm_mssql_job_schedule":
+		"azurerm_mssql_job_schedule",
+		"azurerm_stream_analytics_job_storage_account":
 		id = id.Parent()
 	}
 

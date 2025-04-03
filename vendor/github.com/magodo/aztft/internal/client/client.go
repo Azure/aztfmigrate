@@ -47,6 +47,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/streamanalytics/armstreamanalytics"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/synapse/armsynapse"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/timeseriesinsights/armtimeseriesinsights"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/webpubsub/armwebpubsub"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/workloads/armworkloads"
 )
 
@@ -360,6 +361,14 @@ func (b *ClientBuilder) NewStreamAnalyticsOutputsClient(subscriptionId string) (
 
 func (b *ClientBuilder) NewStreamAnalyticsFunctionsClient(subscriptionId string) (*armstreamanalytics.FunctionsClient, error) {
 	return armstreamanalytics.NewFunctionsClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewStreamAnalyticsJobsClient(subscriptionId string) (*armstreamanalytics.StreamingJobsClient, error) {
+	return armstreamanalytics.NewStreamingJobsClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
@@ -721,4 +730,8 @@ func (b *ClientBuilder) NewHybridKubernetesConnectedClient(subscriptionId string
 
 func (b *ClientBuilder) NewSqlJobsClient(subscriptionId string) (*armsql.JobsClient, error) {
 	return armsql.NewJobsClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewWebPubSubsClient(subscriptionId string) (*armwebpubsub.Client, error) {
+	return armwebpubsub.NewClient(subscriptionId, b.Cred, &b.ClientOpt)
 }
