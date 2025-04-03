@@ -23,6 +23,7 @@ var populaters = map[string]populateFunc{
 	"azurerm_lb":                        populateLoadBalancer,
 	"azurerm_container_app_environment": populateContainerAppEnv,
 	"azurerm_mssql_job":                 populateMssqlJob,
+	"azurerm_stream_analytics_job":      populateStreamAnalyticsJob,
 }
 
 func NeedsAPI(rt string) bool {

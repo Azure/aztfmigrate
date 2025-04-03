@@ -217,6 +217,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.MACHINELEARNINGSERVICES/WORKSPACES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": machineLearningWorkspaceResolver{},
 	},
+	"/MICROSOFT.SIGNALRSERVICE/WEBPUBSUB": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": webPubSubResolver{},
+	},
 }
 
 type ResolveError struct {
