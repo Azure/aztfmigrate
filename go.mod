@@ -5,6 +5,7 @@ go 1.23.0
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.1
 	github.com/gertd/go-pluralize v0.2.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/hc-install v0.9.0
 	github.com/hashicorp/hcl/v2 v2.22.0
