@@ -5971,6 +5971,20 @@
       ]
     }
   },
+  "azurerm_function_app_flex_consumption": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Web",
+      "types": [
+        "sites"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Web/sites"
+      ]
+    }
+  },
   "azurerm_function_app_function": {
     "management_plane": {
       "scopes": [
@@ -7479,9 +7493,6 @@
       "types": [
         "workspaces",
         "linkedServices"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.OperationalInsights/workspaces/linkedServices"
       ]
     }
   },
@@ -9598,6 +9609,21 @@
       ]
     }
   },
+  "azurerm_network_manager_ipam_pool": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "ipamPools"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/ipamPools"
+      ]
+    }
+  },
   "azurerm_network_manager_management_group_connection": {
     "management_plane": {
       "scopes": [
@@ -9684,6 +9710,21 @@
       ],
       "import_specs": [
         "/subscriptions/Microsoft.Network/networkManagerConnections"
+      ]
+    }
+  },
+  "azurerm_network_manager_verifier_workspace": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "verifierWorkspaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/verifierWorkspaces"
       ]
     }
   },
@@ -11956,6 +11997,20 @@
       ]
     }
   },
+  "azurerm_servicebus_namespace_customer_managed_key": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ServiceBus",
+      "types": [
+        "namespaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ServiceBus/namespaces"
+      ]
+    }
+  },
   "azurerm_servicebus_namespace_disaster_recovery_config": {
     "management_plane": {
       "scopes": [
@@ -13637,6 +13692,20 @@
       ]
     }
   },
+  "azurerm_stream_analytics_job_storage_account": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.StreamAnalytics",
+      "types": [
+        "streamingJobs"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.StreamAnalytics/streamingJobs"
+      ]
+    }
+  },
   "azurerm_stream_analytics_managed_private_endpoint": {
     "management_plane": {
       "scopes": [
@@ -14441,6 +14510,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ScVmm/vmmServers"
+      ]
+    }
+  },
+  "azurerm_system_center_virtual_machine_manager_virtual_machine_instance": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines"
+      ],
+      "provider": "Microsoft.ScVmm",
+      "types": [
+        "virtualMachineInstances"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines/Microsoft.ScVmm/virtualMachineInstances"
       ]
     }
   },
@@ -15388,6 +15471,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.SignalRService/webPubSub/sharedPrivateLinkResources"
+      ]
+    }
+  },
+  "azurerm_web_pubsub_socketio": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.SignalRService",
+      "types": [
+        "webPubSub"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.SignalRService/webPubSub"
       ]
     }
   },

@@ -1,5 +1,30 @@
 # Release History
 
+## 1.5.0 (2025-03-28)
+### Features Added
+
+- New value `ManagedHsmSKUFamilyC` added to enum type `ManagedHsmSKUFamily`
+- New value `ManagedHsmSKUNameCustomC10`, `ManagedHsmSKUNameCustomC42` added to enum type `ManagedHsmSKUName`
+
+
+## 1.4.0 (2023-11-24)
+### Features Added
+
+- Support for test fakes and OpenTelemetry trace spans.
+
+
+## 1.3.0 (2023-10-27)
+### Features Added
+
+- New value `ManagedHsmSKUNameCustomB6` added to enum type `ManagedHsmSKUName`
+- New enum type `ManagedServiceIdentityType` with values `ManagedServiceIdentityTypeNone`, `ManagedServiceIdentityTypeSystemAssigned`, `ManagedServiceIdentityTypeSystemAssignedUserAssigned`, `ManagedServiceIdentityTypeUserAssigned`
+- New struct `ManagedServiceIdentity`
+- New struct `UserAssignedIdentity`
+- New field `Identity` in struct `MHSMPrivateEndpointConnection`
+- New field `Identity` in struct `MHSMPrivateLinkResource`
+- New field `Identity` in struct `ManagedHsm`
+
+
 ## 1.2.0 (2023-04-28)
 ### Features Added
 

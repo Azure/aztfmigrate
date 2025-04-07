@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/Azure/aztfmigrate/cmd"
+	_ "github.com/golang-jwt/jwt/v4"
 	"github.com/mitchellh/cli"
 )
 

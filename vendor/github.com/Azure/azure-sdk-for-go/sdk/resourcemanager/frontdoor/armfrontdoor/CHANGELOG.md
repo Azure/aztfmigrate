@@ -1,5 +1,27 @@
 # Release History
 
+## 1.4.0 (2024-04-26)
+### Features Added
+
+- New value `ActionTypeJSChallenge` added to enum type `ActionType`
+- New enum type `ScrubbingRuleEntryMatchOperator` with values `ScrubbingRuleEntryMatchOperatorEquals`, `ScrubbingRuleEntryMatchOperatorEqualsAny`
+- New enum type `ScrubbingRuleEntryMatchVariable` with values `ScrubbingRuleEntryMatchVariableQueryStringArgNames`, `ScrubbingRuleEntryMatchVariableRequestBodyJSONArgNames`, `ScrubbingRuleEntryMatchVariableRequestBodyPostArgNames`, `ScrubbingRuleEntryMatchVariableRequestCookieNames`, `ScrubbingRuleEntryMatchVariableRequestHeaderNames`, `ScrubbingRuleEntryMatchVariableRequestIPAddress`, `ScrubbingRuleEntryMatchVariableRequestURI`
+- New enum type `ScrubbingRuleEntryState` with values `ScrubbingRuleEntryStateDisabled`, `ScrubbingRuleEntryStateEnabled`
+- New enum type `VariableName` with values `VariableNameGeoLocation`, `VariableNameNone`, `VariableNameSocketAddr`
+- New enum type `WebApplicationFirewallScrubbingState` with values `WebApplicationFirewallScrubbingStateDisabled`, `WebApplicationFirewallScrubbingStateEnabled`
+- New struct `GroupByVariable`
+- New struct `PolicySettingsLogScrubbing`
+- New struct `WebApplicationFirewallScrubbingRules`
+- New field `GroupBy` in struct `CustomRule`
+- New field `JavascriptChallengeExpirationInMinutes`, `LogScrubbing` in struct `PolicySettings`
+
+
+## 1.3.0 (2023-11-24)
+### Features Added
+
+- Support for test fakes and OpenTelemetry trace spans.
+
+
 ## 1.2.0 (2023-05-26)
 ### Features Added
 
