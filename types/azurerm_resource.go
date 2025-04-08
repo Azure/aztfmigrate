@@ -61,17 +61,17 @@ func (r *AzurermResource) GenerateNewConfig(terraform *tf.Terraform) error {
 	if !r.IsMultipleResources() {
 		instance := r.Instances[0]
 		log.Printf("[INFO] importing %s to %s and generating config...", instance.ResourceId, r.NewAddress(nil))
-		if block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, "", true); err == nil {
-			r.Block = block
-			valuePropMap := GetValuePropMap(r.Block, r.NewAddress(nil))
-			for i, output := range r.Instances[0].Outputs {
-				r.Instances[0].Outputs[i].NewName = valuePropMap[output.GetStringValue()]
-			}
-			r.Migrated = true
-			log.Printf("[INFO] resource %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
-		} else {
-			log.Printf("[ERROR] %+v", err)
+		block, err := importAndGenerateConfig(terraform, r.NewAddress(nil), instance.ResourceId, "", true)
+		if err != nil {
+			return err
 		}
+		r.Block = block
+		valuePropMap := GetValuePropMap(r.Block, r.NewAddress(nil))
+		for i, output := range r.Instances[0].Outputs {
+			r.Instances[0].Outputs[i].NewName = valuePropMap[output.GetStringValue()]
+		}
+		r.Migrated = true
+		log.Printf("[INFO] resource %s has migrated to %s", r.OldAddress(nil), r.NewAddress(nil))
 		r.Block = InjectReference(r.Block, r.References)
 	} else {
 		// import and build combined block

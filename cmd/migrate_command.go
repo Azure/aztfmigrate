@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Azure/aztfmigrate/helper"
 	"github.com/Azure/aztfmigrate/tf"
 	"github.com/Azure/aztfmigrate/types"
 	"github.com/hashicorp/hcl/v2/hclwrite"
@@ -125,7 +126,7 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 	}
 
 	log.Printf("[INFO] generating import config...")
-	config := importConfig(resources)
+	config := ImportConfig(resources, helper.FindHclBlock(workingDirectory, "terraform", nil))
 	if err = os.WriteFile(filepath.Join(tempDir, filenameImport), []byte(config), 0600); err != nil {
 		log.Fatal(err)
 	}
@@ -190,26 +191,20 @@ func (c *MigrateCommand) MigrateResources(terraform *tf.Terraform, resources []t
 	}
 }
 
-func importConfig(resources []types.AzureResource) string {
-	const providerConfig = `
-terraform {
+func ImportConfig(resources []types.AzureResource, terraformBlock *hclwrite.Block) string {
+	config := `terraform {
   required_providers {
     azapi = {
       source = "Azure/azapi"
     }
   }
-}
+}`
+	if terraformBlock != nil {
+		newFile := hclwrite.NewEmptyFile()
+		newFile.Body().AppendBlock(terraformBlock)
+		config = string(hclwrite.Format(newFile.Bytes()))
+	}
 
-provider "azurerm" {
-  features {}
-  subscription_id = "%s"
-}
-
-provider "azapi" {
-}
-`
-
-	config := ""
 	for _, r := range resources {
 		config += r.EmptyImportConfig()
 	}
@@ -232,7 +227,16 @@ provider "azapi" {
 			break
 		}
 	}
-	config = fmt.Sprintf(providerConfig, subscriptionId) + config
 
-	return config
+	const providerConfig = `
+provider "azurerm" {
+  features {}
+  subscription_id = "%s"
+}
+
+provider "azapi" {
+}
+`
+
+	return fmt.Sprintf(providerConfig, subscriptionId) + config
 }
