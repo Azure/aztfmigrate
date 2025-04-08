@@ -88,7 +88,7 @@ func (t *Terraform) ImportAdd(address string, id string) (string, error) {
 	_ = t.Init()
 	err := t.exec.Import(context.TODO(), address, id)
 	if err != nil {
-		log.Fatal(err)
+		return "", fmt.Errorf("importing resource %s: %w", address, err)
 	}
 	outputs, err := tfadd.StateForTargets(context.TODO(), t.exec, []string{address}, tfadd.Full(true))
 	if err != nil {
