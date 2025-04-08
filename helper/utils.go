@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -77,6 +78,47 @@ func ListHclFiles(workingDirectory string) []fs.DirEntry {
 		}
 	}
 	return res
+}
+
+func ListHclBlocks(workingDirectory string) []*hclwrite.Block {
+	res := make([]*hclwrite.Block, 0)
+	files := ListHclFiles(workingDirectory)
+	for _, file := range files {
+		filePath := path.Join(workingDirectory, file.Name())
+		f, err := os.ReadFile(filePath)
+		if err != nil {
+			continue
+		}
+		hclFile, diags := hclwrite.ParseConfig(f, file.Name(), hcl.InitialPos)
+		if diags.HasErrors() {
+			continue
+		}
+		res = append(res, hclFile.Body().Blocks()...)
+	}
+	return res
+}
+
+func FindHclBlock(workingDirectory string, blockType string, labels []string) *hclwrite.Block {
+	blocks := ListHclBlocks(workingDirectory)
+	for _, block := range blocks {
+		if block.Type() != blockType {
+			continue
+		}
+		if len(block.Labels()) != len(labels) {
+			continue
+		}
+		isLabelsEqual := true
+		for i, label := range labels {
+			if block.Labels()[i] != label {
+				isLabelsEqual = false
+				break
+			}
+		}
+		if isLabelsEqual {
+			return block
+		}
+	}
+	return nil
 }
 
 // GetTokensForExpression convert a literal value to hclwrite.Tokens
