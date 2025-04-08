@@ -85,6 +85,7 @@ func ListHclBlocks(workingDirectory string) []*hclwrite.Block {
 	files := ListHclFiles(workingDirectory)
 	for _, file := range files {
 		filePath := path.Join(workingDirectory, file.Name())
+		// #nosec G304
 		f, err := os.ReadFile(filePath)
 		if err != nil {
 			continue
