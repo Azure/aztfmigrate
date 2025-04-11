@@ -222,6 +222,13 @@ func ImportConfig(resources []types.AzureResource, terraformBlock *hclwrite.Bloc
 			if strings.HasPrefix(resource.Id, "/subscriptions/") {
 				subscriptionId = strings.Split(resource.Id, "/")[2]
 			}
+		case *types.AzurermResource:
+			for _, instance := range resource.Instances {
+				if strings.HasPrefix(instance.ResourceId, "/subscriptions/") {
+					subscriptionId = strings.Split(instance.ResourceId, "/")[2]
+					break
+				}
+			}
 		}
 		if subscriptionId != "" {
 			break
