@@ -4,21 +4,21 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/alertsmanagement/armalertsmanagement"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/applicationinsights/armapplicationinsights"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform/v2"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v4"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v7"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datashare/armdatashare"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/devtestlabs/armdevtestlabs"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/digitaltwins/armdigitaltwins"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/domainservices/armdomainservices"
@@ -27,22 +27,21 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/hybridkubernetes/armhybridkubernetes"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/iothub/armiothub"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/keyvault/armkeyvault"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v4"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v7"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v6"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup/v4"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery/v2"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/sql/armsql"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache/v4"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagepool/armstoragepool"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/streamanalytics/armstreamanalytics"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/synapse/armsynapse"
@@ -375,14 +374,6 @@ func (b *ClientBuilder) NewStreamAnalyticsJobsClient(subscriptionId string) (*ar
 	)
 }
 
-func (b *ClientBuilder) NewMonitorScheduledQueryRulesClient(subscriptionId string) (*armmonitor.ScheduledQueryRulesClient, error) {
-	return armmonitor.NewScheduledQueryRulesClient(
-		subscriptionId,
-		b.Cred,
-		&b.ClientOpt,
-	)
-}
-
 func (b *ClientBuilder) NewCdnProfilesClient(subscriptionId string) (*armcdn.ProfilesClient, error) {
 	return armcdn.NewProfilesClient(
 		subscriptionId,
@@ -583,50 +574,40 @@ func (b *ClientBuilder) NewDeploymentScriptsClient(subscriptionId string) (*armd
 	)
 }
 
-func (b *ClientBuilder) NewSiteRecoveryReplicationPoliciesClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationPoliciesClient, error) {
+func (b *ClientBuilder) NewSiteRecoveryReplicationPoliciesClient(subscriptionId string) (*armrecoveryservicessiterecovery.ReplicationPoliciesClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationPoliciesClient(
-		vaultName,
-		resourceGroupName,
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
 	)
 }
 
-func (b *ClientBuilder) NewSiteRecoveryReplicationFabricsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationFabricsClient, error) {
+func (b *ClientBuilder) NewSiteRecoveryReplicationFabricsClient(subscriptionId string) (*armrecoveryservicessiterecovery.ReplicationFabricsClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationFabricsClient(
-		vaultName,
-		resourceGroupName,
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
 	)
 }
 
-func (b *ClientBuilder) NewSiteRecoveryReplicationProtectedItemsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationProtectedItemsClient, error) {
+func (b *ClientBuilder) NewSiteRecoveryReplicationProtectedItemsClient(subscriptionId string) (*armrecoveryservicessiterecovery.ReplicationProtectedItemsClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationProtectedItemsClient(
-		vaultName,
-		resourceGroupName,
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
 	)
 }
 
-func (b *ClientBuilder) NewSiteRecoveryReplicationProtectionContainerMappingsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationProtectionContainerMappingsClient, error) {
+func (b *ClientBuilder) NewSiteRecoveryReplicationProtectionContainerMappingsClient(subscriptionId string) (*armrecoveryservicessiterecovery.ReplicationProtectionContainerMappingsClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationProtectionContainerMappingsClient(
-		vaultName,
-		resourceGroupName,
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
 	)
 }
 
-func (b *ClientBuilder) NewSiteRecoveryReplicationNetworkMappingsClient(subscriptionId, resourceGroupName, vaultName string) (*armrecoveryservicessiterecovery.ReplicationNetworkMappingsClient, error) {
+func (b *ClientBuilder) NewSiteRecoveryReplicationNetworkMappingsClient(subscriptionId string) (*armrecoveryservicessiterecovery.ReplicationNetworkMappingsClient, error) {
 	return armrecoveryservicessiterecovery.NewReplicationNetworkMappingsClient(
-		vaultName,
-		resourceGroupName,
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,

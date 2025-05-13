@@ -16,11 +16,11 @@ func (recoveryServicesReplicationProtectedItemsResolver) ResourceTypes() []strin
 
 func (recoveryServicesReplicationProtectedItemsResolver) Resolve(b *client.ClientBuilder, id armid.ResourceId) (string, error) {
 	resourceGroupId := id.RootScope().(*armid.ResourceGroup)
-	client, err := b.NewSiteRecoveryReplicationProtectedItemsClient(resourceGroupId.SubscriptionId, resourceGroupId.Name, id.Names()[0])
+	client, err := b.NewSiteRecoveryReplicationProtectedItemsClient(resourceGroupId.SubscriptionId)
 	if err != nil {
 		return "", err
 	}
-	resp, err := client.Get(context.Background(), id.Names()[1], id.Names()[2], id.Names()[3], nil)
+	resp, err := client.Get(context.Background(), resourceGroupId.Name, id.Names()[0], id.Names()[1], id.Names()[2], id.Names()[3], nil)
 	if err != nil {
 		return "", fmt.Errorf("retrieving %q: %v", id, err)
 	}

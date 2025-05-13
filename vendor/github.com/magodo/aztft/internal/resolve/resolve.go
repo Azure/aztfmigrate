@@ -127,9 +127,6 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.STREAMANALYTICS/STREAMINGJOBS/FUNCTIONS": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": streamAnalyticsFunctionsResolver{},
 	},
-	"/MICROSOFT.INSIGHTS/SCHEDULEDQUERYRULES": {
-		"/SUBSCRIPTIONS/RESOURCEGROUPS": monitorScheduledQueryRulesResolver{},
-	},
 	"/MICROSOFT.CDN/PROFILES": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": cdnProfilesResolver{},
 	},

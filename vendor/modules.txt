@@ -1,7 +1,7 @@
 # dario.cat/mergo v1.0.1
 ## explicit; go 1.13
 dario.cat/mergo
-# github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.1
+# github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0
 ## explicit; go 1.23.0
 github.com/Azure/azure-sdk-for-go/sdk/azcore
 github.com/Azure/azure-sdk-for-go/sdk/azcore/arm
@@ -24,7 +24,9 @@ github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime
 github.com/Azure/azure-sdk-for-go/sdk/azcore/streaming
 github.com/Azure/azure-sdk-for-go/sdk/azcore/to
 github.com/Azure/azure-sdk-for-go/sdk/azcore/tracing
-# github.com/Azure/azure-sdk-for-go/sdk/internal v1.11.0
+# github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.9.0
+## explicit; go 1.23.0
+# github.com/Azure/azure-sdk-for-go/sdk/internal v1.11.1
 ## explicit; go 1.23.0
 github.com/Azure/azure-sdk-for-go/sdk/internal/diag
 github.com/Azure/azure-sdk-for-go/sdk/internal/errorinfo
@@ -38,19 +40,25 @@ github.com/Azure/azure-sdk-for-go/sdk/internal/uuid
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/alertsmanagement/armalertsmanagement
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement v1.1.1
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement
-# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3 v3.0.0
-## explicit; go 1.18
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement/v3 v3.0.0
+## explicit; go 1.23.0
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/apimanagement/armapimanagement/v3
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3 v3.1.0
+## explicit; go 1.23.0
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/applicationinsights/armapplicationinsights v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/applicationinsights/armapplicationinsights
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform v1.1.0-beta.1
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform/v2 v2.0.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appplatform/armappplatform/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v4 v4.1.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v4
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation v0.9.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation
@@ -59,7 +67,9 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/automation/armautomation
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/botservice/armbotservice
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn v1.1.1
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn/v2 v2.2.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices v1.7.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices
@@ -74,13 +84,17 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmana
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v7
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection/v3 v3.1.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection/v3
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datashare/armdatashare v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datashare/armdatashare
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization/v2 v2.3.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/desktopvirtualization/armdesktopvirtualization/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/devtestlabs/armdevtestlabs v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/devtestlabs/armdevtestlabs
@@ -107,7 +121,9 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/iothub/armiothub
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/keyvault/armkeyvault
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto v1.3.1
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto/v2 v2.3.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic
@@ -116,13 +132,16 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v4
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor v0.7.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/monitor/armmonitor
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v7 v7.5.0
+## explicit; go 1.23.0
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v7
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork v1.1.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v6 v6.2.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v6
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights
@@ -131,28 +150,38 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armope
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup/v4 v4.2.0
+## explicit; go 1.23.0
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup/v4
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery v1.1.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery/v2 v2.4.0
+## explicit; go 1.23.0
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts/v2 v2.1.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2 v2.0.0-beta.4
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/sql/armsql v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/sql/armsql
-# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage v1.7.0
-## explicit; go 1.18
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage v1.8.0
+## explicit; go 1.23.0
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache v1.0.0
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache/v4 v4.0.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagecache/armstoragecache/v4
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover v1.1.1
 ## explicit; go 1.18
-github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover
+# github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover/v2 v2.2.0
+## explicit; go 1.18
+github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagemover/armstoragemover/v2
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagepool/armstoragepool v1.2.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storagepool/armstoragepool
@@ -171,6 +200,8 @@ github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/webpubsub/armwebpubsub
 # github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/workloads/armworkloads v1.1.0
 ## explicit; go 1.18
 github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/workloads/armworkloads
+# github.com/AzureAD/microsoft-authentication-library-for-go v1.4.2
+## explicit; go 1.18
 # github.com/Masterminds/goutils v1.1.1
 ## explicit
 github.com/Masterminds/goutils
@@ -196,6 +227,8 @@ github.com/armon/go-radix
 github.com/bgentry/speakeasy
 # github.com/cloudflare/circl v1.6.0
 ## explicit; go 1.22.0
+# github.com/cpuguy83/go-md2man/v2 v2.0.7
+## explicit; go 1.12
 # github.com/cyphar/filepath-securejoin v0.4.1
 ## explicit; go 1.18
 # github.com/fatih/color v1.17.0
@@ -209,6 +242,8 @@ github.com/gertd/go-pluralize
 # github.com/golang-jwt/jwt/v4 v4.5.2
 ## explicit; go 1.16
 github.com/golang-jwt/jwt/v4
+# github.com/golang-jwt/jwt/v5 v5.2.2
+## explicit; go 1.18
 # github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8
 ## explicit; go 1.20
 # github.com/golang/protobuf v1.5.4
@@ -303,11 +338,13 @@ github.com/hashicorp/terraform-plugin-sdk/v2/terraform
 # github.com/huandu/xstrings v1.5.0
 ## explicit; go 1.12
 github.com/huandu/xstrings
+# github.com/kylelemons/godebug v1.1.0
+## explicit; go 1.11
 # github.com/magodo/armid v0.0.0-20240524082432-7ce06ae46c33
 ## explicit; go 1.18
 github.com/magodo/armid
-# github.com/magodo/aztft v0.3.1-0.20250331004505-d5aff7c777d4
-## explicit; go 1.19
+# github.com/magodo/aztft v0.3.1-0.20250512012628-bf61e7a7a744
+## explicit; go 1.23.0
 github.com/magodo/aztft/aztft
 github.com/magodo/aztft/internal/client
 github.com/magodo/aztft/internal/populate
@@ -355,11 +392,15 @@ github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.2
 ## explicit
 github.com/mitchellh/reflectwalk
+# github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
+## explicit; go 1.14
 # github.com/posener/complete v1.2.3
 ## explicit; go 1.13
 github.com/posener/complete
 github.com/posener/complete/cmd
 github.com/posener/complete/cmd/install
+# github.com/russross/blackfriday/v2 v2.1.0
+## explicit
 # github.com/shopspring/decimal v1.4.0
 ## explicit; go 1.10
 github.com/shopspring/decimal
@@ -368,6 +409,8 @@ github.com/shopspring/decimal
 # github.com/spf13/cast v1.7.0
 ## explicit; go 1.19
 github.com/spf13/cast
+# github.com/urfave/cli/v2 v2.27.6
+## explicit; go 1.18
 # github.com/vmihailenco/msgpack v4.0.4+incompatible
 ## explicit
 github.com/vmihailenco/msgpack
@@ -381,6 +424,8 @@ github.com/vmihailenco/msgpack/v5/msgpcode
 github.com/vmihailenco/tagparser/v2
 github.com/vmihailenco/tagparser/v2/internal
 github.com/vmihailenco/tagparser/v2/internal/parser
+# github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1
+## explicit; go 1.15
 # github.com/zclconf/go-cty v1.15.0
 ## explicit; go 1.18
 github.com/zclconf/go-cty/cty
@@ -391,7 +436,7 @@ github.com/zclconf/go-cty/cty/function/stdlib
 github.com/zclconf/go-cty/cty/gocty
 github.com/zclconf/go-cty/cty/json
 github.com/zclconf/go-cty/cty/set
-# golang.org/x/crypto v0.36.0
+# golang.org/x/crypto v0.38.0
 ## explicit; go 1.23.0
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
@@ -403,21 +448,21 @@ golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/modfile
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.38.0
+# golang.org/x/net v0.40.0
 ## explicit; go 1.23.0
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/httpcommon
-# golang.org/x/sync v0.12.0
+# golang.org/x/sync v0.14.0
 ## explicit; go 1.23.0
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.31.0
+# golang.org/x/sys v0.33.0
 ## explicit; go 1.23.0
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.23.0
+# golang.org/x/text v0.25.0
 ## explicit; go 1.23.0
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
