@@ -5431,6 +5431,18 @@
       ]
     }
   },
+  "azurerm_eventgrid_partner_configuration": {
+    "management_plane": {
+      "provider": "Microsoft.Resources",
+      "types": [
+        "subscriptions",
+        "resourceGroups"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups"
+      ]
+    }
+  },
   "azurerm_eventgrid_system_topic": {
     "management_plane": {
       "scopes": [
@@ -9826,6 +9838,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/NewRelic.Observability/monitors/tagRules"
+      ]
+    }
+  },
+  "azurerm_nginx_api_key": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Nginx.NginxPlus",
+      "types": [
+        "nginxDeployments",
+        "apiKeys"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Nginx.NginxPlus/nginxDeployments/apiKeys"
       ]
     }
   },

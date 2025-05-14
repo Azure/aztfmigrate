@@ -5443,6 +5443,20 @@
       ]
     }
   },
+  "azurerm_eventgrid_partner_configuration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.EventGrid",
+      "types": [
+        "partnerConfigurations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups"
+      ]
+    }
+  },
   "azurerm_eventgrid_system_topic": {
     "management_plane": {
       "scopes": [
@@ -8709,6 +8723,8 @@
     }
   },
   "azurerm_monitor_scheduled_query_rules_log": {
+    "is_removed": true,
+    "remove_reason": "This is deprecated in favor of azurerm_monitor_scheduled_query_rules_alert_v2",
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
@@ -9948,6 +9964,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/NewRelic.Observability/monitors/tagRules"
+      ]
+    }
+  },
+  "azurerm_nginx_api_key": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Nginx.NginxPlus",
+      "types": [
+        "nginxDeployments",
+        "apiKeys"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Nginx.NginxPlus/nginxDeployments/apiKeys"
       ]
     }
   },

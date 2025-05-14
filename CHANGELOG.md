@@ -1,4 +1,5 @@
-## v2.4.0 (unreleased)
+## v2.4.0
+Target azurerm version: v4.28.0
 
 ENHANCEMENTS:
 - Support specifying the provider version used in the migration in the `terraform` block.
