@@ -1,4 +1,7 @@
 ## v2.4.0
+Target azurerm version: v4.34.0
+
+## v2.4.0
 Target azurerm version: v4.28.0
 
 ENHANCEMENTS:

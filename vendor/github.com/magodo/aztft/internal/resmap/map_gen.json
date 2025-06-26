@@ -3795,10 +3795,10 @@
       "provider": "Microsoft.DataFactory",
       "types": [
         "factories",
-        "integrationruntimes"
+        "integrationRuntimes"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationruntimes"
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationRuntimes"
       ]
     }
   },
@@ -3810,10 +3810,10 @@
       "provider": "Microsoft.DataFactory",
       "types": [
         "factories",
-        "integrationruntimes"
+        "integrationRuntimes"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationruntimes"
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationRuntimes"
       ]
     }
   },
@@ -3825,10 +3825,10 @@
       "provider": "Microsoft.DataFactory",
       "types": [
         "factories",
-        "integrationruntimes"
+        "integrationRuntimes"
       ],
       "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationruntimes"
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/integrationRuntimes"
       ]
     }
   },
@@ -9665,6 +9665,21 @@
       ]
     }
   },
+  "azurerm_network_manager_routing_configuration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "routingConfigurations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/routingConfigurations"
+      ]
+    }
+  },
   "azurerm_network_manager_scope_connection": {
     "management_plane": {
       "scopes": [
@@ -10785,6 +10800,20 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Purview/accounts"
+      ]
+    }
+  },
+  "azurerm_qumulo_file_system": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Qumulo.Storage",
+      "types": [
+        "fileSystems"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Qumulo.Storage/fileSystems"
       ]
     }
   },
@@ -14551,6 +14580,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines/Microsoft.ScVmm/virtualMachineInstances"
+      ]
+    }
+  },
+  "azurerm_system_center_virtual_machine_manager_virtual_machine_instance_guest_agent": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines"
+      ],
+      "provider": "Microsoft.ScVmm",
+      "types": [
+        "virtualMachineInstances",
+        "guestAgents"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.HybridCompute/machines/Microsoft.ScVmm/virtualMachineInstances/guestAgents"
       ]
     }
   },
