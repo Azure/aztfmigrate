@@ -2,6 +2,13 @@ package cmd_test
 
 import (
 	"fmt"
+	"log"
+	"math/rand"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+
 	"github.com/Azure/aztfmigrate/azurerm"
 	"github.com/Azure/aztfmigrate/cmd"
 	"github.com/Azure/aztfmigrate/tf"
@@ -9,12 +16,6 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/mitchellh/cli"
-	"log"
-	"math/rand"
-	"os"
-	"path/filepath"
-	"strings"
-	"testing"
 )
 
 func TestMigrate_basic(t *testing.T) {
