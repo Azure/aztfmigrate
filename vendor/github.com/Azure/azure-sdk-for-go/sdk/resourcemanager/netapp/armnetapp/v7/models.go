@@ -1137,9 +1137,6 @@ type Replication struct {
 
 // ReplicationObject - Replication properties
 type ReplicationObject struct {
-	// Indicates whether the local volume is the source or destination for the Volume Replication
-	EndpointType *EndpointType
-
 	// The full path to a volume that is to be migrated into ANF. Required for Migration volumes
 	RemotePath *RemotePath
 
@@ -1154,6 +1151,9 @@ type ReplicationObject struct {
 
 	// READ-ONLY; A list of destination replications
 	DestinationReplications []*DestinationReplication
+
+	// READ-ONLY; Indicates whether the local volume is the source or destination for the Volume Replication
+	EndpointType *EndpointType
 
 	// READ-ONLY; Id
 	ReplicationID *string
@@ -1368,6 +1368,9 @@ type SubscriptionQuotaItem struct {
 
 // SubscriptionQuotaItemList - List of Subscription Quota Items
 type SubscriptionQuotaItemList struct {
+	// URL to get the next set of results.
+	NextLink *string
+
 	// A list of SubscriptionQuotaItems
 	Value []*SubscriptionQuotaItem
 }

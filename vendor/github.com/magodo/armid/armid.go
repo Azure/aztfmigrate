@@ -19,7 +19,8 @@ type ResourceId interface {
 	ParentScope() ResourceId
 
 	// Parent returns the parent resource. The parent resource belongs to the same provider as the current resource.
-	// Nil is returned if the current resource is a root scoped resource, or this is a root scope.
+	// For scoped resource, it returns the parent resource belongs to the same provider. Nil is returned for RP level resource e.g. /subscriptions/0000/resourceGroups/rg1/providers/Microsoft.Foo.
+	// For root scoped resource, it returns the parent resource belongs to the same root scope. Nil is returned for root scope resource.
 	Parent() ResourceId
 
 	// Provider returns the provider namespace of this resource id.
