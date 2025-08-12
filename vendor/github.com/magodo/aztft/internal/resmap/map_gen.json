@@ -833,6 +833,20 @@
       ]
     }
   },
+  "azurerm_api_management_standalone_gateway": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "gateways"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/gateways"
+      ]
+    }
+  },
   "azurerm_api_management_subscription": {
     "management_plane": {
       "scopes": [
@@ -875,6 +889,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/users"
+      ]
+    }
+  },
+  "azurerm_api_management_workspace": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces"
       ]
     }
   },
@@ -1314,6 +1343,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.ServiceNetworking/trafficControllers/frontends"
+      ]
+    }
+  },
+  "azurerm_application_load_balancer_security_policy": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ServiceNetworking",
+      "types": [
+        "trafficControllers",
+        "securityPolicies"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ServiceNetworking/trafficControllers/securityPolicies"
       ]
     }
   },
@@ -5374,6 +5418,22 @@
       ]
     }
   },
+  "azurerm_email_communication_service_domain_sender_username": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Communication",
+      "types": [
+        "emailServices",
+        "domains",
+        "senderUsernames"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Communication/emailServices/domains/senderUsernames"
+      ]
+    }
+  },
   "azurerm_eventgrid_domain": {
     "management_plane": {
       "scopes": [
@@ -5440,6 +5500,34 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups"
+      ]
+    }
+  },
+  "azurerm_eventgrid_partner_namespace": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.EventGrid",
+      "types": [
+        "partnerNamespaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.EventGrid/partnerNamespaces"
+      ]
+    }
+  },
+  "azurerm_eventgrid_partner_registration": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.EventGrid",
+      "types": [
+        "partnerRegistrations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.EventGrid/partnerRegistrations"
       ]
     }
   },
@@ -8204,6 +8292,20 @@
       ]
     }
   },
+  "azurerm_management_group_policy_set_definition": {
+    "management_plane": {
+      "scopes": [
+        "/Microsoft.Management/managementGroups"
+      ],
+      "provider": "Microsoft.Authorization",
+      "types": [
+        "policySetDefinitions"
+      ],
+      "import_specs": [
+        "/Microsoft.Management/managementGroups/Microsoft.Authorization/policySetDefinitions"
+      ]
+    }
+  },
   "azurerm_management_group_subscription_association": {
     "management_plane": {
       "provider": "Microsoft.Management",
@@ -9008,6 +9110,21 @@
       ]
     }
   },
+  "azurerm_mssql_managed_instance_start_stop_schedule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Sql",
+      "types": [
+        "managedInstances",
+        "startStopSchedules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Sql/managedInstances/startStopSchedules"
+      ]
+    }
+  },
   "azurerm_mssql_managed_instance_transparent_data_encryption": {
     "management_plane": {
       "scopes": [
@@ -9755,6 +9872,22 @@
       ]
     }
   },
+  "azurerm_network_manager_verifier_workspace_reachability_analysis_intent": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "verifierWorkspaces",
+        "reachabilityAnalysisIntents"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/verifierWorkspaces/reachabilityAnalysisIntents"
+      ]
+    }
+  },
   "azurerm_network_profile": {
     "management_plane": {
       "scopes": [
@@ -10236,16 +10369,14 @@
   "azurerm_policy_set_definition": {
     "management_plane": {
       "scopes": [
-        "/subscriptions",
-        "/Microsoft.Management/managementGroups"
+        "/subscriptions"
       ],
       "provider": "Microsoft.Authorization",
       "types": [
         "policySetDefinitions"
       ],
       "import_specs": [
-        "/subscriptions/Microsoft.Authorization/policySetDefinitions",
-        "/Microsoft.Management/managementgroups/Microsoft.Authorization/policySetDefinitions"
+        "/subscriptions/Microsoft.Authorization/policySetDefinitions"
       ]
     }
   },
@@ -10376,6 +10507,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DBforPostgreSQL/flexibleServers/administrators"
+      ]
+    }
+  },
+  "azurerm_postgresql_flexible_server_backup": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DBforPostgreSQL",
+      "types": [
+        "flexibleServers",
+        "backups"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DBforPostgreSQL/flexibleServers/backups"
       ]
     }
   },

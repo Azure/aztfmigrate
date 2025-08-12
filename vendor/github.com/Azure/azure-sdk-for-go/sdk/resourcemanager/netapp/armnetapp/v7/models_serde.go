@@ -3463,6 +3463,7 @@ func (s *SubscriptionQuotaItem) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type SubscriptionQuotaItemList.
 func (s SubscriptionQuotaItemList) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
+	populate(objectMap, "nextLink", s.NextLink)
 	populate(objectMap, "value", s.Value)
 	return json.Marshal(objectMap)
 }
@@ -3476,6 +3477,9 @@ func (s *SubscriptionQuotaItemList) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
+		case "nextLink":
+			err = unpopulate(val, "NextLink", &s.NextLink)
+			delete(rawMsg, key)
 		case "value":
 			err = unpopulate(val, "Value", &s.Value)
 			delete(rawMsg, key)
