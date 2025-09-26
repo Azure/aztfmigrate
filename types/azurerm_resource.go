@@ -10,7 +10,6 @@ import (
 	"github.com/Azure/aztfmigrate/tf"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/gertd/go-pluralize"
-	_ "github.com/gertd/go-pluralize"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 )

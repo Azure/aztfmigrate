@@ -3646,6 +3646,22 @@
       ]
     }
   },
+  "azurerm_data_factory_customer_managed_key": {
+    "is_removed": true,
+    "remove_reason": "This is a property rather than a resource",
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataFactory",
+      "types": [
+        "factories"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories"
+      ]
+    }
+  },
   "azurerm_data_factory_data_flow": {
     "management_plane": {
       "scopes": [
@@ -8729,14 +8745,11 @@
   "azurerm_monitor_data_collection_rule_association": {
     "management_plane": {
       "scopes": [
-        "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines"
+        "any"
       ],
       "provider": "Microsoft.Insights",
       "types": [
         "dataCollectionRuleAssociations"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.Compute/virtualMachines/Microsoft.Insights/dataCollectionRuleAssociations"
       ]
     }
   },
@@ -9879,6 +9892,22 @@
       ]
     }
   },
+  "azurerm_network_manager_ipam_pool_static_cidr": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "ipamPools",
+        "staticCidrs"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/ipamPools/staticCidrs"
+      ]
+    }
+  },
   "azurerm_network_manager_management_group_connection": {
     "management_plane": {
       "scopes": [
@@ -9920,6 +9949,22 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/routingConfigurations"
+      ]
+    }
+  },
+  "azurerm_network_manager_routing_rule_collection": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "routingConfigurations",
+        "ruleCollections"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/routingConfigurations/ruleCollections"
       ]
     }
   },
@@ -10230,6 +10275,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Oracle.Database/autonomousDatabases"
+      ]
+    }
+  },
+  "azurerm_oracle_autonomous_database_backup": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Oracle.Database",
+      "types": [
+        "autonomousDatabases",
+        "autonomousDatabaseBackups"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Oracle.Database/autonomousDatabases/autonomousDatabaseBackups"
       ]
     }
   },

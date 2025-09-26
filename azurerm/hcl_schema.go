@@ -67,11 +67,9 @@ func tuneForBlock(rb *hclwrite.Body, sch *schema.SchemaBlock, parentAttrNames []
 		default:
 			if schAttr.AttributeType.IsListType() || schAttr.AttributeType.IsSetType() {
 				dstr = "[]"
-				break
 			}
 			if schAttr.AttributeType.IsMapType() {
 				dstr = "{}"
-				break
 			}
 		}
 		if schAttr.Default != nil {

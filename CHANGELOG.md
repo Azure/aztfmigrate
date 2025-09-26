@@ -1,3 +1,6 @@
+## v2.7.0
+Target azurerm version: v4.44.0
+
 ## v2.6.0
 Target azurerm version: v4.39.0
 
