@@ -907,6 +907,69 @@
       ]
     }
   },
+  "azurerm_api_management_workspace_api_version_set": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces",
+        "apiVersionSets"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces/apiVersionSets"
+      ]
+    }
+  },
+  "azurerm_api_management_workspace_certificate": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces",
+        "certificates"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces/certificates"
+      ]
+    }
+  },
+  "azurerm_api_management_workspace_policy": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces"
+      ]
+    }
+  },
+  "azurerm_api_management_workspace_policy_fragment": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces",
+        "policyFragments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces/policyFragments"
+      ]
+    }
+  },
   "azurerm_app_configuration": {
     "management_plane": {
       "scopes": [
@@ -8253,6 +8316,34 @@
       ]
     }
   },
+  "azurerm_managed_redis": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Cache",
+      "types": [
+        "redisEnterprise"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Cache/redisEnterprise"
+      ]
+    }
+  },
+  "azurerm_managed_redis_geo_replication": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Cache",
+      "types": [
+        "redisEnterprise"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Cache/redisEnterprise"
+      ]
+    }
+  },
   "azurerm_management_group": {
     "management_plane": {
       "provider": "Microsoft.Management",
@@ -8593,6 +8684,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DocumentDB/mongoClusters"
+      ]
+    }
+  },
+  "azurerm_mongo_cluster_firewall_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DocumentDB",
+      "types": [
+        "mongoClusters",
+        "firewallRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DocumentDB/mongoClusters/firewallRules"
       ]
     }
   },
@@ -9827,6 +9933,23 @@
       ]
     }
   },
+  "azurerm_network_manager_routing_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkManagers",
+        "routingConfigurations",
+        "ruleCollections",
+        "rules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkManagers/routingConfigurations/ruleCollections/rules"
+      ]
+    }
+  },
   "azurerm_network_manager_routing_rule_collection": {
     "management_plane": {
       "scopes": [
@@ -10168,6 +10291,34 @@
       ]
     }
   },
+  "azurerm_oracle_autonomous_database_clone_from_backup": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Oracle.Database",
+      "types": [
+        "autonomousDatabases"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Oracle.Database/autonomousDatabases"
+      ]
+    }
+  },
+  "azurerm_oracle_autonomous_database_clone_from_database": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Oracle.Database",
+      "types": [
+        "autonomousDatabases"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Oracle.Database/autonomousDatabases"
+      ]
+    }
+  },
   "azurerm_oracle_cloud_vm_cluster": {
     "management_plane": {
       "scopes": [
@@ -10193,6 +10344,34 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Oracle.Database/cloudExadataInfrastructures"
+      ]
+    }
+  },
+  "azurerm_oracle_exascale_database_storage_vault": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Oracle.Database",
+      "types": [
+        "exascaleDbStorageVaults"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Oracle.Database/exascaleDbStorageVaults"
+      ]
+    }
+  },
+  "azurerm_oracle_resource_anchor": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Oracle.Database",
+      "types": [
+        "resourceAnchors"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Oracle.Database/resourceAnchors"
       ]
     }
   },
@@ -12752,20 +12931,6 @@
       ],
       "import_specs": [
         "/Microsoft.Web/sourceControls"
-      ]
-    }
-  },
-  "azurerm_spatial_anchors_account": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MixedReality",
-      "types": [
-        "spatialAnchorsAccounts"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MixedReality/spatialAnchorsAccounts"
       ]
     }
   },

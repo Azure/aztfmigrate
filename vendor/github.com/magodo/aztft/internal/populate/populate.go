@@ -24,6 +24,7 @@ var populaters = map[string]populateFunc{
 	"azurerm_container_app_environment": populateContainerAppEnv,
 	"azurerm_mssql_job":                 populateMssqlJob,
 	"azurerm_stream_analytics_job":      populateStreamAnalyticsJob,
+	"azurerm_managed_redis":             populateRedisEnterpriseDatabase,
 }
 
 func NeedsAPI(rt string) bool {

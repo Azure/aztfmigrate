@@ -217,6 +217,9 @@ var Resolvers = map[string]map[string]resolver{
 	"/MICROSOFT.SIGNALRSERVICE/WEBPUBSUB": {
 		"/SUBSCRIPTIONS/RESOURCEGROUPS": webPubSubResolver{},
 	},
+	"/ORACLE.DATABASE/AUTONOMOUSDATABASES": {
+		"/SUBSCRIPTIONS/RESOURCEGROUPS": oracleAutonomousDatabaseResolver{},
+	},
 }
 
 type ResolveError struct {
