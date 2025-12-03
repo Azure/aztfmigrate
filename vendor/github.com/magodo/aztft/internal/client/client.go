@@ -33,9 +33,11 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v7"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v6"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/oracledatabase/armoracledatabase"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup/v4"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicessiterecovery/v2"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/redisenterprise/armredisenterprise"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armdeploymentscripts/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/sql/armsql"
@@ -715,4 +717,12 @@ func (b *ClientBuilder) NewSqlJobsClient(subscriptionId string) (*armsql.JobsCli
 
 func (b *ClientBuilder) NewWebPubSubsClient(subscriptionId string) (*armwebpubsub.Client, error) {
 	return armwebpubsub.NewClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewOracleAutonomousDatabaseClient(subscriptionId string) (*armoracledatabase.AutonomousDatabasesClient, error) {
+	return armoracledatabase.NewAutonomousDatabasesClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewRedisEnterpriseDatabaseClient(subscriptionId string) (*armredisenterprise.DatabasesClient, error) {
+	return armredisenterprise.NewDatabasesClient(subscriptionId, b.Cred, &b.ClientOpt)
 }

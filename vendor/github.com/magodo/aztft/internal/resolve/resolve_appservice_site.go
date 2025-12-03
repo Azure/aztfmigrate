@@ -14,13 +14,11 @@ type appServiceSitesResolver struct{}
 func (appServiceSitesResolver) ResourceTypes() []string {
 	return []string{
 		"azurerm_logic_app_standard",
+		"azurerm_function_app_flex_consumption",
 		"azurerm_linux_function_app",
 		"azurerm_windows_function_app",
 		"azurerm_linux_web_app",
 		"azurerm_windows_web_app",
-
-		// Although this is put here, it won't be resolved to for now.
-		"azurerm_function_app_flex_consumption",
 	}
 }
 
@@ -40,11 +38,12 @@ func (appServiceSitesResolver) Resolve(b *client.ClientBuilder, id armid.Resourc
 	}
 	// The value of kind for different resource are listed below:
 	//
-	// azurerm_logic_app_standard	: functionapp,workflowapp or functionapp,linux,container,workflowapp
-	// azurerm_linux_function_app	: functionapp,linux
-	// azurerm_windows_function_app	: functionapp
-	// azurerm_linux_web_app		: app,linux
-	// azurerm_windows_web_app		: app,container,windows
+	// azurerm_logic_app_standard			: functionapp,workflowapp or functionapp,linux,container,workflowapp
+	// azurerm_windows_function_app			: functionapp
+	// azurerm_linux_web_app				: app,linux
+	// azurerm_windows_web_app				: app,container,windows
+	// azurerm_function_app_flex_consumption: functionapp,linux
+	// azurerm_linux_function_app			: functionapp,linux
 
 	kinds := strings.Split(*kind, ",")
 	m := map[string]bool{}
@@ -57,11 +56,16 @@ func (appServiceSitesResolver) Resolve(b *client.ClientBuilder, id armid.Resourc
 	}
 
 	if m["functionapp"] {
-		if m["linux"] {
-
-			return "azurerm_linux_function_app", nil
+		if _, ok := m["linux"]; !ok {
+			return "azurerm_windows_function_app", nil
 		}
-		return "azurerm_windows_function_app", nil
+		// For "functionapp,linux" kind, it can be either azurerm_linux_function_app or azurerm_function_app_flex_consumption.
+		if props := resp.Properties; props != nil {
+			if sku := props.SKU; sku != nil && *sku == "FlexConsumption" {
+				return "azurerm_function_app_flex_consumption", nil
+			}
+		}
+		return "azurerm_linux_function_app", nil
 	}
 
 	if m["app"] {
