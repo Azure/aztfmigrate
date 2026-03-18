@@ -311,7 +311,7 @@ github.com/huandu/xstrings
 # github.com/magodo/armid v0.0.0-20250724105512-5cedfa9dd8e2
 ## explicit; go 1.18
 github.com/magodo/armid
-# github.com/magodo/aztft v0.3.1-0.20251115232612-bd81c936d4f1
+# github.com/magodo/aztft v0.3.1-0.20260219230708-1e51977ce1cb
 ## explicit; go 1.23.0
 github.com/magodo/aztft/aztft
 github.com/magodo/aztft/internal/client

@@ -35,6 +35,7 @@ func (dataFactoryLinkedServicesResolver) ResourceTypes() []string {
 		"azurerm_data_factory_linked_service_odata",
 		"azurerm_data_factory_linked_service_sql_server",
 		"azurerm_data_factory_linked_custom_service",
+		"azurerm_data_factory_linked_service_sql_managed_instance",
 	}
 }
 
@@ -95,6 +96,8 @@ func (dataFactoryLinkedServicesResolver) Resolve(b *client.ClientBuilder, id arm
 		return "azurerm_data_factory_linked_service_odata", nil
 	case *armdatafactory.SQLServerLinkedService:
 		return "azurerm_data_factory_linked_service_sql_server", nil
+	case *armdatafactory.AzureSQLMILinkedService:
+		return "azurerm_data_factory_linked_service_sql_managed_instance", nil
 	default:
 		// By default, we return the custom service resource, as it is a general resource that supports all kinds of linked service
 		return "azurerm_data_factory_linked_custom_service", nil

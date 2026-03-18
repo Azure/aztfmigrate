@@ -17,6 +17,10 @@ func (paloalToNetworkFirewall) ResourceTypes() []string {
 		"azurerm_palo_alto_next_generation_firewall_virtual_hub_panorama",
 		"azurerm_palo_alto_next_generation_firewall_virtual_hub_local_rulestack",
 		"azurerm_palo_alto_next_generation_firewall_virtual_network_local_rulestack",
+
+		// SDK not supported yet
+		"azurerm_palo_alto_next_generation_firewall_virtual_hub_strata_cloud_manager",
+		"azurerm_palo_alto_next_generation_firewall_virtual_network_strata_cloud_manager",
 	}
 }
 

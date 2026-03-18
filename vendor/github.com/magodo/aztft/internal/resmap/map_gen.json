@@ -939,6 +939,22 @@
       ]
     }
   },
+  "azurerm_api_management_workspace_named_value": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.ApiManagement",
+      "types": [
+        "service",
+        "workspaces",
+        "namedValues"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.ApiManagement/service/workspaces/namedValues"
+      ]
+    }
+  },
   "azurerm_api_management_workspace_policy": {
     "management_plane": {
       "scopes": [
@@ -1860,6 +1876,21 @@
       ]
     }
   },
+  "azurerm_automation_runtime_environment": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Automation",
+      "types": [
+        "automationAccounts",
+        "runtimeEnvironments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Automation/automationAccounts/runtimeEnvironments"
+      ]
+    }
+  },
   "azurerm_automation_schedule": {
     "management_plane": {
       "scopes": [
@@ -2760,6 +2791,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.CognitiveServices/accounts"
+      ]
+    }
+  },
+  "azurerm_cognitive_account_project": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.CognitiveServices",
+      "types": [
+        "accounts",
+        "projects"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.CognitiveServices/accounts/projects"
       ]
     }
   },
@@ -4235,6 +4281,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/linkedservices"
+      ]
+    }
+  },
+  "azurerm_data_factory_linked_service_sql_managed_instance": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DataFactory",
+      "types": [
+        "factories",
+        "linkedServices"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DataFactory/factories/linkedServices"
       ]
     }
   },
@@ -7775,6 +7836,21 @@
       ]
     }
   },
+  "azurerm_log_analytics_workspace_table_custom_log": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.OperationalInsights",
+      "types": [
+        "workspaces",
+        "tables"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.OperationalInsights/workspaces/tables"
+      ]
+    }
+  },
   "azurerm_logic_app_action_custom": {
     "management_plane": {
       "scopes": [
@@ -8330,6 +8406,22 @@
       ]
     }
   },
+  "azurerm_managed_redis_access_policy_assignment": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Cache",
+      "types": [
+        "redisEnterprise",
+        "databases",
+        "accessPolicyAssignments"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Cache/redisEnterprise/databases/accessPolicyAssignments"
+      ]
+    }
+  },
   "azurerm_managed_redis_geo_replication": {
     "management_plane": {
       "scopes": [
@@ -8510,169 +8602,6 @@
       ]
     }
   },
-  "azurerm_mobile_network": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks"
-      ]
-    }
-  },
-  "azurerm_mobile_network_attached_data_network": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "packetCoreControlPlanes",
-        "packetCoreDataPlanes",
-        "attachedDataNetworks"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/packetCoreControlPlanes/packetCoreDataPlanes/attachedDataNetworks"
-      ]
-    }
-  },
-  "azurerm_mobile_network_data_network": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks",
-        "dataNetworks"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/dataNetworks"
-      ]
-    }
-  },
-  "azurerm_mobile_network_packet_core_control_plane": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "packetCoreControlPlanes"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/packetCoreControlPlanes"
-      ]
-    }
-  },
-  "azurerm_mobile_network_packet_core_data_plane": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "packetCoreControlPlanes",
-        "packetCoreDataPlanes"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/packetCoreControlPlanes/packetCoreDataPlanes"
-      ]
-    }
-  },
-  "azurerm_mobile_network_service": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks",
-        "services"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/services"
-      ]
-    }
-  },
-  "azurerm_mobile_network_sim": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "simGroups",
-        "sims"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/simGroups/sims"
-      ]
-    }
-  },
-  "azurerm_mobile_network_sim_group": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "simGroups"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/simGroups"
-      ]
-    }
-  },
-  "azurerm_mobile_network_sim_policy": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks",
-        "simPolicies"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/simPolicies"
-      ]
-    }
-  },
-  "azurerm_mobile_network_site": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks",
-        "sites"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/sites"
-      ]
-    }
-  },
-  "azurerm_mobile_network_slice": {
-    "management_plane": {
-      "scopes": [
-        "/subscriptions/resourceGroups"
-      ],
-      "provider": "Microsoft.MobileNetwork",
-      "types": [
-        "mobileNetworks",
-        "slices"
-      ],
-      "import_specs": [
-        "/subscriptions/resourceGroups/Microsoft.MobileNetwork/mobileNetworks/slices"
-      ]
-    }
-  },
   "azurerm_mongo_cluster": {
     "management_plane": {
       "scopes": [
@@ -8699,6 +8628,21 @@
       ],
       "import_specs": [
         "/subscriptions/resourceGroups/Microsoft.DocumentDB/mongoClusters/firewallRules"
+      ]
+    }
+  },
+  "azurerm_mongo_cluster_user": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.DocumentDB",
+      "types": [
+        "mongoClusters",
+        "users"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.DocumentDB/mongoClusters/users"
       ]
     }
   },
@@ -10085,6 +10029,66 @@
       ]
     }
   },
+  "azurerm_network_security_perimeter": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkSecurityPerimeters"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkSecurityPerimeters"
+      ]
+    }
+  },
+  "azurerm_network_security_perimeter_access_rule": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkSecurityPerimeters",
+        "profiles",
+        "accessRules"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkSecurityPerimeters/profiles/accessRules"
+      ]
+    }
+  },
+  "azurerm_network_security_perimeter_association": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkSecurityPerimeters",
+        "resourceAssociations"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkSecurityPerimeters/resourceAssociations"
+      ]
+    }
+  },
+  "azurerm_network_security_perimeter_profile": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "Microsoft.Network",
+      "types": [
+        "networkSecurityPerimeters",
+        "profiles"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/Microsoft.Network/networkSecurityPerimeters/profiles"
+      ]
+    }
+  },
   "azurerm_network_security_rule": {
     "management_plane": {
       "scopes": [
@@ -10534,6 +10538,20 @@
       ]
     }
   },
+  "azurerm_palo_alto_next_generation_firewall_virtual_hub_strata_cloud_manager": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
   "azurerm_palo_alto_next_generation_firewall_virtual_network_local_rulestack": {
     "management_plane": {
       "scopes": [
@@ -10549,6 +10567,20 @@
     }
   },
   "azurerm_palo_alto_next_generation_firewall_virtual_network_panorama": {
+    "management_plane": {
+      "scopes": [
+        "/subscriptions/resourceGroups"
+      ],
+      "provider": "PaloAltoNetworks.Cloudngfw",
+      "types": [
+        "firewalls"
+      ],
+      "import_specs": [
+        "/subscriptions/resourceGroups/PaloAltoNetworks.Cloudngfw/firewalls"
+      ]
+    }
+  },
+  "azurerm_palo_alto_next_generation_firewall_virtual_network_strata_cloud_manager": {
     "management_plane": {
       "scopes": [
         "/subscriptions/resourceGroups"
