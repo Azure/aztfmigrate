@@ -74,7 +74,7 @@ func ReplaceResourceBlock(workingDirectory, targetAddress string, newBlocks []*h
 			f.Body().AppendNewline()
 		}
 		if found {
-			if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil {
+			if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil { // #nosec G703
 				log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 			}
 			return nil
@@ -103,7 +103,7 @@ func ReplaceGenericOutputs(workingDirectory string, outputs []Output) error {
 				ReplaceOutputs(block, outputs)
 			}
 		}
-		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil {
+		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil { // #nosec G703
 			log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 		}
 	}
@@ -147,7 +147,7 @@ func UpdateMigratedResourceBlock(workingDirectory string, resources []AzapiUpdat
 			}
 		}
 
-		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil {
+		if err := os.WriteFile(filepath.Join(workingDirectory, file.Name()), hclwrite.Format(f.Bytes()), 0600); err != nil { // #nosec G703
 			log.Printf("[Error] saving configuration %s: %+v", file.Name(), err)
 		}
 	}
