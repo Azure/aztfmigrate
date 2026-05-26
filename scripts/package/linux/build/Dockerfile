@@ -1,6 +1,6 @@
-FROM ubuntu:22.04
+FROM mcr.microsoft.com/azurelinux/base/ruby:3.3
 ARG version
-RUN apt update && apt install -y ruby-dev build-essential squashfs-tools
-RUN apt install -y rpm
-RUN gem i fpm
+RUN tdnf install -y gcc gcc-c++ make ruby-devel rpm-build squashfs-tools && \
+    tdnf clean all && \
+    gem install fpm
 CMD ["fpm", "--help"]
