@@ -201,7 +201,7 @@ github.com/fatih/color
 # github.com/gertd/go-pluralize v0.2.1
 ## explicit; go 1.17
 github.com/gertd/go-pluralize
-# github.com/go-git/go-git/v5 v5.19.0
+# github.com/go-git/go-git/v5 v5.19.1
 ## explicit; go 1.25.0
 # github.com/golang-jwt/jwt/v4 v4.5.2
 ## explicit; go 1.16
