@@ -3,19 +3,19 @@ module github.com/Azure/aztfmigrate
 go 1.25.10
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.21.1
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.22.0
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/hashicorp/go-version v1.9.0
 	github.com/hashicorp/hc-install v0.9.5
 	github.com/hashicorp/hcl/v2 v2.24.0
 	github.com/hashicorp/terraform-exec v0.25.2
-	github.com/hashicorp/terraform-json v0.27.2
+	github.com/hashicorp/terraform-json v0.28.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
 	github.com/magodo/aztft v0.3.1-0.20260219230708-1e51977ce1cb
 	github.com/magodo/tfadd v0.10.1-0.20240902124619-bd18a56f410d
 	github.com/mitchellh/cli v1.1.5
-	github.com/zclconf/go-cty v1.18.1
+	github.com/zclconf/go-cty v1.19.0
 )
 
 require (
@@ -73,6 +73,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
+	github.com/apparentlymart/go-textseg/v17 v17.0.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bgentry/speakeasy v0.2.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
