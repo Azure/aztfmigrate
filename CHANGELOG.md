@@ -1,3 +1,10 @@
+## v2.9.1
+Target azurerm version: v4.64.0
+
+ENHANCEMENTS:
+- Bump golang.org/x/crypto v0.50.0 -> v0.54.0.
+- Bump github.com/go-git/go-git/v5 v5.19.0 -> v5.19.1.
+
 ## v2.9.0
 Target azurerm version: v4.64.0
 
