@@ -162,6 +162,7 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		"azurerm_netapp_account_encryption",
 		"azurerm_storage_blob_inventory_policy",
 		"azurerm_storage_account_queue_properties",
+		"azurerm_storage_account_table_properties",
 		"azurerm_storage_account_static_website",
 		"azurerm_container_app_environment_custom_domain",
 		"azurerm_subnet_nat_gateway_association",
@@ -178,7 +179,8 @@ func StaticBuild(id armid.ResourceId, rt string) (string, error) {
 		id = id.Parent().Parent()
 
 	// Parent Scope
-	case "azurerm_eventgrid_partner_configuration":
+	case "azurerm_eventgrid_partner_configuration",
+		"azurerm_kubernetes_cluster_deployment_safeguard":
 		id = id.ParentScope()
 	}
 

@@ -20,6 +20,7 @@ func (dataProtectionBackupPoliciesResolver) ResourceTypes() []string {
 		"azurerm_data_protection_backup_policy_kubernetes_cluster",
 		"azurerm_data_protection_backup_policy_postgresql_flexible_server",
 		"azurerm_data_protection_backup_policy_mysql_flexible_server",
+		"azurerm_data_protection_backup_policy_data_lake_storage",
 	}
 }
 
@@ -61,6 +62,8 @@ func (dataProtectionBackupPoliciesResolver) Resolve(b *client.ClientBuilder, id 
 		return "azurerm_data_protection_backup_policy_postgresql_flexible_server", nil
 	case "MICROSOFT.DBFORMYSQL/FLEXIBLESERVERS":
 		return "azurerm_data_protection_backup_policy_mysql_flexible_server", nil
+	case "MICROSOFT.STORAGE/STORAGEACCOUNTS/ADLSBLOBSERVICES":
+		return "azurerm_data_protection_backup_policy_data_lake_storage", nil
 	default:
 		return "", fmt.Errorf("unknown data source type: %s", *pdt)
 	}
