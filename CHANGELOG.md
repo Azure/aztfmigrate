@@ -1,7 +1,12 @@
 ## v2.9.1
-Target azurerm version: v4.64.0
+Target azurerm version: v4.81.0
 
 ENHANCEMENTS:
+- Refresh `azurerm/coverage/tf.json` from `magodo/azure-rest-api-cov-terraform-reports` commit `26ffa71521c4bdf852b1cc5b0c6ee045fa036bba`.
+- Add `scripts/update-coverage-json.sh` to update `azurerm/coverage/tf.json` from the upstream coverage report repository.
+- Bump github.com/Azure/azure-sdk-for-go/sdk/azcore v1.21.1 -> v1.22.0.
+- Bump github.com/hashicorp/terraform-json v0.27.2 -> v0.28.0.
+- Bump github.com/zclconf/go-cty v1.18.1 -> v1.19.0.
 - Bump golang.org/x/crypto v0.50.0 -> v0.54.0.
 - Bump github.com/go-git/go-git/v5 v5.19.0 -> v5.19.1.
 

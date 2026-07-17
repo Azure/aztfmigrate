@@ -14,6 +14,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cdn/armcdn/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/cognitiveservices/armcognitiveservices"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/compute/armcompute/v5"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/containerservice/armcontainerservice/v9"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/costmanagement/armcostmanagement/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/datafactory/armdatafactory/v7"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/dataprotection/armdataprotection/v3"
@@ -30,9 +31,9 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/kusto/armkusto/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/logic/armlogic"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/machinelearning/armmachinelearning/v4"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v7"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/netapp/armnetapp/v10"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v6"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/operationalinsights/armoperationalinsights/v3"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/oracledatabase/armoracledatabase"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/paloaltonetworksngfw/armpanngfw"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/recoveryservices/armrecoveryservicesbackup/v4"
@@ -312,6 +313,14 @@ func (b *ClientBuilder) NewOperationalInsightsDataSourcesClient(subscriptionId s
 	)
 }
 
+func (b *ClientBuilder) NewOperationalInsightsTablesClient(subscriptionId string) (*armoperationalinsights.TablesClient, error) {
+	return armoperationalinsights.NewTablesClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
 func (b *ClientBuilder) NewAppPlatformBindingsClient(subscriptionId string) (*armappplatform.BindingsClient, error) {
 	return armappplatform.NewBindingsClient(
 		subscriptionId,
@@ -378,6 +387,14 @@ func (b *ClientBuilder) NewStreamAnalyticsJobsClient(subscriptionId string) (*ar
 
 func (b *ClientBuilder) NewCdnProfilesClient(subscriptionId string) (*armcdn.ProfilesClient, error) {
 	return armcdn.NewProfilesClient(
+		subscriptionId,
+		b.Cred,
+		&b.ClientOpt,
+	)
+}
+
+func (b *ClientBuilder) NewCdnRuleSetsClient(subscriptionId string) (*armcdn.RuleSetsClient, error) {
+	return armcdn.NewRuleSetsClient(
 		subscriptionId,
 		b.Cred,
 		&b.ClientOpt,
@@ -707,6 +724,10 @@ func (b *ClientBuilder) NewCognitiveServiceAccountsClient(subscriptionId string)
 	return armcognitiveservices.NewAccountsClient(subscriptionId, b.Cred, &b.ClientOpt)
 }
 
+func (b *ClientBuilder) NewCognitiveServiceAccountConnectionsClient(subscriptionId string) (*armcognitiveservices.AccountConnectionsClient, error) {
+	return armcognitiveservices.NewAccountConnectionsClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
 func (b *ClientBuilder) NewHybridKubernetesConnectedClient(subscriptionId string) (*armhybridkubernetes.ConnectedClusterClient, error) {
 	return armhybridkubernetes.NewConnectedClusterClient(subscriptionId, b.Cred, &b.ClientOpt)
 }
@@ -725,4 +746,12 @@ func (b *ClientBuilder) NewOracleAutonomousDatabaseClient(subscriptionId string)
 
 func (b *ClientBuilder) NewRedisEnterpriseDatabaseClient(subscriptionId string) (*armredisenterprise.DatabasesClient, error) {
 	return armredisenterprise.NewDatabasesClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewNetAppVolumeBucketClient(subscriptionId string) (*armnetapp.BucketsClient, error) {
+	return armnetapp.NewBucketsClient(subscriptionId, b.Cred, &b.ClientOpt)
+}
+
+func (b *ClientBuilder) NewKubernetesClusterClient(subscription string) (*armcontainerservice.ManagedClustersClient, error) {
+	return armcontainerservice.NewManagedClustersClient(subscription, b.Cred, &b.ClientOpt)
 }
