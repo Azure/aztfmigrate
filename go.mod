@@ -3,7 +3,7 @@ module github.com/Azure/aztfmigrate
 go 1.25.10
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.1
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.23.2
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/hashicorp/go-version v1.9.0
